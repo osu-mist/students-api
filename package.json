@@ -1,7 +1,7 @@
 {
-  "name": "express-api-skeleton",
+  "name": "students-api",
   "version": "1.0.0",
-  "description": "Skeleton for Express APIs.",
+  "description": "OSU Students API",
   "main": "app.js",
   "scripts": {
     "start": "./node_modules/.bin/gulp run",
@@ -13,14 +13,14 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/osu-mist/express-api-skeleton.git"
+    "url": "git+https://github.com/osu-mist/students-api.git"
   },
   "author": "osu-mist",
   "license": "AGPL-3.0",
   "bugs": {
-    "url": "https://github.com/osu-mist/express-api-skeleton/issues"
+    "url": "https://github.com/osu-mist/students-api/issues"
   },
-  "homepage": "https://github.com/osu-mist/express-api-skeleton#readme",
+  "homepage": "https://github.com/osu-mist/students-api#readme",
   "dependencies": {
     "app-root-path": "^2.1.0",
     "capitalize": "^2.0.0",
