@@ -8,7 +8,7 @@ const { serializerOptions } = appRoot.require('utils/jsonapi');
 const { openapi } = appRoot.require('utils/load-openapi');
 const { querySelfLink, idSelfLink } = appRoot.require('utils/uri-builder');
 
-const petResourceProp = openapi.definitions.PetResource.properties;
+const petResourceProp = openapi.definitions.GradePointAverageResult.properties.data.properties;
 const petResourceType = petResourceProp.type.example;
 const petResourceKeys = _.keys(petResourceProp.attributes.properties);
 const petResourcePath = 'pets';

@@ -1,10 +1,12 @@
+const appRoot = require('app-root-path');
 const config = require('config');
-const rp = require('request-promise-native');
+const _ = require('lodash');
 
-const { SerializedPets, SerializedPet } = require('../../serializers/pets-serializer');
+const contrib = appRoot.require('api/v1/db/oracledb/contrib/contrib');
+const { getConnection } = appRoot.require('api/v1/db/oracledb/connection');
+const { SerializedPets, SerializedPet } = require('../../serializers/students-serializer');
 
 const { endpointUri } = config.get('server');
-const { sourceUri } = config.get('httpDataSource');
 
 /**
  * @summary Return a list of pets
@@ -12,13 +14,15 @@ const { sourceUri } = config.get('httpDataSource');
  * @returns {Promise} Promise object represents a list of pets
  */
 const getPets = () => new Promise(async (resolve, reject) => {
+  const connection = await getConnection();
   try {
-    const options = { uri: sourceUri, json: true };
-    const rawPets = await rp(options);
+    const { rawPets } = await connection.execute(contrib.getPets());
     const serializedPets = SerializedPets(rawPets, endpointUri);
     resolve(serializedPets);
   } catch (err) {
     reject(err);
+  } finally {
+    connection.close();
   }
 });
 
@@ -29,17 +33,23 @@ const getPets = () => new Promise(async (resolve, reject) => {
  * @returns {Promise} Promise object represents a specific pet
  */
 const getPetById = id => new Promise(async (resolve, reject) => {
+  const connection = await getConnection();
   try {
-    const options = { uri: `${sourceUri}/${id}`, json: true };
-    const rawPet = await rp(options);
-    if (!rawPet) {
+    const { rawPets } = await connection.execute(contrib.getPetById(id), id);
+
+    if (_.isEmpty(rawPets)) {
       resolve(undefined);
+    } else if (rawPets.length > 1) {
+      reject(new Error('Expect a single object but got multiple results.'));
     } else {
+      const [rawPet] = rawPets;
       const serializedPet = SerializedPet(rawPet, endpointUri);
       resolve(serializedPet);
     }
   } catch (err) {
     reject(err);
+  } finally {
+    connection.close();
   }
 });
 

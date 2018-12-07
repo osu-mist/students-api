@@ -2,7 +2,7 @@ const appRoot = require('app-root-path');
 
 const { errorBuilder, errorHandler } = appRoot.require('errors/errors');
 const { openapi: { paths } } = appRoot.require('utils/load-openapi');
-const petsDAO = require('../../db/json/pets-dao-example');
+const studentsDAO = require('../../../db/oracledb/students-dao');
 
 /**
  * @summary Get pet by unique ID
@@ -10,7 +10,7 @@ const petsDAO = require('../../db/json/pets-dao-example');
 const get = async (req, res) => {
   try {
     const { id } = req.params;
-    const result = await petsDAO.getPetById(id);
+    const result = await studentsDAO.getPetById(id);
     if (!result) {
       errorBuilder(res, 404, 'A pet with the specified ID was not found.');
     } else {
