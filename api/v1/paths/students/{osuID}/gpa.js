@@ -5,14 +5,14 @@ const { openapi: { paths } } = appRoot.require('utils/load-openapi');
 const studentsDAO = require('../../../db/oracledb/students-dao');
 
 /**
- * @summary Get pet by unique ID
+ * @summary Get student by unique osuID
  */
 const get = async (req, res) => {
   try {
-    const { id } = req.params;
-    const result = await studentsDAO.getPetById(id);
+    const { osuID } = req.params;
+    const result = await studentsDAO.getGPAsById(osuID);
     if (!result) {
-      errorBuilder(res, 404, 'A pet with the specified ID was not found.');
+      errorBuilder(res, 404, 'A student with the OSU ID was not found.');
     } else {
       res.send(result);
     }
@@ -21,6 +21,6 @@ const get = async (req, res) => {
   }
 };
 
-get.apiDoc = paths['/pets/{id}'].get;
+get.apiDoc = paths['/students/{osuID}/gpa'].get;
 
 module.exports = { get };

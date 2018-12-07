@@ -1,50 +1,25 @@
 const appRoot = require('app-root-path');
-const config = require('config');
 const _ = require('lodash');
 
 const contrib = appRoot.require('api/v1/db/oracledb/contrib/contrib');
 const { getConnection } = appRoot.require('api/v1/db/oracledb/connection');
-const { SerializedPets, SerializedPet } = require('../../serializers/students-serializer');
-
-const { endpointUri } = config.get('server');
-
-/**
- * @summary Return a list of pets
- * @function
- * @returns {Promise} Promise object represents a list of pets
- */
-const getPets = () => new Promise(async (resolve, reject) => {
-  const connection = await getConnection();
-  try {
-    const { rawPets } = await connection.execute(contrib.getPets());
-    const serializedPets = SerializedPets(rawPets, endpointUri);
-    resolve(serializedPets);
-  } catch (err) {
-    reject(err);
-  } finally {
-    connection.close();
-  }
-});
+const { SerializedGPAs } = require('../../serializers/students-serializer');
 
 /**
  * @summary Return a specific pet by unique ID
  * @function
- * @param {string} id Unique pet ID
+ * @param {string} osuID OSU ID
  * @returns {Promise} Promise object represents a specific pet
  */
-const getPetById = id => new Promise(async (resolve, reject) => {
+const getGPAsById = osuID => new Promise(async (resolve, reject) => {
   const connection = await getConnection();
   try {
-    const { rawPets } = await connection.execute(contrib.getPetById(id), id);
-
-    if (_.isEmpty(rawPets)) {
+    const { rows } = await connection.execute(contrib.getGPALevelsByID(), [osuID]);
+    if (_.isEmpty(rows)) {
       resolve(undefined);
-    } else if (rawPets.length > 1) {
-      reject(new Error('Expect a single object but got multiple results.'));
     } else {
-      const [rawPet] = rawPets;
-      const serializedPet = SerializedPet(rawPet, endpointUri);
-      resolve(serializedPet);
+      const serializedGPAs = SerializedGPAs(rows, osuID);
+      resolve(serializedGPAs);
     }
   } catch (err) {
     reject(err);
@@ -53,4 +28,4 @@ const getPetById = id => new Promise(async (resolve, reject) => {
   }
 });
 
-module.exports = { getPets, getPetById };
+module.exports = { getGPAsById };
