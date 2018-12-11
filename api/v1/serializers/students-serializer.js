@@ -15,7 +15,7 @@ const { idSelfLink, subresourceLink } = appRoot.require('utils/uri-builder');
  */
 const SerializedGPAs = (rawGPALevels, osuID) => {
   const gpaResourceProp = openapi.definitions.GradePointAverageResult.properties.data.properties;
-  const gpaResourceType = gpaResourceProp.type.example;
+  const gpaResourceType = gpaResourceProp.type.enum[0];
   const gpaResourceKeys = _.keys(gpaResourceProp.attributes.properties);
   const gpaResourcePath = 'gpa';
 

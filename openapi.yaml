@@ -517,7 +517,7 @@ definitions:
               $ref: '#/definitions/StudentAndTermAndCourseID'
             type:
               type: string
-              example: 'grades'
+              enum: ['grades']
             attributes:
               properties:
                 courseReferenceNumber:
