@@ -308,7 +308,7 @@ definitions:
             $ref: '#/definitions/StudentID'
           type:
             type: string
-            example: 'account-balance'
+            enum: ['account-balance']
           attributes:
             properties:
               currentBalance:
@@ -328,7 +328,7 @@ definitions:
             $ref: '#/definitions/StudentID'
           type:
             type: string
-            example: 'account-transactions'
+            enum: ['account-transactions']
           attributes:
             properties:
               transactions:
@@ -363,7 +363,7 @@ definitions:
               $ref: '#/definitions/StudentAndTermID'
             type:
               type: string
-              example: 'academic-status'
+              enum: ['academic-status']
             attributes:
               properties:
                 academicStanding:
@@ -406,7 +406,7 @@ definitions:
             $ref: '#/definitions/StudentID'
           type:
             type: string
-            example: 'classification'
+            enum: ['classification']
           attributes:
             properties:
               level:
@@ -457,7 +457,7 @@ definitions:
             $ref: '#/definitions/StudentID'
           type:
             type: string
-            example: 'gpa'
+            enum: ['gpa']
           attributes:
             properties:
               gpaLevels:
@@ -596,7 +596,7 @@ definitions:
               $ref: '#/definitions/StudentAndTermAndCourseID'
             type:
               type: string
-              example: 'class-schedule'
+              enum: ['class-schedule']
             attributes:
               properties:
                 academicYear:
@@ -796,7 +796,7 @@ definitions:
             $ref: '#/definitions/StudentID'
           type:
             type: string
-            example: 'holds'
+            enum: ['holds']
           attributes:
             properties:
               holds:
@@ -839,7 +839,7 @@ definitions:
             $ref: '#/definitions/StudentID'
           type:
             type: string
-            example: 'work-study'
+            enum: ['work-study']
           attributes:
             properties:
               awards:
@@ -904,7 +904,7 @@ definitions:
               $ref: '#/definitions/StudentAndTermID'
             type:
               type: string
-              example: 'dual-enrollment'
+              enum: ['dual-enrollment']
             attributes:
               properties:
                 term:
