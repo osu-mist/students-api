@@ -14,14 +14,14 @@ const { idSelfLink, subresourceLink } = appRoot.require('utils/uri-builder');
  * @returns {Object} Serialized petResources object
  */
 const SerializedGPAs = (rawGPALevels, osuID) => {
-  const gpaResourceProp = openapi.definitions.GradePointAverageResult.properties.data.properties;
-  const gpaResourceType = gpaResourceProp.type.enum[0];
-  const gpaResourceKeys = _.keys(gpaResourceProp.attributes.properties);
-  const gpaResourcePath = 'gpa';
+  const ResourceProp = openapi.definitions.GradePointAverageResult.properties.data.properties;
+  const ResourceType = ResourceProp.type.enum[0];
+  const ResourceKeys = _.keys(ResourceProp.attributes.properties);
+  const ResourcePath = 'gpa';
 
   const serializerArgs = {
     identifierField: 'osuID',
-    resourceKeys: gpaResourceKeys,
+    resourceKeys: ResourceKeys,
   };
 
   const rawGPAs = {
@@ -30,12 +30,39 @@ const SerializedGPAs = (rawGPALevels, osuID) => {
   };
 
   const studentSelfLink = idSelfLink(osuID, 'students');
-  const topLevelSelfLink = subresourceLink(studentSelfLink, gpaResourcePath);
+  const topLevelSelfLink = subresourceLink(studentSelfLink, ResourcePath);
 
   return new JSONAPISerializer(
-    gpaResourceType,
-    serializerOptions(serializerArgs, 'students', topLevelSelfLink, gpaResourcePath),
+    ResourceType,
+    serializerOptions(serializerArgs, 'students', topLevelSelfLink, ResourcePath),
   ).serialize(rawGPAs);
 };
 
-module.exports = { SerializedGPAs };
+/**
+ * @summary Serializer petResources to JSON API
+ * @function
+ * @param {[Object]} rawPets Raw data rows from data source
+ * @param {Object} query Query parameters
+ * @returns {Object} Serialized petResources object
+ */
+const SerializedAccountBalance = (rawAccountBalance, osuID) => {
+  const ResourceProp = openapi.definitions.AccountBalanceResult.properties.data.properties;
+  const ResourceType = ResourceProp.type.enum[0];
+  const ResourceKeys = _.keys(ResourceProp.attributes.properties);
+  const ResourcePath = 'account-balance';
+
+  const serializerArgs = {
+    identifierField: 'osuID',
+    resourceKeys: ResourceKeys,
+  };
+
+  const studentSelfLink = idSelfLink(osuID, 'students');
+  const topLevelSelfLink = subresourceLink(studentSelfLink, ResourcePath);
+
+  return new JSONAPISerializer(
+    ResourceType,
+    serializerOptions(serializerArgs, 'students', topLevelSelfLink, ResourcePath),
+  ).serialize(rawAccountBalance);
+};
+
+module.exports = { SerializedGPAs, SerializedAccountBalance };

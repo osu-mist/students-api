@@ -3,7 +3,7 @@ const _ = require('lodash');
 
 const contrib = appRoot.require('api/v1/db/oracledb/contrib/contrib');
 const { getConnection } = appRoot.require('api/v1/db/oracledb/connection');
-const { SerializedGPAs } = require('../../serializers/students-serializer');
+const { SerializedGPAs, SerializedAccountBalance } = require('../../serializers/students-serializer');
 
 /**
  * @summary Return a specific pet by unique ID
@@ -28,4 +28,28 @@ const getGPAsById = osuID => new Promise(async (resolve, reject) => {
   }
 });
 
-module.exports = { getGPAsById };
+/**
+ * @summary Return a specific pet by unique ID
+ * @function
+ * @param {string} osuID OSU ID
+ * @returns {Promise} Promise object represents a specific pet
+ */
+const getAccountBalanceById = osuID => new Promise(async (resolve, reject) => {
+  const connection = await getConnection();
+  try {
+    const { rows } = await connection.execute(contrib.getAccountBalanceByID(), [osuID]);
+    const [row] = rows;
+    if (_.isEmpty(row)) {
+      resolve(undefined);
+    } else {
+      const serializedAccountBalance = SerializedAccountBalance(row, osuID);
+      resolve(serializedAccountBalance);
+    }
+  } catch (err) {
+    reject(err);
+  } finally {
+    connection.close();
+  }
+});
+
+module.exports = { getGPAsById, getAccountBalanceById };
