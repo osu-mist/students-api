@@ -1,6 +1,7 @@
 const appRoot = require('app-root-path');
 const _ = require('lodash');
 const JSONAPISerializer = require('jsonapi-serializer').Serializer;
+const moment = require('moment-timezone');
 
 const { serializerOptions } = appRoot.require('utils/jsonapi');
 const { openapi } = appRoot.require('utils/load-openapi');
@@ -65,4 +66,42 @@ const SerializedAccountBalance = (rawAccountBalance, osuID) => {
   ).serialize(rawAccountBalance);
 };
 
-module.exports = { SerializedGPAs, SerializedAccountBalance };
+/**
+ * @summary Serializer petResources to JSON API
+ * @function
+ * @param {[Object]} rawPets Raw data rows from data source
+ * @param {Object} query Query parameters
+ * @returns {Object} Serialized petResources object
+ */
+const SerializedTransactions = (rawTransactions, osuID) => {
+  const ResourceProp = openapi.definitions.AccountTransactionsResult.properties.data.properties;
+  const ResourceType = ResourceProp.type.enum[0];
+  const ResourceKeys = _.keys(ResourceProp.attributes.properties);
+  const ResourcePath = 'account-transactions';
+
+  const serializerArgs = {
+    identifierField: 'osuID',
+    resourceKeys: ResourceKeys,
+  };
+
+  _.forEach(rawTransactions, (rawTransaction) => {
+    const rawEntryDate = rawTransaction.entryDate;
+    rawTransaction.amount = parseFloat(rawTransaction.amount);
+    rawTransaction.entryDate = moment.tz(rawEntryDate, 'PST8PDT').utc().format();
+  });
+
+  const rawAccountTransactions = {
+    osuID,
+    transactions: rawTransactions,
+  };
+
+  const studentSelfLink = idSelfLink(osuID, 'students');
+  const topLevelSelfLink = subresourceLink(studentSelfLink, ResourcePath);
+
+  return new JSONAPISerializer(
+    ResourceType,
+    serializerOptions(serializerArgs, 'students', topLevelSelfLink, ResourcePath),
+  ).serialize(rawAccountTransactions);
+};
+
+module.exports = { SerializedGPAs, SerializedAccountBalance, SerializedTransactions };

@@ -10,7 +10,7 @@ const studentsDAO = require('../../../db/oracledb/students-dao');
 const get = async (req, res) => {
   try {
     const { osuID } = req.params;
-    const result = await studentsDAO.getAccountBalanceById(osuID);
+    const result = await studentsDAO.getTransactionsById(osuID);
     if (!result) {
       errorBuilder(res, 404, 'A student with the OSU ID was not found.');
     } else {
@@ -21,6 +21,6 @@ const get = async (req, res) => {
   }
 };
 
-get.apiDoc = paths['/students/{osuID}/account-balance'].get;
+get.apiDoc = paths['/students/{osuID}/account-transactions'].get;
 
 module.exports = { get };
