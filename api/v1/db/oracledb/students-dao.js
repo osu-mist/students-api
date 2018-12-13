@@ -37,7 +37,7 @@ const getResourceById = (id, sql, serializer, isSingleton) => new Promise(
 
 const getGPAById = osuID => getResourceById(
   osuID,
-  contrib.getGPAById(),
+  contrib.getGPALevelsById(),
   studentsSerializer.serializeGPA,
   false,
 );
@@ -51,7 +51,7 @@ const getAccountBalanceById = osuID => getResourceById(
 
 const getAccountTransactionsById = osuID => getResourceById(
   osuID,
-  contrib.getAccountTransactionsById(),
+  contrib.getTransactionsById(),
   studentsSerializer.serializeAccountTransactions,
   false,
 );
