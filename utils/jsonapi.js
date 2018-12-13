@@ -26,8 +26,11 @@ const serializerOptions = (serializerArgs) => {
     keyForAttribute: 'camelCase',
     dataLinks: {
       self: (row) => {
-        const resourceURL = idSelfLink(row[identifierField], resourcePath);
-        return subresourceLink(resourceURL, subresourcePath);
+        if (subresourcePath) {
+          const resourceURL = idSelfLink(row[identifierField], resourcePath);
+          return subresourceLink(resourceURL, subresourcePath);
+        }
+        return idSelfLink(row[identifierField], resourcePath);
       },
     },
     topLevelLinks: { self: topLevelSelfLink },
