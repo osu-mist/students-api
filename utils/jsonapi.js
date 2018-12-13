@@ -7,16 +7,16 @@ const { paginatedLink, idSelfLink, subresourceLink } = appRoot.require('utils/ur
  * @summary Generate JSON API serializer options
  * @function
  * @param {[Object]} serializerArgs JSON API serializer arguments
- * @param {string} resourcePath resource path
- * @param {string} topLevelSelfLink top-level self-link
- * @param {string} subresourcePath subresource path
  * @returns {Object} JSON API serializer options
  */
-const serializerOptions = (serializerArgs, resourcePath, topLevelSelfLink, subresourcePath) => {
+const serializerOptions = (serializerArgs) => {
   const {
     identifierField,
     resourceKeys,
     pagination,
+    resourcePath,
+    topLevelSelfLink,
+    subresourcePath,
   } = serializerArgs;
 
   const options = {

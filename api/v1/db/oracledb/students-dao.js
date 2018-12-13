@@ -3,76 +3,57 @@ const _ = require('lodash');
 
 const contrib = appRoot.require('api/v1/db/oracledb/contrib/contrib');
 const { getConnection } = appRoot.require('api/v1/db/oracledb/connection');
-const { SerializedGPAs, SerializedAccountBalance, SerializedTransactions } = require('../../serializers/students-serializer');
+const studentsSerializer = require('../../serializers/students-serializer');
 
 /**
- * @summary Return a specific pet by unique ID
+ * @summary Return serialized resource(s) by unique ID
  * @function
- * @param {string} osuID OSU ID
- * @returns {Promise} Promise object represents a specific pet
+ * @param {string} id The unique ID for resource(s)
+ * @param {string} sql The SQL statement that is executed
+ * @param {function} serializer Resource serializer function
+ * @param {boolean} isSingleton A Boolean value represents the resource should be singleton or not
+ * @returns {Promise} Promise object represents serialized resource(s)
  */
-const getGPAsById = osuID => new Promise(async (resolve, reject) => {
-  const connection = await getConnection();
-  try {
-    const { rows } = await connection.execute(contrib.getGPALevelsByID(), [osuID]);
-    if (_.isEmpty(rows)) {
-      resolve(undefined);
-    } else {
-      const serializedGPAs = SerializedGPAs(rows, osuID);
-      resolve(serializedGPAs);
+const getResourceById = (id, sql, serializer, isSingleton) => new Promise(
+  async (resolve, reject) => {
+    const connection = await getConnection();
+    try {
+      const { rows } = await connection.execute(sql, [id]);
+      if (_.isEmpty(rows)) {
+        resolve(undefined);
+      } else if (isSingleton && rows.length > 1) {
+        reject(new Error('Expect a single object but got multiple results.'));
+      } else {
+        const serializedResource = serializer(isSingleton ? rows[0] : rows, id);
+        resolve(serializedResource);
+      }
+    } catch (err) {
+      reject(err);
+    } finally {
+      connection.close();
     }
-  } catch (err) {
-    reject(err);
-  } finally {
-    connection.close();
-  }
-});
+  },
+);
 
-/**
- * @summary Return a specific pet by unique ID
- * @function
- * @param {string} osuID OSU ID
- * @returns {Promise} Promise object represents a specific pet
- */
-const getAccountBalanceById = osuID => new Promise(async (resolve, reject) => {
-  const connection = await getConnection();
-  try {
-    const { rows } = await connection.execute(contrib.getAccountBalanceByID(), [osuID]);
-    const [row] = rows;
-    if (_.isEmpty(row)) {
-      resolve(undefined);
-    } else {
-      const serializedAccountBalance = SerializedAccountBalance(row, osuID);
-      resolve(serializedAccountBalance);
-    }
-  } catch (err) {
-    reject(err);
-  } finally {
-    connection.close();
-  }
-});
+const getGPAById = osuID => getResourceById(
+  osuID,
+  contrib.getGPAById(),
+  studentsSerializer.serializeGPA,
+  false,
+);
 
-/**
- * @summary Return a specific pet by unique ID
- * @function
- * @param {string} osuID OSU ID
- * @returns {Promise} Promise object represents a specific pet
- */
-const getTransactionsById = osuID => new Promise(async (resolve, reject) => {
-  const connection = await getConnection();
-  try {
-    const { rows } = await connection.execute(contrib.getAccountTransactionsByID(), [osuID]);
-    if (_.isEmpty(rows)) {
-      resolve(undefined);
-    } else {
-      const serializedTransactions = SerializedTransactions(rows, osuID);
-      resolve(serializedTransactions);
-    }
-  } catch (err) {
-    reject(err);
-  } finally {
-    connection.close();
-  }
-});
+const getAccountBalanceById = osuID => getResourceById(
+  osuID,
+  contrib.getAccountBalanceById(),
+  studentsSerializer.serializeAccountBalance,
+  true,
+);
 
-module.exports = { getGPAsById, getAccountBalanceById, getTransactionsById };
+const getAccountTransactionsById = osuID => getResourceById(
+  osuID,
+  contrib.getAccountTransactionsById(),
+  studentsSerializer.serializeAccountTransactions,
+  false,
+);
+
+module.exports = { getGPAById, getAccountBalanceById, getAccountTransactionsById };

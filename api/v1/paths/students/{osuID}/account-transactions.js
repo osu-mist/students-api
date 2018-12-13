@@ -4,13 +4,10 @@ const { errorBuilder, errorHandler } = appRoot.require('errors/errors');
 const { openapi: { paths } } = appRoot.require('utils/load-openapi');
 const studentsDAO = require('../../../db/oracledb/students-dao');
 
-/**
- * @summary Get student by unique osuID
- */
 const get = async (req, res) => {
   try {
     const { osuID } = req.params;
-    const result = await studentsDAO.getTransactionsById(osuID);
+    const result = await studentsDAO.getAccountTransactionsById(osuID);
     if (!result) {
       errorBuilder(res, 404, 'A student with the OSU ID was not found.');
     } else {

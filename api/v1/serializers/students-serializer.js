@@ -7,23 +7,23 @@ const { serializerOptions } = appRoot.require('utils/jsonapi');
 const { openapi } = appRoot.require('utils/load-openapi');
 const { idSelfLink, subresourceLink } = appRoot.require('utils/uri-builder');
 
-/**
- * @summary Serializer petResources to JSON API
- * @function
- * @param {[Object]} rawPets Raw data rows from data source
- * @param {Object} query Query parameters
- * @returns {Object} Serialized petResources object
- */
-const SerializedGPAs = (rawGPALevels, osuID) => {
+// const getOptions = (ResourceKeys, ResourcePath) => {
+//   const studentSelfLink = idSelfLink(osuID, 'students');
+//   const options = {
+//     serializerArgs: {
+//       identifierField: 'osuID',
+//       resourceKeys: ResourceKeys,
+//     },
+//     topLevelSelfLink: subresourceLink(studentSelfLink, ResourcePath);
+//   };
+//   return options;
+// };
+
+const serializeGPA = (rawGPALevels, osuID) => {
   const ResourceProp = openapi.definitions.GradePointAverageResult.properties.data.properties;
   const ResourceType = ResourceProp.type.enum[0];
   const ResourceKeys = _.keys(ResourceProp.attributes.properties);
   const ResourcePath = 'gpa';
-
-  const serializerArgs = {
-    identifierField: 'osuID',
-    resourceKeys: ResourceKeys,
-  };
 
   const rawGPAs = {
     osuID,
@@ -33,56 +33,50 @@ const SerializedGPAs = (rawGPALevels, osuID) => {
   const studentSelfLink = idSelfLink(osuID, 'students');
   const topLevelSelfLink = subresourceLink(studentSelfLink, ResourcePath);
 
+  const serializerArgs = {
+    identifierField: 'osuID',
+    resourceKeys: ResourceKeys,
+    resourcePath: 'student',
+    topLevelSelfLink,
+    subresourcePath: ResourcePath,
+  };
+
   return new JSONAPISerializer(
     ResourceType,
-    serializerOptions(serializerArgs, 'students', topLevelSelfLink, ResourcePath),
+    serializerOptions(serializerArgs),
   ).serialize(rawGPAs);
 };
 
-/**
- * @summary Serializer petResources to JSON API
- * @function
- * @param {[Object]} rawPets Raw data rows from data source
- * @param {Object} query Query parameters
- * @returns {Object} Serialized petResources object
- */
-const SerializedAccountBalance = (rawAccountBalance, osuID) => {
+const serializeAccountBalance = (rawAccountBalance, osuID) => {
   const ResourceProp = openapi.definitions.AccountBalanceResult.properties.data.properties;
   const ResourceType = ResourceProp.type.enum[0];
   const ResourceKeys = _.keys(ResourceProp.attributes.properties);
   const ResourcePath = 'account-balance';
 
-  const serializerArgs = {
-    identifierField: 'osuID',
-    resourceKeys: ResourceKeys,
-  };
+  rawAccountBalance.currentBalance = parseFloat(rawAccountBalance.currentBalance);
 
   const studentSelfLink = idSelfLink(osuID, 'students');
   const topLevelSelfLink = subresourceLink(studentSelfLink, ResourcePath);
 
+  const serializerArgs = {
+    identifierField: 'osuID',
+    resourceKeys: ResourceKeys,
+    resourcePath: 'student',
+    topLevelSelfLink,
+    subresourcePath: ResourcePath,
+  };
+
   return new JSONAPISerializer(
     ResourceType,
-    serializerOptions(serializerArgs, 'students', topLevelSelfLink, ResourcePath),
+    serializerOptions(serializerArgs),
   ).serialize(rawAccountBalance);
 };
 
-/**
- * @summary Serializer petResources to JSON API
- * @function
- * @param {[Object]} rawPets Raw data rows from data source
- * @param {Object} query Query parameters
- * @returns {Object} Serialized petResources object
- */
-const SerializedTransactions = (rawTransactions, osuID) => {
+const serializeAccountTransactions = (rawTransactions, osuID) => {
   const ResourceProp = openapi.definitions.AccountTransactionsResult.properties.data.properties;
   const ResourceType = ResourceProp.type.enum[0];
   const ResourceKeys = _.keys(ResourceProp.attributes.properties);
   const ResourcePath = 'account-transactions';
-
-  const serializerArgs = {
-    identifierField: 'osuID',
-    resourceKeys: ResourceKeys,
-  };
 
   _.forEach(rawTransactions, (rawTransaction) => {
     const rawEntryDate = rawTransaction.entryDate;
@@ -98,10 +92,18 @@ const SerializedTransactions = (rawTransactions, osuID) => {
   const studentSelfLink = idSelfLink(osuID, 'students');
   const topLevelSelfLink = subresourceLink(studentSelfLink, ResourcePath);
 
+  const serializerArgs = {
+    identifierField: 'osuID',
+    resourceKeys: ResourceKeys,
+    resourcePath: 'student',
+    topLevelSelfLink,
+    subresourcePath: ResourcePath,
+  };
+
   return new JSONAPISerializer(
     ResourceType,
-    serializerOptions(serializerArgs, 'students', topLevelSelfLink, ResourcePath),
+    serializerOptions(serializerArgs),
   ).serialize(rawAccountTransactions);
 };
 
-module.exports = { SerializedGPAs, SerializedAccountBalance, SerializedTransactions };
+module.exports = { serializeGPA, serializeAccountBalance, serializeAccountTransactions };
