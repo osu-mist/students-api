@@ -11,7 +11,7 @@ const getSerializerArgs = (osuID, resultField, resourcePath, isSingleton) => {
   const resourceData = openapi.definitions[resultField].properties.data;
   const resourceProp = isSingleton ? resourceData.properties : resourceData.items.properties;
   const serializerArgs = {
-    identifierField: 'osuID',
+    identifierField: 'identifierField',
     resourceKeys: _.keys(resourceProp.attributes.properties),
     resourcePath: 'student',
     topLevelSelfLink: subresourceLink(idSelfLink(osuID, 'students'), resourcePath),
@@ -23,6 +23,7 @@ const getSerializerArgs = (osuID, resultField, resourcePath, isSingleton) => {
 
 const serializeGPA = (rawGPALevels, osuID) => {
   const serializerArgs = getSerializerArgs(osuID, 'GradePointAverageResult', 'gpa', true);
+  const identifierField = osuID;
 
   _.forEach(rawGPALevels, (rawGPALevel) => {
     const floatFields = [
@@ -32,7 +33,7 @@ const serializeGPA = (rawGPALevels, osuID) => {
       rawGPALevel[floatField] = parseFloat(rawGPALevel[floatField]);
     });
   });
-  const rawGPAs = { osuID, gpaLevels: rawGPALevels };
+  const rawGPAs = { identifierField, gpaLevels: rawGPALevels };
 
   return new JSONAPISerializer(
     serializerArgs.resourceType,
@@ -53,6 +54,7 @@ const serializeAccountBalance = (rawAccountBalance, osuID) => {
 
 const serializeAccountTransactions = (rawTransactions, osuID) => {
   const serializerArgs = getSerializerArgs(osuID, 'AccountTransactionsResult', 'account-transactions', true);
+  const identifierField = osuID;
 
   _.forEach(rawTransactions, (rawTransaction) => {
     const rawEntryDate = rawTransaction.entryDate;
@@ -60,7 +62,7 @@ const serializeAccountTransactions = (rawTransactions, osuID) => {
     rawTransaction.entryDate = moment.tz(rawEntryDate, 'PST8PDT').utc().format();
   });
 
-  const rawAccountTransactions = { osuID, transactions: rawTransactions };
+  const rawAccountTransactions = { identifierField, transactions: rawTransactions };
 
   return new JSONAPISerializer(
     serializerArgs.resourceType,
@@ -90,6 +92,7 @@ const serializeAcademicStatus = (rawAcademicStatus, osuID) => {
 
   _.forEach(rawAcademicStatus, (rawRow) => {
     rawDataByTerm[rawRow.term] = {
+      identifierField: `${osuID}-${rawRow.term}`,
       academicStanding: rawRow.academicStanding,
       term: rawRow.term,
       termDescription: rawRow.termDescription,
