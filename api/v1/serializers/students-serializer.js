@@ -7,8 +7,9 @@ const { serializerOptions } = appRoot.require('utils/jsonapi');
 const { openapi } = appRoot.require('utils/load-openapi');
 const { idSelfLink, subresourceLink } = appRoot.require('utils/uri-builder');
 
-const getSerializerArgs = (osuID, resultField, resourcePath) => {
-  const resourceProp = openapi.definitions[resultField].properties.data.properties;
+const getSerializerArgs = (osuID, resultField, resourcePath, isSingleton) => {
+  const resourceData = openapi.definitions[resultField].properties.data;
+  const resourceProp = isSingleton ? resourceData.properties : resourceData.items.properties;
   const serializerArgs = {
     identifierField: 'osuID',
     resourceKeys: _.keys(resourceProp.attributes.properties),
@@ -21,7 +22,7 @@ const getSerializerArgs = (osuID, resultField, resourcePath) => {
 };
 
 const serializeGPA = (rawGPALevels, osuID) => {
-  const serializerArgs = getSerializerArgs(osuID, 'GradePointAverageResult', 'gpa');
+  const serializerArgs = getSerializerArgs(osuID, 'GradePointAverageResult', 'gpa', true);
 
   _.forEach(rawGPALevels, (rawGPALevel) => {
     const floatFields = [
@@ -40,7 +41,7 @@ const serializeGPA = (rawGPALevels, osuID) => {
 };
 
 const serializeAccountBalance = (rawAccountBalance, osuID) => {
-  const serializerArgs = getSerializerArgs(osuID, 'AccountBalanceResult', 'account-balance');
+  const serializerArgs = getSerializerArgs(osuID, 'AccountBalanceResult', 'account-balance', true);
 
   rawAccountBalance.currentBalance = parseFloat(rawAccountBalance.currentBalance);
 
@@ -51,7 +52,7 @@ const serializeAccountBalance = (rawAccountBalance, osuID) => {
 };
 
 const serializeAccountTransactions = (rawTransactions, osuID) => {
-  const serializerArgs = getSerializerArgs(osuID, 'AccountTransactionsResult', 'account-transactions');
+  const serializerArgs = getSerializerArgs(osuID, 'AccountTransactionsResult', 'account-transactions', true);
 
   _.forEach(rawTransactions, (rawTransaction) => {
     const rawEntryDate = rawTransaction.entryDate;
@@ -67,4 +68,49 @@ const serializeAccountTransactions = (rawTransactions, osuID) => {
   ).serialize(rawAccountTransactions);
 };
 
-module.exports = { serializeGPA, serializeAccountBalance, serializeAccountTransactions };
+const serializeAcademicStatus = (rawAcademicStatus, osuID) => {
+  const serializerArgs = getSerializerArgs(osuID, 'AcademicStatusResult', 'academic-status', false);
+
+  const rawDataByTerm = {};
+  const termGPA = {};
+
+  _.forEach(rawAcademicStatus, (rawRow) => {
+    const rawGPA = {
+      gpa: rawRow.gpa,
+      gpaCreditHours: rawRow.gpaCreditHours,
+      gpaType: rawRow.gpaType,
+      creditHoursAttempted: rawRow.creditHoursAttempted,
+      creditHoursEarned: rawRow.creditHoursEarned,
+      creditHoursPassed: rawRow.creditHoursPassed,
+      level: rawRow.level,
+      qualityPoints: rawRow.qualityPoints,
+    };
+    termGPA[rawRow.term] = _.defaultTo(termGPA[rawRow.term], []).concat(rawGPA);
+  });
+
+  _.forEach(rawAcademicStatus, (rawRow) => {
+    rawDataByTerm[rawRow.term] = {
+      academicStanding: rawRow.academicStanding,
+      term: rawRow.term,
+      termDescription: rawRow.termDescription,
+      gpa: termGPA[rawRow.term],
+    };
+  });
+
+  const newRawAcademicStatus = [];
+  _.forEach(rawDataByTerm, (rawData) => {
+    newRawAcademicStatus.push(rawData);
+  });
+
+  return new JSONAPISerializer(
+    serializerArgs.resourceType,
+    serializerOptions(serializerArgs),
+  ).serialize(newRawAcademicStatus);
+};
+
+module.exports = {
+  serializeGPA,
+  serializeAccountBalance,
+  serializeAccountTransactions,
+  serializeAcademicStatus,
+};

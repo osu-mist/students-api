@@ -1,7 +1,7 @@
 const appRoot = require('app-root-path');
 const _ = require('lodash');
 
-const contrib = appRoot.require('api/v1/db/oracledb/contrib/contrib');
+const { contrib } = appRoot.require('api/v1/db/oracledb/contrib/contrib');
 const { getConnection } = appRoot.require('api/v1/db/oracledb/connection');
 const studentsSerializer = require('../../serializers/students-serializer');
 
@@ -56,4 +56,16 @@ const getAccountTransactionsById = osuID => getResourceById(
   false,
 );
 
-module.exports = { getGPAById, getAccountBalanceById, getAccountTransactionsById };
+const getAcademicStatusById = osuID => getResourceById(
+  osuID,
+  contrib.getAcademicStatusById(),
+  studentsSerializer.serializeAcademicStatus,
+  false,
+);
+
+module.exports = {
+  getGPAById,
+  getAccountBalanceById,
+  getAccountTransactionsById,
+  getAcademicStatusById,
+};
