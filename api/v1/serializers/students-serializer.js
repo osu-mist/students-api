@@ -77,11 +77,11 @@ const serializeAcademicStatus = (rawAcademicStatus, osuID) => {
   _.forEach(rawAcademicStatus, (rawRow) => {
     const rawGPA = {
       gpa: rawRow.gpa,
-      gpaCreditHours: rawRow.gpaCreditHours,
+      gpaCreditHours: parseFloat(rawRow.gpaCreditHours),
       gpaType: rawRow.gpaType,
-      creditHoursAttempted: rawRow.creditHoursAttempted,
-      creditHoursEarned: rawRow.creditHoursEarned,
-      creditHoursPassed: rawRow.creditHoursPassed,
+      creditHoursAttempted: parseFloat(rawRow.creditHoursAttempted),
+      creditHoursEarned: parseFloat(rawRow.creditHoursEarned),
+      creditHoursPassed: parseFloat(rawRow.creditHoursPassed),
       level: rawRow.level,
       qualityPoints: rawRow.qualityPoints,
     };
