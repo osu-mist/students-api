@@ -13,13 +13,15 @@ const studentsSerializer = require('../../serializers/students-serializer');
  * @param {string} sql The SQL statement that is executed
  * @param {function} serializer Resource serializer function
  * @param {boolean} isSingleton A Boolean value represents the resource should be singleton or not
+ * @param {[string]} filters An array of filters by order
  * @returns {Promise} Promise object represents serialized resource(s)
  */
-const getResourceById = (id, sql, serializer, isSingleton) => new Promise(
+const getResourceById = (id, sql, serializer, isSingleton, filters) => new Promise(
   async (resolve, reject) => {
     const connection = await getConnection();
     try {
-      const { rows } = await connection.execute(sql, [id]);
+      const sqlParams = filters ? [id].concat(filters) : [id];
+      const { rows } = await connection.execute(sql, sqlParams);
       if (_.isEmpty(rows)) {
         resolve(undefined);
       } else if (isSingleton && rows.length > 1) {
@@ -57,11 +59,12 @@ const getAccountTransactionsById = osuID => getResourceById(
   false,
 );
 
-const getAcademicStatusById = osuID => getResourceById(
+const getAcademicStatusById = (osuID, term) => getResourceById(
   osuID,
-  contrib.getAcademicStatusById(),
+  contrib.getAcademicStatusById(term),
   studentsSerializer.serializeAcademicStatus,
   false,
+  term ? [term] : undefined,
 );
 
 module.exports = {

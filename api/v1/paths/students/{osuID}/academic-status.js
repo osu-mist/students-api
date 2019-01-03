@@ -8,11 +8,18 @@ const studentsDAO = require('../../../db/oracledb/students-dao');
 const get = async (req, res) => {
   try {
     const { osuID } = req.params;
-    const result = await studentsDAO.getAcademicStatusById(osuID);
-    if (!result) {
-      errorBuilder(res, 404, 'A student with the OSU ID was not found.');
+    const { term } = req.query;
+    const termPattern = /^\d{4}0[0-3]{1}/;
+
+    if (term && !termPattern.test(term)) {
+      errorBuilder(res, 400, ['Term is invalid']);
     } else {
-      res.send(result);
+      const result = await studentsDAO.getAcademicStatusById(osuID, term);
+      if (!result) {
+        errorBuilder(res, 404, 'A student with the OSU ID was not found.');
+      } else {
+        res.send(result);
+      }
     }
   } catch (err) {
     errorHandler(res, err);
