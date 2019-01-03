@@ -67,9 +67,17 @@ const getAcademicStatusById = (osuID, term) => getResourceById(
   term ? [term] : undefined,
 );
 
+const getClassificationById = osuID => getResourceById(
+  osuID,
+  contrib.getClassificationById(),
+  studentsSerializer.serializeClassification,
+  false,
+);
+
 module.exports = {
   getGPAById,
   getAccountBalanceById,
   getAccountTransactionsById,
   getAcademicStatusById,
+  getClassificationById,
 };

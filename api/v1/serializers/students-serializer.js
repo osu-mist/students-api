@@ -111,9 +111,19 @@ const serializeAcademicStatus = (rawAcademicStatus, osuID) => {
   ).serialize(newRawAcademicStatus);
 };
 
+const serializeClassification = (rawclassification, osuID) => {
+  const serializerArgs = getSerializerArgs(osuID, 'ClassificationResult', 'classification', true);
+
+  return new JSONAPISerializer(
+    serializerArgs.resourceType,
+    serializerOptions(serializerArgs),
+  ).serialize(rawclassification);
+};
+
 module.exports = {
   serializeGPA,
   serializeAccountBalance,
   serializeAccountTransactions,
   serializeAcademicStatus,
+  serializeClassification,
 };
