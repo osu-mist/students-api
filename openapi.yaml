@@ -528,12 +528,6 @@ definitions:
                   description: Letter grade representing the student's final grade for the course.
                   type: string
                   example: 'A-'
-                gradeAcademicHistoryFinal:
-                  description: >
-                    Letter grade representing the student's final grade as recorded in their academic histroy.
-                    This could differ from gradeFinal for a course that was taken on a Satisfactory/Unsatisfactory grading scheme.
-                  type: string
-                  example: 'A-'
                 courseSubject:
                   description: Abbreviated course subject.
                   type: string

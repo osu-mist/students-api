@@ -120,10 +120,20 @@ const serializeClassification = (rawclassification, osuID) => {
   ).serialize(rawclassification);
 };
 
+const serializeGrades = (rawGrades, osuID) => {
+  const serializerArgs = getSerializerArgs(osuID, 'GradesResult', 'grades', false);
+
+  return new JSONAPISerializer(
+    serializerArgs.resourceType,
+    serializerOptions(serializerArgs),
+  ).serialize(rawGrades);
+};
+
 module.exports = {
   serializeGPA,
   serializeAccountBalance,
   serializeAccountTransactions,
   serializeAcademicStatus,
   serializeClassification,
+  serializeGrades,
 };
