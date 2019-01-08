@@ -74,11 +74,12 @@ const getClassificationById = osuID => getResourceById(
   false,
 );
 
-const getGradesById = osuID => getResourceById(
+const getGradesById = (osuID, term) => getResourceById(
   osuID,
-  contrib.getGradesById(),
+  contrib.getGradesById(term),
   studentsSerializer.serializeGrades,
   false,
+  term ? [term] : undefined,
 );
 
 module.exports = {

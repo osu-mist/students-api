@@ -9,7 +9,7 @@ const get = async (req, res) => {
   try {
     const { osuID } = req.params;
     const { term } = req.query;
-    const termPattern = /^\d{4}0[0-3]{1}/;
+    const termPattern = /^\d{4}0[0-3]{1}$/;
 
     if (term && !termPattern.test(term)) {
       errorBuilder(res, 400, ['Term is invalid']);
