@@ -13,20 +13,21 @@ const studentsSerializer = require('../../serializers/students-serializer');
  * @param {string} sql The SQL statement that is executed
  * @param {function} serializer Resource serializer function
  * @param {boolean} isSingleton A Boolean value represents the resource should be singleton or not
- * @param {[string]} filters An array of filters by order
+ * @param {Object} filters A key-value pair filters object
  * @returns {Promise} Promise object represents serialized resource(s)
  */
 const getResourceById = (id, sql, serializer, isSingleton, filters) => new Promise(
   async (resolve, reject) => {
     const connection = await getConnection();
     try {
-      const sqlParams = filters ? [id].concat(filters) : [id];
-      const { rows } = await connection.execute(sql, sqlParams);
+      // const sqlParams = filters ? [id].concat(filters) : [id];
+      let { rows } = await connection.execute(sql, [id]);
       if (_.isEmpty(rows)) {
         resolve(undefined);
       } else if (isSingleton && rows.length > 1) {
         reject(new Error('Expect a single object but got multiple results.'));
       } else {
+        rows = _.filter(rows, filters);
         const serializedResource = serializer(isSingleton ? rows[0] : rows, id);
         resolve(serializedResource);
       }
@@ -61,10 +62,10 @@ const getAccountTransactionsById = osuID => getResourceById(
 
 const getAcademicStatusById = (osuID, term) => getResourceById(
   osuID,
-  contrib.getAcademicStatusById(term),
+  contrib.getAcademicStatusById(),
   studentsSerializer.serializeAcademicStatus,
   false,
-  term ? [term] : undefined,
+  term ? { term } : {},
 );
 
 const getClassificationById = osuID => getResourceById(
@@ -76,10 +77,10 @@ const getClassificationById = osuID => getResourceById(
 
 const getGradesById = (osuID, term) => getResourceById(
   osuID,
-  contrib.getGradesById(term),
+  contrib.getGradesById(),
   studentsSerializer.serializeGrades,
   false,
-  term ? [term] : undefined,
+  term ? { term } : {},
 );
 
 module.exports = {

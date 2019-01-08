@@ -15,7 +15,7 @@ const get = async (req, res) => {
       errorBuilder(res, 400, ['Term is invalid']);
     } else {
       const result = await studentsDAO.getAcademicStatusById(osuID, term);
-      if (!result) {
+      if (result === undefined) {
         errorBuilder(res, 404, 'A student with the OSU ID was not found.');
       } else {
         res.send(result);
