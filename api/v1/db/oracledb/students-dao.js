@@ -20,7 +20,6 @@ const getResourceById = (id, sql, serializer, isSingleton, filters) => new Promi
   async (resolve, reject) => {
     const connection = await getConnection();
     try {
-      // const sqlParams = filters ? [id].concat(filters) : [id];
       let { rows } = await connection.execute(sql, [id]);
       if (_.isEmpty(rows)) {
         resolve(undefined);
