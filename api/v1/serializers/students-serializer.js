@@ -15,7 +15,7 @@ const getSerializerArgs = (osuID, resultField, resourcePath, isSingleton) => {
     resourceKeys: _.keys(resourceProp.attributes.properties),
     resourcePath: 'student',
     topLevelSelfLink: subresourceLink(idSelfLink(osuID, 'students'), resourcePath),
-    subresourcePath: resourcePath,
+    enableDataLinks: false,
     resourceType: resourceProp.type.enum[0],
   };
   return serializerArgs;
@@ -122,6 +122,10 @@ const serializeClassification = (rawclassification, osuID) => {
 
 const serializeGrades = (rawGrades, osuID) => {
   const serializerArgs = getSerializerArgs(osuID, 'GradesResult', 'grades', false);
+
+  _.forEach(rawGrades, (rawGrade) => {
+    rawGrade.creditHours = parseFloat(rawGrade.creditHours);
+  });
 
   return new JSONAPISerializer(
     serializerArgs.resourceType,
