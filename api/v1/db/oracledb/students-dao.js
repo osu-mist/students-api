@@ -82,6 +82,14 @@ const getGradesById = (osuID, term) => getResourceById(
   term ? { term } : {},
 );
 
+const getClassScheduleById = (osuID, term) => getResourceById(
+  osuID,
+  contrib.getClassScheduleById(),
+  studentsSerializer.serializeClassSchedule,
+  false,
+  term ? { term } : {},
+);
+
 module.exports = {
   getGPAById,
   getAccountBalanceById,
@@ -89,4 +97,5 @@ module.exports = {
   getAcademicStatusById,
   getClassificationById,
   getGradesById,
+  getClassScheduleById,
 };

@@ -728,6 +728,7 @@ definitions:
                       scheduleType:
                         description: |
                           Type of schedule for this given meeting type.
+                          A: Lecture
                           B: Discussion
                           C: Recitation
                           D: Laboratory
@@ -738,7 +739,6 @@ definitions:
                           I: Experimental
                           J: Internship
                           K: Streaming Media
-                          A: Lecture
                           L: Tutorial
                           M: Practicum
                           N: Reading and Conference
@@ -760,6 +760,10 @@ definitions:
                         type: string
                         example: 'A'
                         enum: [B, C, D, E, F, G, H, I, J, K, A, L, M, N, O, P , Q, R, S, T, U, W, Y, Z, V, X, MID, FIL, HYB]
+                      scheduleDescription:
+                        description: Human readable schedule type for the course (agnostic of meeting times).
+                        type: string
+                        example: 'Lecture'
                       weeklySchedule:
                         description: |
                           Array of day abbreviations to represent which days of the week this meeting time occurs on.

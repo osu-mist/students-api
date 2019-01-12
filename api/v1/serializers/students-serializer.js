@@ -21,6 +21,15 @@ const getSerializerArgs = (osuID, resultField, resourcePath, isSingleton) => {
   return serializerArgs;
 };
 
+const uniqConcat = (array, newItem) => _.uniqWith(array.concat(newItem), _.isEqual);
+
+const fourDigitToTime = (string) => {
+  if (string.length !== 4) {
+    return 'Incorrect time format';
+  }
+  return `${string.substring(0, 2)}:${string.substring(2, 4)}:00`;
+};
+
 const serializeGPA = (rawGPALevels, osuID) => {
   const serializerArgs = getSerializerArgs(osuID, 'GradePointAverageResult', 'gpa', true);
   const identifierField = osuID;
@@ -111,13 +120,13 @@ const serializeAcademicStatus = (rawAcademicStatus, osuID) => {
   ).serialize(newRawAcademicStatus);
 };
 
-const serializeClassification = (rawclassification, osuID) => {
+const serializeClassification = (rawClassification, osuID) => {
   const serializerArgs = getSerializerArgs(osuID, 'ClassificationResult', 'classification', true);
 
   return new JSONAPISerializer(
     serializerArgs.resourceType,
     serializerOptions(serializerArgs),
-  ).serialize(rawclassification);
+  ).serialize(rawClassification);
 };
 
 const serializeGrades = (rawGrades, osuID) => {
@@ -133,6 +142,80 @@ const serializeGrades = (rawGrades, osuID) => {
   ).serialize(rawGrades);
 };
 
+const serializeClassSchedule = (rawClassSchedule, osuID) => {
+  const serializerArgs = getSerializerArgs(osuID, 'ClassScheduleResult', 'class-schedule', false);
+  const rawDataByTermAndCRN = {};
+
+  _.forEach(rawClassSchedule, (rawRow) => {
+    const id = `${osuID}-${rawRow.term}-${rawRow.courseReferenceNumber}`;
+
+    rawDataByTermAndCRN[id] = rawDataByTermAndCRN[id] || { faculty: [], meetingTimes: [] };
+
+    const faculty = {
+      osuID: rawRow.facultyOSUID,
+      name: rawRow.facultyName,
+      email: rawRow.facultyEmail,
+      primary: rawRow.facultyPrimary === 'Y',
+    };
+
+    const meetingTime = {
+      beginDate: rawRow.beginDate,
+      beginTime: fourDigitToTime(rawRow.beginTime),
+      endDate: rawRow.endDate,
+      endTime: fourDigitToTime(rawRow.endTime),
+      room: rawRow.room,
+      building: rawRow.building,
+      buildingDescription: rawRow.buildingDescription,
+      campus: rawRow.campus,
+      hoursPerWeek: parseFloat(rawRow.hoursPerWeek),
+      creditHourSession: parseFloat(rawRow.creditHourSession),
+      scheduleType: rawRow.meetingScheduleType,
+      scheduleDescription: rawRow.meetingScheduleDescription,
+      weeklySchedule: _.without([
+        rawRow.monday ? 'M' : null,
+        rawRow.tuesday ? 'T' : null,
+        rawRow.wednesday ? 'W' : null,
+        rawRow.thursday ? 'Th' : null,
+        rawRow.friday ? 'F' : null,
+        rawRow.saturday ? 'Sa' : null,
+        rawRow.sunday ? 'Su' : null,
+      ], null),
+    };
+
+    rawDataByTermAndCRN[id] = {
+      identifierField: id,
+      academicYear: rawRow.academicYear,
+      academicYearDescription: rawRow.academicYearDescription,
+      courseReferenceNumber: rawRow.courseReferenceNumber,
+      courseSubject: rawRow.courseSubject,
+      courseSubjectDescription: rawRow.courseSubjectDescription,
+      courseNumber: rawRow.courseNumber,
+      courseTitle: rawRow.courseTitleLong || rawRow.courseTitleShort,
+      sectionNumber: rawRow.sectionNumber,
+      term: rawRow.term,
+      termDescription: rawRow.termDescription,
+      scheduleDescription: rawRow.scheduleDescription,
+      scheduleType: rawRow.scheduleType,
+      creditHours: parseFloat(rawRow.creditHours),
+      registrationStatus: rawRow.registrationStatus,
+      gradingMode: rawRow.gradingMode,
+      continuingEducation: rawRow.continuingEducation === 'Y',
+      faculty: uniqConcat(rawDataByTermAndCRN[id].faculty, faculty),
+      meetingTimes: uniqConcat(rawDataByTermAndCRN[id].meetingTimes, meetingTime),
+    };
+  });
+
+  const newClassSchedule = [];
+  _.forEach(rawDataByTermAndCRN, (rawData) => {
+    newClassSchedule.push(rawData);
+  });
+
+  return new JSONAPISerializer(
+    serializerArgs.resourceType,
+    serializerOptions(serializerArgs),
+  ).serialize(newClassSchedule);
+};
+
 module.exports = {
   serializeGPA,
   serializeAccountBalance,
@@ -140,4 +223,5 @@ module.exports = {
   serializeAcademicStatus,
   serializeClassification,
   serializeGrades,
+  serializeClassSchedule,
 };
