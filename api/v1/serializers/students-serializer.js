@@ -216,6 +216,33 @@ const serializeClassSchedule = (rawClassSchedule, osuID) => {
   ).serialize(newClassSchedule);
 };
 
+const serializeHolds = (rawHolds, osuID) => {
+  const serializerArgs = getSerializerArgs(osuID, 'HoldsResult', 'holds', true);
+  const identifierField = osuID;
+
+  _.forEach(rawHolds, (rawHold) => {
+    const processesAffectedKeys = [
+      'registration',
+      'transcript',
+      'graduation',
+      'grades',
+      'accountsReceivable',
+      'enrollmentVerification',
+      'application',
+      'compliance',
+    ];
+    rawHold.processesAffected = _.without(processesAffectedKeys.map(key => rawHold[key]), null);
+    _.forEach(processesAffectedKeys, key => delete rawHold[key]);
+  });
+
+  const holds = { identifierField, holds: rawHolds };
+
+  return new JSONAPISerializer(
+    serializerArgs.resourceType,
+    serializerOptions(serializerArgs),
+  ).serialize(holds);
+};
+
 module.exports = {
   serializeGPA,
   serializeAccountBalance,
@@ -224,4 +251,5 @@ module.exports = {
   serializeClassification,
   serializeGrades,
   serializeClassSchedule,
+  serializeHolds,
 };
