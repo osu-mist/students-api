@@ -243,6 +243,28 @@ const serializeHolds = (rawHolds, osuID) => {
   ).serialize(holds);
 };
 
+const serializeWorkStudy = (rawAwards, osuID) => {
+  const serializerArgs = getSerializerArgs(osuID, 'WorkStudyResult', 'work-study', true);
+  const identifierField = osuID;
+
+  _.forEach(rawAwards, (rawAward) => {
+    const floatFields = [
+      'offerAmount', 'acceptedAmount', 'paidAmount',
+    ];
+
+    _.forEach(floatFields, (floatField) => {
+      rawAward[floatField] = parseFloat(rawAward[floatField]);
+    });
+  });
+
+  const rawWorkStudy = { identifierField, awards: rawAwards };
+
+  return new JSONAPISerializer(
+    serializerArgs.resourceType,
+    serializerOptions(serializerArgs),
+  ).serialize(rawWorkStudy);
+};
+
 module.exports = {
   serializeGPA,
   serializeAccountBalance,
@@ -252,4 +274,5 @@ module.exports = {
   serializeGrades,
   serializeClassSchedule,
   serializeHolds,
+  serializeWorkStudy,
 };

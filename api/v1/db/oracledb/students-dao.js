@@ -97,6 +97,13 @@ const getHoldsById = osuID => getResourceById(
   false,
 );
 
+const getWorkStudyById = osuID => getResourceById(
+  osuID,
+  contrib.getAwardsById(),
+  studentsSerializer.serializeWorkStudy,
+  false,
+);
+
 module.exports = {
   getGPAById,
   getAccountBalanceById,
@@ -106,4 +113,5 @@ module.exports = {
   getGradesById,
   getClassScheduleById,
   getHoldsById,
+  getWorkStudyById,
 };
