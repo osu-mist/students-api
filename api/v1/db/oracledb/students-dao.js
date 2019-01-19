@@ -104,6 +104,14 @@ const getWorkStudyById = osuID => getResourceById(
   false,
 );
 
+const getDualEnrollmentById = (osuID, term) => getResourceById(
+  osuID,
+  contrib.getDualEnrollmentById(),
+  studentsSerializer.serializeDualEnrollment,
+  false,
+  term ? { term } : {},
+);
+
 module.exports = {
   getGPAById,
   getAccountBalanceById,
@@ -114,4 +122,5 @@ module.exports = {
   getClassScheduleById,
   getHoldsById,
   getWorkStudyById,
+  getDualEnrollmentById,
 };

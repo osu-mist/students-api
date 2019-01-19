@@ -19,6 +19,6 @@ const get = async (req, res) => {
   }
 };
 
-get.apiDoc = paths['/students/{osuID}/holds'].get;
+get.apiDoc = paths['/students/{osuID}/work-study'].get;
 
 module.exports = { get };

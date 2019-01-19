@@ -265,6 +265,19 @@ const serializeWorkStudy = (rawAwards, osuID) => {
   ).serialize(rawWorkStudy);
 };
 
+const serializeDualEnrollment = (rawDualEnrollment, osuID) => {
+  const serializerArgs = getSerializerArgs(osuID, 'DualEnrollmentResult', 'dual-enrollment', false);
+
+  _.forEach(rawDualEnrollment, (rawRow) => {
+    rawRow.creditHours = parseFloat(rawRow.creditHours);
+  });
+
+  return new JSONAPISerializer(
+    serializerArgs.resourceType,
+    serializerOptions(serializerArgs),
+  ).serialize(rawDualEnrollment);
+};
+
 module.exports = {
   serializeGPA,
   serializeAccountBalance,
@@ -275,4 +288,5 @@ module.exports = {
   serializeClassSchedule,
   serializeHolds,
   serializeWorkStudy,
+  serializeDualEnrollment,
 };
