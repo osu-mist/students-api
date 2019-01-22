@@ -21,6 +21,11 @@ const getSerializerArgs = (osuID, resultField, resourcePath, isSingleton) => {
   return serializerArgs;
 };
 
+const getJSONAPISerializer = (serializerArgs, rawRows) => new JSONAPISerializer(
+  serializerArgs.resourceType,
+  serializerOptions(serializerArgs),
+).serialize(rawRows);
+
 const uniqConcat = (array, newItem) => _.uniqWith(array.concat(newItem), _.isEqual);
 
 const fourDigitToTime = (string) => {
@@ -44,10 +49,7 @@ const serializeGPA = (rawGPALevels, osuID) => {
   });
   const rawGPAs = { identifierField, gpaLevels: rawGPALevels };
 
-  return new JSONAPISerializer(
-    serializerArgs.resourceType,
-    serializerOptions(serializerArgs),
-  ).serialize(rawGPAs);
+  return getJSONAPISerializer(serializerArgs, rawGPAs);
 };
 
 const serializeAccountBalance = (rawAccountBalance, osuID) => {
@@ -55,10 +57,7 @@ const serializeAccountBalance = (rawAccountBalance, osuID) => {
 
   rawAccountBalance.currentBalance = parseFloat(rawAccountBalance.currentBalance);
 
-  return new JSONAPISerializer(
-    serializerArgs.resourceType,
-    serializerOptions(serializerArgs),
-  ).serialize(rawAccountBalance);
+  return getJSONAPISerializer(serializerArgs, rawAccountBalance);
 };
 
 const serializeAccountTransactions = (rawTransactions, osuID) => {
@@ -73,10 +72,7 @@ const serializeAccountTransactions = (rawTransactions, osuID) => {
 
   const rawAccountTransactions = { identifierField, transactions: rawTransactions };
 
-  return new JSONAPISerializer(
-    serializerArgs.resourceType,
-    serializerOptions(serializerArgs),
-  ).serialize(rawAccountTransactions);
+  return getJSONAPISerializer(serializerArgs, rawAccountTransactions);
 };
 
 const serializeAcademicStatus = (rawAcademicStatus, osuID) => {
@@ -114,10 +110,7 @@ const serializeAcademicStatus = (rawAcademicStatus, osuID) => {
     newRawAcademicStatus.push(rawData);
   });
 
-  return new JSONAPISerializer(
-    serializerArgs.resourceType,
-    serializerOptions(serializerArgs),
-  ).serialize(newRawAcademicStatus);
+  return getJSONAPISerializer(serializerArgs, newRawAcademicStatus);
 };
 
 const serializeClassification = (rawClassification, osuID) => {
@@ -136,10 +129,7 @@ const serializeGrades = (rawGrades, osuID) => {
     rawGrade.creditHours = parseFloat(rawGrade.creditHours);
   });
 
-  return new JSONAPISerializer(
-    serializerArgs.resourceType,
-    serializerOptions(serializerArgs),
-  ).serialize(rawGrades);
+  return getJSONAPISerializer(serializerArgs, rawGrades);
 };
 
 const serializeClassSchedule = (rawClassSchedule, osuID) => {
@@ -210,10 +200,7 @@ const serializeClassSchedule = (rawClassSchedule, osuID) => {
     newClassSchedule.push(rawData);
   });
 
-  return new JSONAPISerializer(
-    serializerArgs.resourceType,
-    serializerOptions(serializerArgs),
-  ).serialize(newClassSchedule);
+  return getJSONAPISerializer(serializerArgs, newClassSchedule);
 };
 
 const serializeHolds = (rawHolds, osuID) => {
@@ -237,10 +224,7 @@ const serializeHolds = (rawHolds, osuID) => {
 
   const holds = { identifierField, holds: rawHolds };
 
-  return new JSONAPISerializer(
-    serializerArgs.resourceType,
-    serializerOptions(serializerArgs),
-  ).serialize(holds);
+  return getJSONAPISerializer(serializerArgs, holds);
 };
 
 const serializeWorkStudy = (rawAwards, osuID) => {
@@ -259,10 +243,7 @@ const serializeWorkStudy = (rawAwards, osuID) => {
 
   const rawWorkStudy = { identifierField, awards: rawAwards };
 
-  return new JSONAPISerializer(
-    serializerArgs.resourceType,
-    serializerOptions(serializerArgs),
-  ).serialize(rawWorkStudy);
+  return getJSONAPISerializer(serializerArgs, rawWorkStudy);
 };
 
 const serializeDualEnrollment = (rawDualEnrollment, osuID) => {
@@ -272,10 +253,7 @@ const serializeDualEnrollment = (rawDualEnrollment, osuID) => {
     rawRow.creditHours = parseFloat(rawRow.creditHours);
   });
 
-  return new JSONAPISerializer(
-    serializerArgs.resourceType,
-    serializerOptions(serializerArgs),
-  ).serialize(rawDualEnrollment);
+  return getJSONAPISerializer(serializerArgs, rawDualEnrollment);
 };
 
 module.exports = {
