@@ -1,10 +1,10 @@
 const appRoot = require('app-root-path');
 const _ = require('lodash');
 
+const studentsSerializer = require('../../serializers/students-serializer');
+
 const { contrib } = appRoot.require('api/v1/db/oracledb/contrib/contrib');
 const { getConnection } = appRoot.require('api/v1/db/oracledb/connection');
-
-const studentsSerializer = require('../../serializers/students-serializer');
 
 /**
  * @summary Return serialized resource(s) by unique ID
