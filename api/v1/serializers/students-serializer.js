@@ -42,7 +42,6 @@ const serializeJSONAPI = (serializerArgs, rawRows) => new JSONAPISerializer(
   serializerOptions(serializerArgs),
 ).serialize(rawRows);
 
-
 /**
  * @summary A helper function to convert a four digit string to time format
  * @function

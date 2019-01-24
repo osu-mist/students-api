@@ -1,6 +1,6 @@
-# Express API Skeleton ![version](https://img.shields.io/badge/version-v1-blue.svg) [![openapi](https://img.shields.io/badge/openapi-2.0-green.svg)](./openapi.yaml) ![node](https://img.shields.io/badge/node-10.13-brightgreen.svg)
+# Students API ![version](https://img.shields.io/badge/version-v1-blue.svg) [![openapi](https://img.shields.io/badge/openapi-2.0-green.svg)](./openapi.yaml) ![node](https://img.shields.io/badge/node-10.13-brightgreen.svg)
 
-Skeleton for Express APIs. API definition is contained in the [OpenAPI specification](./openapi.yaml).
+API to get student data.. API definition is contained in the [OpenAPI specification](./openapi.yaml).
 
 ## Getting Started
 
@@ -93,7 +93,7 @@ $ npm test
 1. Clone the skeleton:
 
     ```shell
-    $ git clone --origin skeleton git@github.com:osu-mist/express-api-skeleton.git <my-api>
+    $ git clone --origin skeleton git@github.com:osu-mist/express-api-skeleton.git students-api
     ```
 
 2. Rename project by modifying [package.json](./package.json).
@@ -233,8 +233,8 @@ The following instructions show you how to connect the API to an Oracle database
 
     ```Dockerfile
     # Copy folder to workspace
-    WORKDIR /usr/src/<my-api>
-    COPY . /usr/src/<my-api>
+    WORKDIR /usr/src/students-api
+    COPY . /usr/src/students-api
     ```
 
 2. If the API requires [node-oracledb](https://oracle.github.io/node-oracledb/) to connect to an Oracle database, download an [Oracle Instant Client 12.2 Basic Light zip (64 bits)](http://www.oracle.com/technetwork/topics/linuxx86-64soft-092277.html) and place into `./bin` folder. In addition, uncomment [the following code](Dockerfile#L11-L18) from the Dockerfile:
@@ -254,7 +254,7 @@ The following instructions show you how to connect the API to an Oracle database
 3. Build the docker image:
 
     ```shell
-    $ docker build -t <my-api> .
+    $ docker build -t students-api .
     ```
 
 4. Run the app in a container:
@@ -263,9 +263,9 @@ The following instructions show you how to connect the API to an Oracle database
     $ docker run -d \
                  -p 8080:8080 \
                  -p 8081:8081 \
-                 -v path/to/keytools/:/usr/src/<my-api>/keytools:ro \
-                 -v "$PWD"/config:/usr/src/<my-api>/config:ro \
-                 -v "$PWD"/logs:/usr/src/<my-api>/logs \
-                 --name <my-api> \
-                 <my-api>
+                 -v path/to/keytools/:/usr/src/students-api/keytools:ro \
+                 -v "$PWD"/config:/usr/src/students-api/config:ro \
+                 -v "$PWD"/logs:/usr/src/students-api/logs \
+                 --name students-api \
+                 students-api
     ```
