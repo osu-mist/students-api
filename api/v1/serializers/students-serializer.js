@@ -7,6 +7,15 @@ const { serializerOptions } = appRoot.require('utils/jsonapi');
 const { openapi } = appRoot.require('utils/load-openapi');
 const { idSelfLink, subresourceLink } = appRoot.require('utils/uri-builder');
 
+/**
+ * @summary The function to generate arguments for JSONAPI serializer
+ * @function
+ * @param {string} osuID 9 digits OSU ID
+ * @param {string} resultField result field from OpenAPI file which the serializer should refer to
+ * @param {string} resourcePath resource path name for generating top-level self-link
+ * @param {boolean} isSingleton a boolean value represents the resource is singleton or not
+ * @returns {Object} arguments for JSONAPI serializer
+ */
 const getSerializerArgs = (osuID, resultField, resourcePath, isSingleton) => {
   const resourceData = openapi.definitions[resultField].properties.data;
   const resourceProp = isSingleton ? resourceData.properties : resourceData.items.properties;
@@ -21,13 +30,25 @@ const getSerializerArgs = (osuID, resultField, resourcePath, isSingleton) => {
   return serializerArgs;
 };
 
-const getJSONAPISerializer = (serializerArgs, rawRows) => new JSONAPISerializer(
+/**
+ * @summary Serialize raw data by given serializer arguments
+ * @function
+ * @param {string} serializerArgs serializer arguments
+ * @param {string} rawRows raw data to be serialized
+ * @returns {Object} serialized data
+ */
+const serializeJSONAPI = (serializerArgs, rawRows) => new JSONAPISerializer(
   serializerArgs.resourceType,
   serializerOptions(serializerArgs),
 ).serialize(rawRows);
 
-const uniqConcat = (array, newItem) => _.uniqWith(array.concat(newItem), _.isEqual);
 
+/**
+ * @summary A helper function to convert a four digit string to time format
+ * @function
+ * @param {string} string 4 digits string represent time, e.g. 0900
+ * @returns {string} properly formatted time format, e.g. 09:00:00
+ */
 const fourDigitToTime = (string) => {
   if (string.length !== 4) {
     return 'Incorrect time format';
@@ -35,6 +56,10 @@ const fourDigitToTime = (string) => {
   return `${string.substring(0, 2)}:${string.substring(2, 4)}:00`;
 };
 
+/**
+ * @summary A function to serialize raw GPA data
+ * @function
+ */
 const serializeGPA = (rawGPALevels, osuID) => {
   const serializerArgs = getSerializerArgs(osuID, 'GradePointAverageResult', 'gpa', true);
   const identifierField = osuID;
@@ -49,17 +74,25 @@ const serializeGPA = (rawGPALevels, osuID) => {
   });
   const rawGPAs = { identifierField, gpaLevels: rawGPALevels };
 
-  return getJSONAPISerializer(serializerArgs, rawGPAs);
+  return serializeJSONAPI(serializerArgs, rawGPAs);
 };
 
+/**
+ * @summary A function to serialize raw account balance data
+ * @function
+ */
 const serializeAccountBalance = (rawAccountBalance, osuID) => {
   const serializerArgs = getSerializerArgs(osuID, 'AccountBalanceResult', 'account-balance', true);
 
   rawAccountBalance.currentBalance = parseFloat(rawAccountBalance.currentBalance);
 
-  return getJSONAPISerializer(serializerArgs, rawAccountBalance);
+  return serializeJSONAPI(serializerArgs, rawAccountBalance);
 };
 
+/**
+ * @summary A function to serialize raw account transactions data
+ * @function
+ */
 const serializeAccountTransactions = (rawTransactions, osuID) => {
   const serializerArgs = getSerializerArgs(osuID, 'AccountTransactionsResult', 'account-transactions', true);
   const identifierField = osuID;
@@ -72,9 +105,13 @@ const serializeAccountTransactions = (rawTransactions, osuID) => {
 
   const rawAccountTransactions = { identifierField, transactions: rawTransactions };
 
-  return getJSONAPISerializer(serializerArgs, rawAccountTransactions);
+  return serializeJSONAPI(serializerArgs, rawAccountTransactions);
 };
 
+/**
+ * @summary A function to serialize raw academic status data
+ * @function
+ */
 const serializeAcademicStatus = (rawAcademicStatus, osuID) => {
   const serializerArgs = getSerializerArgs(osuID, 'AcademicStatusResult', 'academic-status', false);
 
@@ -110,16 +147,17 @@ const serializeAcademicStatus = (rawAcademicStatus, osuID) => {
     newRawAcademicStatus.push(rawData);
   });
 
-  return getJSONAPISerializer(serializerArgs, newRawAcademicStatus);
+  return serializeJSONAPI(serializerArgs, newRawAcademicStatus);
 };
 
+/**
+ * @summary A function to serialize raw classification data
+ * @function
+ */
 const serializeClassification = (rawClassification, osuID) => {
   const serializerArgs = getSerializerArgs(osuID, 'ClassificationResult', 'classification', true);
 
-  return new JSONAPISerializer(
-    serializerArgs.resourceType,
-    serializerOptions(serializerArgs),
-  ).serialize(rawClassification);
+  return serializeJSONAPI(serializerArgs, rawClassification);
 };
 
 const serializeGrades = (rawGrades, osuID) => {
@@ -129,9 +167,13 @@ const serializeGrades = (rawGrades, osuID) => {
     rawGrade.creditHours = parseFloat(rawGrade.creditHours);
   });
 
-  return getJSONAPISerializer(serializerArgs, rawGrades);
+  return serializeJSONAPI(serializerArgs, rawGrades);
 };
 
+/**
+ * @summary A function to serialize raw class schedule data
+ * @function
+ */
 const serializeClassSchedule = (rawClassSchedule, osuID) => {
   const serializerArgs = getSerializerArgs(osuID, 'ClassScheduleResult', 'class-schedule', false);
   const rawDataByTermAndCRN = {};
@@ -190,8 +232,8 @@ const serializeClassSchedule = (rawClassSchedule, osuID) => {
       registrationStatus: rawRow.registrationStatus,
       gradingMode: rawRow.gradingMode,
       continuingEducation: rawRow.continuingEducation === 'Y',
-      faculty: uniqConcat(rawDataByTermAndCRN[id].faculty, faculty),
-      meetingTimes: uniqConcat(rawDataByTermAndCRN[id].meetingTimes, meetingTime),
+      faculty: _.unionWith(rawDataByTermAndCRN[id].faculty, [faculty], _.isEqual),
+      meetingTimes: _.unionWith(rawDataByTermAndCRN[id].meetingTimes, [meetingTime], _.isEqual),
     };
   });
 
@@ -200,9 +242,13 @@ const serializeClassSchedule = (rawClassSchedule, osuID) => {
     newClassSchedule.push(rawData);
   });
 
-  return getJSONAPISerializer(serializerArgs, newClassSchedule);
+  return serializeJSONAPI(serializerArgs, newClassSchedule);
 };
 
+/**
+ * @summary A function to serialize raw holds data
+ * @function
+ */
 const serializeHolds = (rawHolds, osuID) => {
   const serializerArgs = getSerializerArgs(osuID, 'HoldsResult', 'holds', true);
   const identifierField = osuID;
@@ -224,9 +270,13 @@ const serializeHolds = (rawHolds, osuID) => {
 
   const holds = { identifierField, holds: rawHolds };
 
-  return getJSONAPISerializer(serializerArgs, holds);
+  return serializeJSONAPI(serializerArgs, holds);
 };
 
+/**
+ * @summary A function to serialize raw work study data
+ * @function
+ */
 const serializeWorkStudy = (rawAwards, osuID) => {
   const serializerArgs = getSerializerArgs(osuID, 'WorkStudyResult', 'work-study', true);
   const identifierField = osuID;
@@ -243,9 +293,13 @@ const serializeWorkStudy = (rawAwards, osuID) => {
 
   const rawWorkStudy = { identifierField, awards: rawAwards };
 
-  return getJSONAPISerializer(serializerArgs, rawWorkStudy);
+  return serializeJSONAPI(serializerArgs, rawWorkStudy);
 };
 
+/**
+ * @summary A function to serialize raw dual enrollment data
+ * @function
+ */
 const serializeDualEnrollment = (rawDualEnrollment, osuID) => {
   const serializerArgs = getSerializerArgs(osuID, 'DualEnrollmentResult', 'dual-enrollment', false);
 
@@ -253,7 +307,7 @@ const serializeDualEnrollment = (rawDualEnrollment, osuID) => {
     rawRow.creditHours = parseFloat(rawRow.creditHours);
   });
 
-  return getJSONAPISerializer(serializerArgs, rawDualEnrollment);
+  return serializeJSONAPI(serializerArgs, rawDualEnrollment);
 };
 
 module.exports = {
