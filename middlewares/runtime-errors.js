@@ -19,9 +19,23 @@ const customOpenAPIError = (err, req, res, next) => {
   if (!isOpenAPIError(err)) {
     next(err);
   }
-  /**
-   * @todo Implement custom OpenAPI error rules and handlers here.
-   */
+
+  const { status, errors } = err;
+  const handledErrors = [];
+
+  if (status === 400) {
+    const details = [];
+    _.forEach(errors, (error) => {
+      const { path, errorCode } = error;
+      if (path === 'term' && errorCode === 'pattern.openapi.validation') {
+        const { term } = req.query;
+        details.push(`Term code: '${term}' is not valid`);
+        handledErrors.push(error);
+      }
+    });
+    err.errors = _.difference(err.errors, handledErrors);
+    err.details = details;
+  }
   next(err);
 };
 
