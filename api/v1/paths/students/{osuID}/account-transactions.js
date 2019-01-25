@@ -2,8 +2,8 @@ const appRoot = require('app-root-path');
 
 const studentsDAO = require('../../../db/oracledb/students-dao');
 
+const { paths } = appRoot.require('app').locals.openapi;
 const { errorBuilder, errorHandler } = appRoot.require('errors/errors');
-const { openapi: { paths } } = appRoot.require('utils/load-openapi');
 
 const get = async (req, res) => {
   try {
