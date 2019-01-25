@@ -291,7 +291,7 @@ parameters:
   term:
     name: term
     in: query
-    pattern: '/^\d{4}0[0-3]{1}$/'
+    pattern: '^\d{4}0[0-3]{1}$'
     required: false
     description: >
       Term code. Example: 201802. You can also specify 'current' to get the current term. During
