@@ -3,7 +3,7 @@ const _ = require('lodash');
 const JSONAPISerializer = require('jsonapi-serializer').Serializer;
 const moment = require('moment-timezone');
 
-const { openapi } = appRoot.require('app').locals;
+const { openapi } = appRoot.require('utils/load-openapi');
 const { serializerOptions } = appRoot.require('utils/jsonapi');
 const { idSelfLink, subresourceLink } = appRoot.require('utils/uri-builder');
 
