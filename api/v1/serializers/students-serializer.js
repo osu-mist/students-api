@@ -49,6 +49,9 @@ const serializeJSONAPI = (serializerArgs, rawRows) => new JSONAPISerializer(
  * @returns {string} properly formatted time format, e.g. 09:00:00
  */
 const fourDigitToTime = (string) => {
+  if (string === null) {
+    return null;
+  }
   if (string.length !== 4) {
     return 'Incorrect time format';
   }
