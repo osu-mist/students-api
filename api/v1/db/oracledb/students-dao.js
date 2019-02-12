@@ -71,7 +71,7 @@ const getClassificationById = osuID => getResourceById(
   osuID,
   contrib.getClassificationById(),
   studentsSerializer.serializeClassification,
-  false,
+  true,
 );
 
 const getGradesById = (osuID, term) => getResourceById(
