@@ -19,7 +19,8 @@ const { apiBaseUrl, resourcePathLink, paramsLink } = appRoot.require('utils/uri-
 const getSerializerArgs = (osuId, resultField, resourcePath, isSingleton, params) => {
   const resourceData = openapi.definitions[resultField].properties.data;
   const resourceProp = isSingleton ? resourceData.properties : resourceData.items.properties;
-  const resourceUrl = resourcePathLink(resourcePathLink(apiBaseUrl, osuId), resourcePath);
+  const studentsUrl = resourcePathLink(apiBaseUrl, 'students');
+  const resourceUrl = resourcePathLink(resourcePathLink(studentsUrl, osuId), resourcePath);
 
   const serializerArgs = {
     identifierField: 'identifierField',
