@@ -121,7 +121,7 @@ const serializeAcademicStatus = (rawAcademicStatus, osuId, params) => {
   const serializerArgs = getSerializerArgs(osuId, 'AcademicStatusResult', 'academic-status', false, params);
 
   const rawDataByTerm = {};
-  const termGpa = {};
+  const termsGpa = {};
 
   _.forEach(rawAcademicStatus, (rawRow) => {
     const rawGpa = {
@@ -134,7 +134,9 @@ const serializeAcademicStatus = (rawAcademicStatus, osuId, params) => {
       level: rawRow.level,
       qualityPoints: rawRow.qualityPoints,
     };
-    termGpa[rawRow.term] = _.defaultTo(termGpa[rawRow.term], []).concat(rawGpa);
+
+    const termGpa = _.defaultTo(termsGpa[rawRow.term], []);
+    termsGpa[rawRow.term] = rawRow.gpa ? termGpa.concat(rawGpa) : termGpa;
   });
 
   _.forEach(rawAcademicStatus, (rawRow) => {
@@ -143,7 +145,7 @@ const serializeAcademicStatus = (rawAcademicStatus, osuId, params) => {
       academicStanding: rawRow.academicStanding,
       term: rawRow.term,
       termDescription: rawRow.termDescription,
-      gpa: termGpa[rawRow.term],
+      gpa: termsGpa[rawRow.term],
     };
   });
 
