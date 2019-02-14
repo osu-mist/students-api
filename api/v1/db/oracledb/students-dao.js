@@ -13,10 +13,10 @@ const { getConnection } = appRoot.require('api/v1/db/oracledb/connection');
  * @param {string} sql The SQL statement that is executed
  * @param {function} serializer Resource serializer function
  * @param {boolean} isSingleton A Boolean value represents the resource should be singleton or not
- * @param {Object} filters A key-value pair filters object
+ * @param {Object} params A key-value pair params object
  * @returns {Promise} Promise object represents serialized resource(s)
  */
-const getResourceById = (id, sql, serializer, isSingleton, filters) => new Promise(
+const getResourceById = (id, sql, serializer, isSingleton, params) => new Promise(
   async (resolve, reject) => {
     const connection = await getConnection();
     try {
@@ -26,8 +26,8 @@ const getResourceById = (id, sql, serializer, isSingleton, filters) => new Promi
       } else if (isSingleton && rows.length > 1) {
         reject(new Error('Expect a single object but got multiple results.'));
       } else {
-        rows = _.filter(rows, filters);
-        const serializedResource = serializer(isSingleton ? rows[0] : rows, id);
+        rows = _.filter(rows, params);
+        const serializedResource = serializer(isSingleton ? rows[0] : rows, id, params);
         resolve(serializedResource);
       }
     } catch (err) {

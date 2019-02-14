@@ -5,7 +5,7 @@ const moment = require('moment-timezone');
 
 const { openapi } = appRoot.require('utils/load-openapi');
 const { serializerOptions } = appRoot.require('utils/jsonapi');
-const { apiBaseUrl, resourcePathLink } = appRoot.require('utils/uri-builder');
+const { apiBaseUrl, resourcePathLink, paramsLink } = appRoot.require('utils/uri-builder');
 
 /**
  * @summary The function to generate arguments for JSONAPI serializer
@@ -16,16 +16,16 @@ const { apiBaseUrl, resourcePathLink } = appRoot.require('utils/uri-builder');
  * @param {boolean} isSingleton a boolean value represents the resource is singleton or not
  * @returns {Object} arguments for JSONAPI serializer
  */
-const getSerializerArgs = (osuId, resultField, resourcePath, isSingleton) => {
+const getSerializerArgs = (osuId, resultField, resourcePath, isSingleton, params) => {
   const resourceData = openapi.definitions[resultField].properties.data;
   const resourceProp = isSingleton ? resourceData.properties : resourceData.items.properties;
-  const studentIdUrl = resourcePathLink(apiBaseUrl, osuId);
+  const resourceUrl = resourcePathLink(resourcePathLink(apiBaseUrl, osuId), resourcePath);
 
   const serializerArgs = {
     identifierField: 'identifierField',
     resourceKeys: _.keys(resourceProp.attributes.properties),
     resourcePath: 'student',
-    topLevelSelfLink: resourcePathLink(studentIdUrl, resourcePath),
+    topLevelSelfLink: params && !_.isEmpty(params) ? paramsLink(resourceUrl, params) : resourceUrl,
     enableDataLinks: false,
     resourceType: resourceProp.type.enum[0],
   };
@@ -116,8 +116,8 @@ const serializeAccountTransactions = (rawTransactions, osuId) => {
  * @summary A function to serialize raw academic status data
  * @function
  */
-const serializeAcademicStatus = (rawAcademicStatus, osuId) => {
-  const serializerArgs = getSerializerArgs(osuId, 'AcademicStatusResult', 'academic-status', false);
+const serializeAcademicStatus = (rawAcademicStatus, osuId, params) => {
+  const serializerArgs = getSerializerArgs(osuId, 'AcademicStatusResult', 'academic-status', false, params);
 
   const rawDataByTerm = {};
   const termGpa = {};
@@ -164,8 +164,8 @@ const serializeClassification = (rawClassification, osuId) => {
   return serializeJsonApi(serializerArgs, rawClassification);
 };
 
-const serializeGrades = (rawGrades, osuId) => {
-  const serializerArgs = getSerializerArgs(osuId, 'GradesResult', 'grades', false);
+const serializeGrades = (rawGrades, osuId, params) => {
+  const serializerArgs = getSerializerArgs(osuId, 'GradesResult', 'grades', false, params);
 
   _.forEach(rawGrades, (rawGrade) => {
     rawGrade.creditHours = parseFloat(rawGrade.creditHours);
@@ -178,8 +178,8 @@ const serializeGrades = (rawGrades, osuId) => {
  * @summary A function to serialize raw class schedule data
  * @function
  */
-const serializeClassSchedule = (rawClassSchedule, osuId) => {
-  const serializerArgs = getSerializerArgs(osuId, 'ClassScheduleResult', 'class-schedule', false);
+const serializeClassSchedule = (rawClassSchedule, osuId, params) => {
+  const serializerArgs = getSerializerArgs(osuId, 'ClassScheduleResult', 'class-schedule', false, params);
   const rawDataByTermAndCrn = {};
 
   _.forEach(rawClassSchedule, (rawRow) => {
@@ -304,8 +304,8 @@ const serializeWorkStudy = (rawAwards, osuId) => {
  * @summary A function to serialize raw dual enrollment data
  * @function
  */
-const serializeDualEnrollment = (rawDualEnrollment, osuId) => {
-  const serializerArgs = getSerializerArgs(osuId, 'DualEnrollmentResult', 'dual-enrollment', false);
+const serializeDualEnrollment = (rawDualEnrollment, osuId, params) => {
+  const serializerArgs = getSerializerArgs(osuId, 'DualEnrollmentResult', 'dual-enrollment', false, params);
 
   _.forEach(rawDualEnrollment, (rawRow) => {
     rawRow.creditHours = parseFloat(rawRow.creditHours);
