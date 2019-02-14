@@ -38,74 +38,74 @@ const getResourceById = (id, sql, serializer, isSingleton, filters) => new Promi
   },
 );
 
-const getGPAById = osuID => getResourceById(
-  osuID,
-  contrib.getGPALevelsById(),
-  studentsSerializer.serializeGPA,
+const getGpaById = osuId => getResourceById(
+  osuId,
+  contrib.getGpaLevelsById(),
+  studentsSerializer.serializeGpa,
   false,
 );
 
-const getAccountBalanceById = osuID => getResourceById(
-  osuID,
+const getAccountBalanceById = osuId => getResourceById(
+  osuId,
   contrib.getAccountBalanceById(),
   studentsSerializer.serializeAccountBalance,
   true,
 );
 
-const getAccountTransactionsById = osuID => getResourceById(
-  osuID,
+const getAccountTransactionsById = osuId => getResourceById(
+  osuId,
   contrib.getTransactionsById(),
   studentsSerializer.serializeAccountTransactions,
   false,
 );
 
-const getAcademicStatusById = (osuID, term) => getResourceById(
-  osuID,
+const getAcademicStatusById = (osuId, term) => getResourceById(
+  osuId,
   contrib.getAcademicStatusById(),
   studentsSerializer.serializeAcademicStatus,
   false,
   term ? { term } : {},
 );
 
-const getClassificationById = osuID => getResourceById(
-  osuID,
+const getClassificationById = osuId => getResourceById(
+  osuId,
   contrib.getClassificationById(),
   studentsSerializer.serializeClassification,
   true,
 );
 
-const getGradesById = (osuID, term) => getResourceById(
-  osuID,
+const getGradesById = (osuId, term) => getResourceById(
+  osuId,
   contrib.getGradesById(),
   studentsSerializer.serializeGrades,
   false,
   term ? { term } : {},
 );
 
-const getClassScheduleById = (osuID, term) => getResourceById(
-  osuID,
+const getClassScheduleById = (osuId, term) => getResourceById(
+  osuId,
   contrib.getClassScheduleById(),
   studentsSerializer.serializeClassSchedule,
   false,
   term ? { term } : {},
 );
 
-const getHoldsById = osuID => getResourceById(
-  osuID,
+const getHoldsById = osuId => getResourceById(
+  osuId,
   contrib.getHoldsById(),
   studentsSerializer.serializeHolds,
   false,
 );
 
-const getWorkStudyById = osuID => getResourceById(
-  osuID,
+const getWorkStudyById = osuId => getResourceById(
+  osuId,
   contrib.getAwardsById(),
   studentsSerializer.serializeWorkStudy,
   false,
 );
 
-const getDualEnrollmentById = (osuID, term) => getResourceById(
-  osuID,
+const getDualEnrollmentById = (osuId, term) => getResourceById(
+  osuId,
   contrib.getDualEnrollmentById(),
   studentsSerializer.serializeDualEnrollment,
   false,
@@ -113,7 +113,7 @@ const getDualEnrollmentById = (osuID, term) => getResourceById(
 );
 
 module.exports = {
-  getGPAById,
+  getGpaById,
   getAccountBalanceById,
   getAccountTransactionsById,
   getAcademicStatusById,

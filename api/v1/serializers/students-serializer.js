@@ -5,25 +5,27 @@ const moment = require('moment-timezone');
 
 const { openapi } = appRoot.require('utils/load-openapi');
 const { serializerOptions } = appRoot.require('utils/jsonapi');
-const { idSelfLink, subresourceLink } = appRoot.require('utils/uri-builder');
+const { apiBaseUrl, resourcePathLink } = appRoot.require('utils/uri-builder');
 
 /**
  * @summary The function to generate arguments for JSONAPI serializer
  * @function
- * @param {string} osuID 9 digits OSU ID
+ * @param {string} osuId 9 digits OSU ID
  * @param {string} resultField result field from OpenAPI file which the serializer should refer to
  * @param {string} resourcePath resource path name for generating top-level self-link
  * @param {boolean} isSingleton a boolean value represents the resource is singleton or not
  * @returns {Object} arguments for JSONAPI serializer
  */
-const getSerializerArgs = (osuID, resultField, resourcePath, isSingleton) => {
+const getSerializerArgs = (osuId, resultField, resourcePath, isSingleton) => {
   const resourceData = openapi.definitions[resultField].properties.data;
   const resourceProp = isSingleton ? resourceData.properties : resourceData.items.properties;
+  const studentIdUrl = resourcePathLink(apiBaseUrl, osuId);
+
   const serializerArgs = {
     identifierField: 'identifierField',
     resourceKeys: _.keys(resourceProp.attributes.properties),
     resourcePath: 'student',
-    topLevelSelfLink: subresourceLink(idSelfLink(osuID, 'students'), resourcePath),
+    topLevelSelfLink: resourcePathLink(studentIdUrl, resourcePath),
     enableDataLinks: false,
     resourceType: resourceProp.type.enum[0],
   };
@@ -37,7 +39,7 @@ const getSerializerArgs = (osuID, resultField, resourcePath, isSingleton) => {
  * @param {string} rawRows raw data to be serialized
  * @returns {Object} serialized data
  */
-const serializeJSONAPI = (serializerArgs, rawRows) => new JSONAPISerializer(
+const serializeJsonApi = (serializerArgs, rawRows) => new JSONAPISerializer(
   serializerArgs.resourceType,
   serializerOptions(serializerArgs),
 ).serialize(rawRows);
@@ -62,42 +64,42 @@ const fourDigitToTime = (string) => {
  * @summary A function to serialize raw GPA data
  * @function
  */
-const serializeGPA = (rawGPALevels, osuID) => {
-  const serializerArgs = getSerializerArgs(osuID, 'GradePointAverageResult', 'gpa', true);
-  const identifierField = osuID;
+const serializeGpa = (rawGpaLevels, osuId) => {
+  const serializerArgs = getSerializerArgs(osuId, 'GradePointAverageResult', 'gpa', true);
+  const identifierField = osuId;
 
-  _.forEach(rawGPALevels, (rawGPALevel) => {
+  _.forEach(rawGpaLevels, (rawGpaLevel) => {
     const floatFields = [
       'gpaCreditHours', 'creditHoursAttempted', 'creditHoursEarned', 'creditHoursPassed',
     ];
     _.forEach(floatFields, (floatField) => {
-      rawGPALevel[floatField] = parseFloat(rawGPALevel[floatField]);
+      rawGpaLevel[floatField] = parseFloat(rawGpaLevel[floatField]);
     });
   });
-  const rawGPAs = { identifierField, gpaLevels: rawGPALevels };
+  const rawGpas = { identifierField, gpaLevels: rawGpaLevels };
 
-  return serializeJSONAPI(serializerArgs, rawGPAs);
+  return serializeJsonApi(serializerArgs, rawGpas);
 };
 
 /**
  * @summary A function to serialize raw account balance data
  * @function
  */
-const serializeAccountBalance = (rawAccountBalance, osuID) => {
-  const serializerArgs = getSerializerArgs(osuID, 'AccountBalanceResult', 'account-balance', true);
+const serializeAccountBalance = (rawAccountBalance, osuId) => {
+  const serializerArgs = getSerializerArgs(osuId, 'AccountBalanceResult', 'account-balance', true);
 
   rawAccountBalance.currentBalance = parseFloat(rawAccountBalance.currentBalance);
 
-  return serializeJSONAPI(serializerArgs, rawAccountBalance);
+  return serializeJsonApi(serializerArgs, rawAccountBalance);
 };
 
 /**
  * @summary A function to serialize raw account transactions data
  * @function
  */
-const serializeAccountTransactions = (rawTransactions, osuID) => {
-  const serializerArgs = getSerializerArgs(osuID, 'AccountTransactionsResult', 'account-transactions', true);
-  const identifierField = osuID;
+const serializeAccountTransactions = (rawTransactions, osuId) => {
+  const serializerArgs = getSerializerArgs(osuId, 'AccountTransactionsResult', 'account-transactions', true);
+  const identifierField = osuId;
 
   _.forEach(rawTransactions, (rawTransaction) => {
     const rawEntryDate = rawTransaction.entryDate;
@@ -107,21 +109,21 @@ const serializeAccountTransactions = (rawTransactions, osuID) => {
 
   const rawAccountTransactions = { identifierField, transactions: rawTransactions };
 
-  return serializeJSONAPI(serializerArgs, rawAccountTransactions);
+  return serializeJsonApi(serializerArgs, rawAccountTransactions);
 };
 
 /**
  * @summary A function to serialize raw academic status data
  * @function
  */
-const serializeAcademicStatus = (rawAcademicStatus, osuID) => {
-  const serializerArgs = getSerializerArgs(osuID, 'AcademicStatusResult', 'academic-status', false);
+const serializeAcademicStatus = (rawAcademicStatus, osuId) => {
+  const serializerArgs = getSerializerArgs(osuId, 'AcademicStatusResult', 'academic-status', false);
 
   const rawDataByTerm = {};
-  const termGPA = {};
+  const termGpa = {};
 
   _.forEach(rawAcademicStatus, (rawRow) => {
-    const rawGPA = {
+    const rawGpa = {
       gpa: rawRow.gpa,
       gpaCreditHours: parseFloat(rawRow.gpaCreditHours),
       gpaType: rawRow.gpaType,
@@ -131,16 +133,16 @@ const serializeAcademicStatus = (rawAcademicStatus, osuID) => {
       level: rawRow.level,
       qualityPoints: rawRow.qualityPoints,
     };
-    termGPA[rawRow.term] = _.defaultTo(termGPA[rawRow.term], []).concat(rawGPA);
+    termGpa[rawRow.term] = _.defaultTo(termGpa[rawRow.term], []).concat(rawGpa);
   });
 
   _.forEach(rawAcademicStatus, (rawRow) => {
     rawDataByTerm[rawRow.term] = {
-      identifierField: `${osuID}-${rawRow.term}`,
+      identifierField: `${osuId}-${rawRow.term}`,
       academicStanding: rawRow.academicStanding,
       term: rawRow.term,
       termDescription: rawRow.termDescription,
-      gpa: termGPA[rawRow.term],
+      gpa: termGpa[rawRow.term],
     };
   });
 
@@ -149,44 +151,44 @@ const serializeAcademicStatus = (rawAcademicStatus, osuID) => {
     newRawAcademicStatus.push(rawData);
   });
 
-  return serializeJSONAPI(serializerArgs, newRawAcademicStatus);
+  return serializeJsonApi(serializerArgs, newRawAcademicStatus);
 };
 
 /**
  * @summary A function to serialize raw classification data
  * @function
  */
-const serializeClassification = (rawClassification, osuID) => {
-  const serializerArgs = getSerializerArgs(osuID, 'ClassificationResult', 'classification', true);
+const serializeClassification = (rawClassification, osuId) => {
+  const serializerArgs = getSerializerArgs(osuId, 'ClassificationResult', 'classification', true);
 
-  return serializeJSONAPI(serializerArgs, rawClassification);
+  return serializeJsonApi(serializerArgs, rawClassification);
 };
 
-const serializeGrades = (rawGrades, osuID) => {
-  const serializerArgs = getSerializerArgs(osuID, 'GradesResult', 'grades', false);
+const serializeGrades = (rawGrades, osuId) => {
+  const serializerArgs = getSerializerArgs(osuId, 'GradesResult', 'grades', false);
 
   _.forEach(rawGrades, (rawGrade) => {
     rawGrade.creditHours = parseFloat(rawGrade.creditHours);
   });
 
-  return serializeJSONAPI(serializerArgs, rawGrades);
+  return serializeJsonApi(serializerArgs, rawGrades);
 };
 
 /**
  * @summary A function to serialize raw class schedule data
  * @function
  */
-const serializeClassSchedule = (rawClassSchedule, osuID) => {
-  const serializerArgs = getSerializerArgs(osuID, 'ClassScheduleResult', 'class-schedule', false);
-  const rawDataByTermAndCRN = {};
+const serializeClassSchedule = (rawClassSchedule, osuId) => {
+  const serializerArgs = getSerializerArgs(osuId, 'ClassScheduleResult', 'class-schedule', false);
+  const rawDataByTermAndCrn = {};
 
   _.forEach(rawClassSchedule, (rawRow) => {
-    const id = `${osuID}-${rawRow.term}-${rawRow.courseReferenceNumber}`;
+    const id = `${osuId}-${rawRow.term}-${rawRow.courseReferenceNumber}`;
 
-    rawDataByTermAndCRN[id] = rawDataByTermAndCRN[id] || { faculty: [], meetingTimes: [] };
+    rawDataByTermAndCrn[id] = rawDataByTermAndCrn[id] || { faculty: [], meetingTimes: [] };
 
     const faculty = {
-      osuID: rawRow.facultyOSUID,
+      osuID: rawRow.facultyOsuId,
       name: rawRow.facultyName,
       email: rawRow.facultyEmail,
       primary: rawRow.facultyPrimary === 'Y',
@@ -216,7 +218,7 @@ const serializeClassSchedule = (rawClassSchedule, osuID) => {
       ], null),
     };
 
-    rawDataByTermAndCRN[id] = {
+    rawDataByTermAndCrn[id] = {
       identifierField: id,
       academicYear: rawRow.academicYear,
       academicYearDescription: rawRow.academicYearDescription,
@@ -234,17 +236,17 @@ const serializeClassSchedule = (rawClassSchedule, osuID) => {
       registrationStatus: rawRow.registrationStatus,
       gradingMode: rawRow.gradingMode,
       continuingEducation: rawRow.continuingEducation === 'Y',
-      faculty: _.unionWith(rawDataByTermAndCRN[id].faculty, [faculty], _.isEqual),
-      meetingTimes: _.unionWith(rawDataByTermAndCRN[id].meetingTimes, [meetingTime], _.isEqual),
+      faculty: _.unionWith(rawDataByTermAndCrn[id].faculty, [faculty], _.isEqual),
+      meetingTimes: _.unionWith(rawDataByTermAndCrn[id].meetingTimes, [meetingTime], _.isEqual),
     };
   });
 
   const newClassSchedule = [];
-  _.forEach(rawDataByTermAndCRN, (rawData) => {
+  _.forEach(rawDataByTermAndCrn, (rawData) => {
     newClassSchedule.push(rawData);
   });
 
-  return serializeJSONAPI(serializerArgs, newClassSchedule);
+  return serializeJsonApi(serializerArgs, newClassSchedule);
 };
 
 /**
@@ -272,16 +274,16 @@ const serializeHolds = (rawHolds, osuID) => {
 
   const holds = { identifierField, holds: rawHolds };
 
-  return serializeJSONAPI(serializerArgs, holds);
+  return serializeJsonApi(serializerArgs, holds);
 };
 
 /**
  * @summary A function to serialize raw work study data
  * @function
  */
-const serializeWorkStudy = (rawAwards, osuID) => {
-  const serializerArgs = getSerializerArgs(osuID, 'WorkStudyResult', 'work-study', true);
-  const identifierField = osuID;
+const serializeWorkStudy = (rawAwards, osuId) => {
+  const serializerArgs = getSerializerArgs(osuId, 'WorkStudyResult', 'work-study', true);
+  const identifierField = osuId;
 
   _.forEach(rawAwards, (rawAward) => {
     const floatFields = [
@@ -295,25 +297,25 @@ const serializeWorkStudy = (rawAwards, osuID) => {
 
   const rawWorkStudy = { identifierField, awards: rawAwards };
 
-  return serializeJSONAPI(serializerArgs, rawWorkStudy);
+  return serializeJsonApi(serializerArgs, rawWorkStudy);
 };
 
 /**
  * @summary A function to serialize raw dual enrollment data
  * @function
  */
-const serializeDualEnrollment = (rawDualEnrollment, osuID) => {
-  const serializerArgs = getSerializerArgs(osuID, 'DualEnrollmentResult', 'dual-enrollment', false);
+const serializeDualEnrollment = (rawDualEnrollment, osuId) => {
+  const serializerArgs = getSerializerArgs(osuId, 'DualEnrollmentResult', 'dual-enrollment', false);
 
   _.forEach(rawDualEnrollment, (rawRow) => {
     rawRow.creditHours = parseFloat(rawRow.creditHours);
   });
 
-  return serializeJSONAPI(serializerArgs, rawDualEnrollment);
+  return serializeJsonApi(serializerArgs, rawDualEnrollment);
 };
 
 module.exports = {
-  serializeGPA,
+  serializeGpa,
   serializeAccountBalance,
   serializeAccountTransactions,
   serializeAcademicStatus,
