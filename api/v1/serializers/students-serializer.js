@@ -172,6 +172,7 @@ const serializeGrades = (rawGrades, osuId, params) => {
 
   _.forEach(rawGrades, (rawGrade) => {
     rawGrade.creditHours = parseFloat(rawGrade.creditHours);
+    rawGrade.courseLevel = rawGrade.sfrstcrCourseLevel || rawGrade.tcknCourseLevel;
   });
 
   return serializeJsonApi(serializerArgs, rawGrades);
