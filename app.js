@@ -19,7 +19,7 @@ const { validateDataSource } = appRoot.require('utils/validate-data-source');
 
 const serverConfig = config.get('server');
 
-validateDataSource();
+validateDataSource('json');
 
 /**
  * @summary Initialize Express applications and routers
