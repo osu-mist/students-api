@@ -36,7 +36,7 @@ const getConnection = () => new Promise(async (resolve, reject) => {
  * @function
  * @throws Throws an error if unable to connect to the database
  */
-const validateDBConnection = async () => {
+const validateOracleDb = async () => {
   try {
     const connection = await getConnection();
     await connection.execute('SELECT 1 FROM DUAL');
@@ -45,4 +45,4 @@ const validateDBConnection = async () => {
   }
 };
 
-module.exports = { getConnection, validateDBConnection };
+module.exports = { getConnection, validateOracleDb };

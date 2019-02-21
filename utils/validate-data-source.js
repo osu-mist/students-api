@@ -1,29 +1,30 @@
 const appRoot = require('app-root-path');
 
-const { validateDBPath } = appRoot.require('api/v1/db/json/fs-operations');
-const { validateDBConnection } = appRoot.require('api/v1/db/oracledb/connection');
+const { validateJsonDb } = appRoot.require('api/v1/db/json/fs-operations');
+const { validateOracleDb } = appRoot.require('api/v1/db/oracledb/connection');
 
 /**
  * @summary Validate database configuration
- * @param {string} dataSourceType data source type
  * @function
+ * @param {string} dataSourceType data source type
  */
 const validateDataSource = (dataSourceType) => {
   const validationMethods = {
     aws: null, // TODO: add AWS validation method
     http: null, // TODO: add HTTP validation method
-    json: validateDBPath(),
-    oracledb: validateDBConnection(),
+    json: validateJsonDb,
+    oracledb: validateOracleDb,
   };
 
   try {
     if (dataSourceType in validationMethods) {
-      return validationMethods.dataSourceType;
+      validationMethods[dataSourceType]();
+    } else {
+      throw new Error(`Data source type: '${dataSourceType}' is not recognized.`);
     }
-    throw new Error(`Data source type: '${dataSourceType}' is not recognized.`);
   } catch (err) {
     console.error(err);
-    return process.exit(1);
+    process.exit(1);
   }
 };
 

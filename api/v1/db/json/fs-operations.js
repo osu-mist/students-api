@@ -18,7 +18,7 @@ const validateFilePath = (path) => {
  * @summary Validate database file path
  * @function
  */
-const validateDBPath = () => validateFilePath(dbPath);
+const validateJsonDb = () => validateFilePath(dbPath);
 
 /**
  * @summary Read a JSON file and return the contents as an object
@@ -60,7 +60,7 @@ const deleteFile = (filePath) => {
 
 module.exports = {
   validateFilePath,
-  validateDBPath,
+  validateJsonDb,
   readJSONFile,
   writeJSONFile,
   deleteFile,
