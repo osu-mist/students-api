@@ -529,6 +529,15 @@ definitions:
                   description: Letter grade representing the student's final grade for the course.
                   type: string
                   example: 'A-'
+                gradeMode:
+                  description: Grade mode for the course.
+                  type: string
+                  example: 'N'
+                  enum: [N, P, C, S, A, K, E, Z]
+                gradeModeDescription:
+                  description: Human readable gradeMode.
+                  type: string
+                  example: 'Normal Grading Mode'
                 courseSubject:
                   description: Abbreviated course subject.
                   type: string
@@ -577,15 +586,6 @@ definitions:
                   description: Academic level of the course.
                   type: string
                   example: 'Undergraduate'
-                gradeMode:
-                  description: Grade mode for the course.
-                  type: string
-                  example: 'N'
-                  enum: [N, P, C, S, A, K, E, Z]
-                gradeModeDescription:
-                  description: Human readable gradeMode.
-                  type: string
-                  example: 'Normal Grading Mode'
             links:
               $ref: '#/definitions/SelfLink'
   ClassScheduleResult:
