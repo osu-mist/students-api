@@ -7,8 +7,8 @@ const { openapi: { paths } } = appRoot.require('utils/load-openapi');
 
 const get = async (req, res) => {
   try {
-    const { osuID } = req.params;
-    const result = await studentsDAO.getGpaById(osuID);
+    const { osuId } = req.params;
+    const result = await studentsDAO.getGpaById(osuId);
     if (result === undefined) {
       errorBuilder(res, 404, 'A student with the OSU ID was not found.');
     } else {
@@ -19,6 +19,6 @@ const get = async (req, res) => {
   }
 };
 
-get.apiDoc = paths['/students/{osuID}/gpa'].get;
+get.apiDoc = paths['/students/{osuId}/gpa'].get;
 
 module.exports = { get };
