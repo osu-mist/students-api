@@ -1,6 +1,6 @@
 const appRoot = require('app-root-path');
 const config = require('config');
-const decodeUriComponent = require('decode-uri-component');
+const queryString = require('query-string');
 const url = require('url');
 
 const { openapi: { basePath } } = appRoot.require('utils/load-openapi');
@@ -8,43 +8,30 @@ const { openapi: { basePath } } = appRoot.require('utils/load-openapi');
 const { protocol, hostname } = config.get('server');
 
 /**
- * @summary Self link builder
- * @function
- * @param {string} id resource ID
- * @param {string} resourcePath resource path
- * @returns A self link URL
+ * @summary API base URL
  */
-const selfLink = (id, resourcePath) => url.format({
-  protocol,
-  hostname,
-  pathname: `${basePath}/${resourcePath}/${id}`,
-});
+const apiBaseUrl = url.format({ protocol, hostname, pathname: basePath });
 
 /**
- * @summary Top level query link builder
+ * @summary Resource path link builder
  * @function
- * @param {object} query
+ * @param {string} baseUrl base URL
  * @param {string} resourcePath resource path
- * @returns A decoded url formatted with query parameters in the query object.
+ * @returns A resource path URL
  */
-const querySelfLink = (query, resourcePath) => decodeUriComponent(url.format({
-  protocol,
-  hostname,
-  pathname: `${basePath}/${resourcePath}`,
-  query,
-}));
+const resourcePathLink = (baseUrl, resourcePath) => `${baseUrl}/${resourcePath}`;
 
 /**
- * @summary Paginated link builder
+ * @summary Params link builder
  * @function
- * @param {number} pageNumber Page number of results
- * @param {number} pageSize Number of results to return
- * @param {string} resourcePath resource path
- * @returns A decoded paginated link URL
+ * @param {string} baseUrl base URL
+ * @param {string} params query params
+ * @returns A decoded url formatted with query parameters in the query object
  */
-const paginatedLink = (pageNumber, pageSize, resourcePath) => querySelfLink({
-  'page[number]': pageNumber,
-  'page[size]': pageSize,
-}, resourcePath);
+const paramsLink = (baseUrl, params) => `${baseUrl}?${queryString.stringify(params, { encode: false })}`;
 
-module.exports = { selfLink, paginatedLink, querySelfLink };
+module.exports = {
+  apiBaseUrl,
+  resourcePathLink,
+  paramsLink,
+};
