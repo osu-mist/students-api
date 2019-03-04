@@ -1,5 +1,4 @@
 const appRoot = require('app-root-path');
-const _ = require('lodash');
 
 const studentsSerializer = require('../../serializers/students-serializer');
 
