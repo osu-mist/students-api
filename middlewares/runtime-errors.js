@@ -29,7 +29,8 @@ const customOpenAPIError = (err, req, res, next) => {
       const { path, errorCode } = error;
       if (path === 'term' && errorCode === 'pattern.openapi.validation') {
         const { term } = req.query;
-        details.push(`Term code: '${term}' is not valid`);
+        details.push(`Term code: '${term}' is not valid. A valid term code can `
+        + 'either be a 6-digit term code or \'current\' which represents the current term.');
         handledErrors.push(error);
       }
     });

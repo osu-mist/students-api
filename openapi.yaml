@@ -35,10 +35,6 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/AccountBalanceResult'
-        404:
-          description: Student not found
-          schema:
-            $ref: '#/definitions/Errors'
         500:
           description: Internal Server Error
           schema:
@@ -58,10 +54,6 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/AccountTransactionsResult'
-        404:
-          description: Student not found
-          schema:
-            $ref: '#/definitions/Errors'
         500:
           description: Internal Server Error
           schema:
@@ -81,10 +73,6 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/GradePointAverageResult'
-        404:
-          description: Student not found
-          schema:
-            $ref: '#/definitions/Errors'
         500:
           description: Internal Server Error
           schema:
@@ -105,14 +93,6 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/AcademicStatusResult'
-        400:
-          description: Bad term
-          schema:
-            $ref: '#/definitions/Errors'
-        404:
-          description: Student not found
-          schema:
-            $ref: '#/definitions/Errors'
         500:
           description: Internal Server Error
           schema:
@@ -132,10 +112,6 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/ClassificationResult'
-        404:
-          description: Student not found
-          schema:
-            $ref: '#/definitions/Errors'
         500:
           description: Internal Server Error
           schema:
@@ -156,14 +132,6 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/GradesResult'
-        400:
-          description: Bad term
-          schema:
-            $ref: '#/definitions/Errors'
-        404:
-          description: Student not found
-          schema:
-            $ref: '#/definitions/Errors'
         500:
           description: Internal Server Error
           schema:
@@ -178,14 +146,7 @@ paths:
         active registrations for all terms will be returned.
       operationId: getClassScheduleById
       parameters:
-        - name: term
-          in: query
-          required: true
-          description: >
-            Term code. Example: 201802. You can also specify 'current' to get the current term.
-            During academic breaks, the current term will be the current or the
-            most future term. For example, during spring break, the current term will be the spring term.
-          type: string
+        - $ref: '#/parameters/term'
         - $ref: '#/parameters/authorization'
         - $ref: '#/parameters/osuId'
       responses:
@@ -193,14 +154,6 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/ClassScheduleResult'
-        400:
-          description: Bad term
-          schema:
-            $ref: '#/definitions/Errors'
-        404:
-          description: Student not found
-          schema:
-            $ref: '#/definitions/Errors'
         500:
           description: Internal Server Error
           schema:
@@ -220,10 +173,6 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/HoldsResult'
-        404:
-          description: Student not found
-          schema:
-            $ref: '#/definitions/Errors'
         500:
           description: Internal Server Error
           schema:
@@ -243,10 +192,6 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/WorkStudyResult'
-        404:
-          description: Student not found
-          schema:
-            $ref: '#/definitions/Errors'
         500:
           description: Internal Server Error
           schema:
@@ -267,10 +212,6 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/DualEnrollmentResult'
-        404:
-          description: Student not found
-          schema:
-            $ref: '#/definitions/Errors'
         500:
           description: Internal Server Error
           schema:
@@ -291,8 +232,8 @@ parameters:
   term:
     name: term
     in: query
-    pattern: '^\d{4}0[0-3]{1}$'
     required: false
+    pattern: '^\d{6}|current$'
     description: >
       Term code. Example: 201802. You can also specify 'current' to get the current term. During
       academic breaks, the current term will be the current or the most future term. For example,
@@ -306,7 +247,7 @@ definitions:
       data:
         properties:
           id:
-            $ref: '#/definitions/StudentID'
+            $ref: '#/definitions/StudentId'
           type:
             type: string
             enum: ['account-balance']
@@ -326,7 +267,7 @@ definitions:
       data:
         properties:
           id:
-            $ref: '#/definitions/StudentID'
+            $ref: '#/definitions/StudentId'
           type:
             type: string
             enum: ['account-transactions']
@@ -361,7 +302,7 @@ definitions:
         items:
           properties:
             id:
-              $ref: '#/definitions/StudentAndTermID'
+              $ref: '#/definitions/StudentAndTermId'
             type:
               type: string
               enum: ['academic-status']
@@ -404,7 +345,7 @@ definitions:
       data:
         properties:
           id:
-            $ref: '#/definitions/StudentID'
+            $ref: '#/definitions/StudentId'
           type:
             type: string
             enum: ['classification']
@@ -455,7 +396,7 @@ definitions:
       data:
         properties:
           id:
-            $ref: '#/definitions/StudentID'
+            $ref: '#/definitions/StudentId'
           type:
             type: string
             enum: ['gpa']
@@ -515,7 +456,7 @@ definitions:
         items:
           properties:
             id:
-              $ref: '#/definitions/StudentAndTermAndCourseID'
+              $ref: '#/definitions/StudentAndTermAndCourseId'
             type:
               type: string
               enum: ['grades']
@@ -597,7 +538,7 @@ definitions:
         items:
           properties:
             id:
-              $ref: '#/definitions/StudentAndTermAndCourseID'
+              $ref: '#/definitions/StudentAndTermAndCourseId'
             type:
               type: string
               enum: ['class-schedule']
@@ -801,7 +742,7 @@ definitions:
       data:
         properties:
           id:
-            $ref: '#/definitions/StudentID'
+            $ref: '#/definitions/StudentId'
           type:
             type: string
             enum: ['holds']
@@ -844,7 +785,7 @@ definitions:
       data:
         properties:
           id:
-            $ref: '#/definitions/StudentID'
+            $ref: '#/definitions/StudentId'
           type:
             type: string
             enum: ['work-study']
@@ -909,7 +850,7 @@ definitions:
         items:
           properties:
             id:
-              $ref: '#/definitions/StudentAndTermID'
+              $ref: '#/definitions/StudentAndTermId'
             type:
               type: string
               enum: ['dual-enrollment']
@@ -925,14 +866,14 @@ definitions:
                   example: 5
             links:
               $ref: '#/definitions/SelfLink'
-  StudentID:
+  StudentId:
     type: string
     description: Student ID
     example: '931234567'
-  StudentAndTermID:
+  StudentAndTermId:
     type: string
     example: '931234567-201901'
-  StudentAndTermAndCourseID:
+  StudentAndTermAndCourseId:
     type: string
     example: '931123456-201901-123456'
   SelfLink:
