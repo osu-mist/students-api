@@ -1,0 +1,8 @@
+{
+  "mockConfig": {
+    "server": {
+      "protocol": "https",
+      "hostname": "localhost"
+    }
+  }
+}

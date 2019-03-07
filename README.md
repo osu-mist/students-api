@@ -153,7 +153,7 @@ The following instructions show you how to get data from external endpoints for 
 3. Make sure to require the correct path for the new DAO file at path handlers files:
 
     ```js
-    const petsDAO = require('../db/http/<resources>-dao');
+    const petsDao = require('../db/http/<resources>-dao');
     ```
 
 ## Getting data source from the Oracle Database
@@ -226,7 +226,7 @@ The following instructions show you how to connect the API to an Oracle database
 7. Make sure to require the correct path for the new DAO file at path handlers files:
 
     ```js
-    const petsDAO = require('../db/oracledb/<resources>-dao');
+    const petsDao = require('../db/oracledb/<resources>-dao');
     ```
 
 ## Docker
