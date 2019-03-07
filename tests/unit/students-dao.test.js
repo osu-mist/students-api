@@ -5,12 +5,11 @@ const sinon = require('sinon');
 const mockConfig = {};
 
 sinon.stub(oracledb, 'getConnection').resolves({
-  execute: sql => {
+  execute: (sql) => {
     if (sql === 'select 1 from dual') {
       return '1000000';
-    } else {
-      return 2;
     }
+    return 2;
   },
   close: () => {},
 });
@@ -26,13 +25,8 @@ describe('Parent', () => {
       //   rows: [[2]]
       // });
 
-      let result = await conn.execute(
-        'select 1 from dual'
-      );
-
+      const result = await conn.execute('select 1 from dual');
       console.log(result);
-
-
       expect(result.rows[0][0]).to.equal(1);
     } catch (err) {
       console.error(err);
