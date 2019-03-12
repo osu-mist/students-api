@@ -8,7 +8,6 @@ sinon.replace(config, 'get', () => ({ oracledb: {} }));
 const conn = appRoot.require('api/v1/db/oracledb/connection');
 const studentsDao = appRoot.require('api/v1/db/oracledb/students-dao');
 
-chai.should();
 chai.use(chaiAsPromised);
 const { expect } = chai;
 
@@ -39,7 +38,9 @@ describe('Test students-dao', () => {
         isSingleton,
         fakeParams,
       );
-      return expect(result).to.be.rejected;
+      return expect(result).to.eventually
+        .be.rejectedWith('Expect a single object but got multiple results.')
+        .and.be.an.instanceOf(Error);
     });
   });
 });
