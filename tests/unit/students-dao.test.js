@@ -1,43 +1,45 @@
-const { expect } = require('chai');
-const oracledb = require('oracledb');
+const appRoot = require('app-root-path');
+const config = require('config');
+const chai = require('chai');
+const chaiAsPromised = require('chai-as-promised');
 const sinon = require('sinon');
 
-const mockConfig = {};
+sinon.replace(config, 'get', () => ({ oracledb: {} }));
+const conn = appRoot.require('api/v1/db/oracledb/connection');
+const studentsDao = appRoot.require('api/v1/db/oracledb/students-dao');
 
-sinon.stub(oracledb, 'getConnection').resolves({
+chai.should();
+chai.use(chaiAsPromised);
+const { expect } = chai;
+
+sinon.stub(conn, 'getConnection').resolves({
   execute: (sql) => {
-    if (sql === 'select 1 from dual') {
-      return '1000000';
-    }
-    return 2;
+    const sqlResults = {
+      multiResults: { rows: [{}, {}] },
+      singleResult: { rows: [{}] },
+    };
+    return sqlResults[sql];
   },
   close: () => {},
 });
 
-describe('Parent', () => {
-  it('should work', async () => {
-    let conn;
+describe('Test students-dao', () => {
+  describe('Test getResourceById', () => {
+    it('should reject promise if isSingleton is true but get multiple results', () => {
+      const fakeId = 'fakeId';
+      const fakeSql = () => 'multiResults';
+      const isSingleton = true;
+      const fakeStudentsSerializer = rows => rows;
+      const fakeParams = {};
 
-    try {
-      conn = await oracledb.getConnection(mockConfig);
-
-      // sinon.stub(conn, 'execute').resolves({
-      //   rows: [[2]]
-      // });
-
-      const result = await conn.execute('select 1 from dual');
-      console.log(result);
-      expect(result.rows[0][0]).to.equal(1);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      if (conn) {
-        try {
-          await conn.close();
-        } catch (err) {
-          console.error(err);
-        }
-      }
-    }
+      const result = studentsDao.getResourceById(
+        fakeId,
+        fakeSql,
+        fakeStudentsSerializer,
+        isSingleton,
+        fakeParams,
+      );
+      return expect(result).to.be.rejected;
+    });
   });
 });
