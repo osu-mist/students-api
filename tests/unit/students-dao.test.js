@@ -2,14 +2,15 @@ const appRoot = require('app-root-path');
 const config = require('config');
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
+const _ = require('lodash');
 const sinon = require('sinon');
 
 sinon.replace(config, 'get', () => ({ oracledb: {} }));
 const conn = appRoot.require('api/v1/db/oracledb/connection');
 const studentsDao = appRoot.require('api/v1/db/oracledb/students-dao');
 
+chai.should();
 chai.use(chaiAsPromised);
-const { expect } = chai;
 
 sinon.stub(conn, 'getConnection').resolves({
   execute: (sql) => {
@@ -24,12 +25,33 @@ sinon.stub(conn, 'getConnection').resolves({
 
 describe('Test students-dao', () => {
   describe('Test getResourceById', () => {
-    it('should reject promise if isSingleton is true but get multiple results', () => {
-      const fakeId = 'fakeId';
+    const fakeId = 'fakeId';
+    const fakeStudentsSerializer = rows => rows;
+    const fakeParams = {};
+
+    it('should be fulfilled if isSingleton is true and only get one result', () => {
+      const fulfilledCases = [
+        { fakeSql: () => 'singleResult', isSingleton: true, expectResult: 123 },
+        { fakeSql: () => 'multiResults', isSingleton: false, expectResult: [{}, {}] },
+        { fakeSql: () => 'singleResult', isSingleton: false, expectResult: [{}] },
+      ];
+
+      _.each(fulfilledCases, ({ fakeSql, isSingleton, expectResult }) => {
+        const result = studentsDao.getResourceById(
+          fakeId,
+          fakeSql,
+          fakeStudentsSerializer,
+          isSingleton,
+          fakeParams,
+        );
+        result.should.to.eventually.be.fulfilled.and.deep.equal(expectResult); // didn't fail correctly
+      });
+    });
+
+    it('should to rejected if isSingleton is true but get multiple results', () => {
       const fakeSql = () => 'multiResults';
       const isSingleton = true;
-      const fakeStudentsSerializer = rows => rows;
-      const fakeParams = {};
+      const expectResult = 'Expect a single object but got multiple results.';
 
       const result = studentsDao.getResourceById(
         fakeId,
@@ -38,9 +60,7 @@ describe('Test students-dao', () => {
         isSingleton,
         fakeParams,
       );
-      return expect(result).to.eventually
-        .be.rejectedWith('Expect a single object but got multiple results.')
-        .and.be.an.instanceOf(Error);
+      return result.should.to.eventually.be.rejectedWith(expectResult).and.be.an.instanceOf(Error);
     });
   });
 });
