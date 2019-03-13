@@ -44,7 +44,8 @@ describe('Test students-dao', () => {
           isSingleton,
           fakeParams,
         );
-        result.should.to.eventually.be.fulfilled.and.deep.equal(expectResult); // didn't fail correctly
+        // didn't fail correctly
+        result.should.to.eventually.be.fulfilled.and.deep.equal(expectResult);
       });
     });
 
