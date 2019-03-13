@@ -11,6 +11,7 @@ const studentsDao = appRoot.require('api/v1/db/oracledb/students-dao');
 
 chai.should();
 chai.use(chaiAsPromised);
+const { any } = sinon.match;
 
 sinon.stub(conn, 'getConnection').resolves({
   execute: (sql) => {
@@ -26,12 +27,12 @@ sinon.stub(conn, 'getConnection').resolves({
 describe('Test students-dao', () => {
   describe('Test getResourceById', () => {
     const fakeId = 'fakeId';
-    const fakeStudentsSerializer = rows => rows;
-    const fakeParams = {};
+    const fakeStudentsSerializer = (rows, id, params) => rows; // eslint-disable-line no-unused-vars
 
     it(`should be fulfilled if
           1. isSingleton is true and only get exact one result
           2. isSingleton is false and get a list of results`, () => {
+      const fakeParams = {};
       const fulfilledCases = [
         { fakeSql: () => 'singleResult', isSingleton: true, expectResult: {} },
         { fakeSql: () => 'singleResult', isSingleton: false, expectResult: [{}] },
@@ -58,6 +59,7 @@ describe('Test students-dao', () => {
       const fakeSql = () => 'multiResults';
       const isSingleton = true;
       const expectResult = 'Expect a single object but got multiple results.';
+      const fakeParams = {};
 
       const result = studentsDao.getResourceById(
         fakeId,
@@ -67,6 +69,23 @@ describe('Test students-dao', () => {
         fakeParams,
       );
       return result.should.to.eventually.be.rejectedWith(expectResult).and.be.an.instanceOf(Error);
+    });
+
+    it('should call the serializer and pass the params', async () => {
+      const fakeSql = () => 'multiResults';
+      const isSingleton = false;
+      const fakeParams = { key: 'value' };
+      const spy = sinon.spy(fakeStudentsSerializer);
+
+      await studentsDao.getResourceById(
+        fakeId,
+        fakeSql,
+        spy,
+        isSingleton,
+        fakeParams,
+      );
+      sinon.assert.calledOnce(spy);
+      sinon.assert.calledWithExactly(spy.getCall(0), any, any, fakeParams);
     });
   });
 });
