@@ -20,7 +20,7 @@ sinon.stub(conn, 'getConnection').resolves({
     };
     return sqlResults[sql];
   },
-  close: () => {},
+  close: () => null,
 });
 
 describe('Test students-dao', () => {
@@ -29,13 +29,16 @@ describe('Test students-dao', () => {
     const fakeStudentsSerializer = rows => rows;
     const fakeParams = {};
 
-    it('should be fulfilled if isSingleton is true and only get one result', () => {
+    it(`should be fulfilled if
+          1. isSingleton is true and only get exact one result
+          2. isSingleton is false and get a list of results`, () => {
       const fulfilledCases = [
-        { fakeSql: () => 'singleResult', isSingleton: true, expectResult: 123 },
-        { fakeSql: () => 'multiResults', isSingleton: false, expectResult: [{}, {}] },
+        { fakeSql: () => 'singleResult', isSingleton: true, expectResult: {} },
         { fakeSql: () => 'singleResult', isSingleton: false, expectResult: [{}] },
+        { fakeSql: () => 'multiResults', isSingleton: false, expectResult: [{}, {}] },
       ];
 
+      const fulfilledPromises = [];
       _.each(fulfilledCases, ({ fakeSql, isSingleton, expectResult }) => {
         const result = studentsDao.getResourceById(
           fakeId,
@@ -44,12 +47,14 @@ describe('Test students-dao', () => {
           isSingleton,
           fakeParams,
         );
-        // didn't fail correctly
-        result.should.to.eventually.be.fulfilled.and.deep.equal(expectResult);
+        fulfilledPromises.push(result.should
+          .to.eventually.be.fulfilled
+          .and.deep.equal(expectResult));
       });
+      return Promise.all(fulfilledPromises);
     });
 
-    it('should to rejected if isSingleton is true but get multiple results', () => {
+    it('should be rejected if isSingleton is true but get multiple results', () => {
       const fakeSql = () => 'multiResults';
       const isSingleton = true;
       const expectResult = 'Expect a single object but got multiple results.';
