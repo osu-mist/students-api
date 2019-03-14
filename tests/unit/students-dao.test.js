@@ -19,15 +19,16 @@ sinon.stub(conn, 'getConnection').resolves({
       multiResults: { rows: [{}, {}] },
       singleResult: { rows: [{}] },
     };
-    return sqlResults[sql];
+    return sql in sqlResults ? sqlResults[sql] : sqlResults.singleResult;
   },
   close: () => null,
 });
 
 describe('Test students-dao', () => {
-  describe('Test getResourceById', () => {
-    const fakeId = 'fakeId';
-    const fakeStudentsSerializer = (rows, id, params) => rows; // eslint-disable-line no-unused-vars
+  const fakeId = 'fakeId';
+  const fakeStudentsSerializer = (rows, id, params) => rows; // eslint-disable-line no-unused-vars
+
+  describe('Test getResourceById()', () => {
     const fakeParams = {};
 
     it(`should be fulfilled if
@@ -53,7 +54,6 @@ describe('Test students-dao', () => {
       });
       return Promise.all(fulfilledPromises);
     });
-
     it('should be rejected if isSingleton is true but get multiple results', () => {
       const fakeSql = () => 'multiResults';
       const spy = sinon.spy(fakeStudentsSerializer);
@@ -65,6 +65,33 @@ describe('Test students-dao', () => {
         .to.eventually.be.rejectedWith(expectResult)
         .and.be.an.instanceOf(Error)
         .then(() => sinon.assert.notCalled(spy));
+    });
+  });
+  describe('Test all getResourceById methods', () => {
+    it('test getGpaById()', () => {
+      const result = studentsDao.getGpaById(fakeId);
+      const expectResult = {
+        links: { self: '/v1/students/fakeId/gpa' },
+        data: {
+          id: fakeId,
+          type: 'gpa',
+          attributes: {
+            gpaLevels: [
+              {
+                creditHoursAttempted: NaN,
+                creditHoursEarned: NaN,
+                creditHoursPassed: NaN,
+                gpaCreditHours: NaN,
+              },
+            ],
+          },
+          links: { self: null },
+        },
+      };
+
+      return result.should
+        .to.eventually.be.fulfilled
+        .and.to.deep.include(expectResult);
     });
   });
 });
