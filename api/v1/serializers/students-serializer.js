@@ -319,6 +319,7 @@ const serializeDualEnrollment = (rawDualEnrollment, osuId, params) => {
 };
 
 module.exports = {
+  getSerializerArgs,
   serializeGpa,
   serializeAccountBalance,
   serializeAccountTransactions,
