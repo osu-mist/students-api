@@ -2,6 +2,7 @@ const appRoot = require('app-root-path');
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const _ = require('lodash');
+const randomize = require('randomatic');
 const sinon = require('sinon');
 
 const studentsSerializer = appRoot.require('api/v1/serializers/students-serializer');
@@ -12,6 +13,31 @@ chai.use(chaiAsPromised);
 const { assert } = chai;
 
 describe('Test students-serializer', () => {
+  it('test fourDigitToTime', () => {
+    const { fourDigitToTime } = studentsSerializer;
+    assert.isNull(fourDigitToTime(null));
+
+    const invalidStrings = [];
+    while (invalidStrings.length < 10) {
+      const length = Math.floor(Math.random() * Math.floor(10));
+      if (length !== 4) {
+        invalidStrings.push(randomize('aA0!', length));
+      } else {
+        invalidStrings.push(randomize('aA!', length));
+      }
+    }
+    _.each(invalidStrings, (string) => {
+      assert.equal(fourDigitToTime(string), 'Incorrect time format');
+    });
+
+    const validStrings = [];
+    while (validStrings.length < 10) {
+      validStrings.push(randomize('0', 4));
+    }
+    _.each(validStrings, (string) => {
+      assert.equal(fourDigitToTime(string), `${string.substring(0, 2)}:${string.substring(2, 4)}:00`);
+    });
+  });
   it('test getSerializerArgs', () => {
     const { getSerializerArgs } = studentsSerializer;
     const fakeType = 'fakeType';

@@ -52,10 +52,11 @@ const serializeJsonApi = (serializerArgs, rawRows) => new JSONAPISerializer(
  * @returns {string} properly formatted time format, e.g. 09:00:00
  */
 const fourDigitToTime = (string) => {
+  const validFormat = /^\d{4}$/;
   if (string === null) {
     return null;
   }
-  if (string.length !== 4) {
+  if (!validFormat.test(string)) {
     return 'Incorrect time format';
   }
   return `${string.substring(0, 2)}:${string.substring(2, 4)}:00`;
@@ -319,6 +320,7 @@ const serializeDualEnrollment = (rawDualEnrollment, osuId, params) => {
 };
 
 module.exports = {
+  fourDigitToTime,
   getSerializerArgs,
   serializeGpa,
   serializeAccountBalance,
