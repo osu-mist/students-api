@@ -131,6 +131,7 @@ describe('Test students-serializer', () => {
   });
   it('test serializeGpa', () => {
     const { serializeGpa } = studentsSerializer;
+    const resourceType = 'gpa';
     const rawGpaLevels = [
       {
         gpa: '3.96',
@@ -159,11 +160,11 @@ describe('Test students-serializer', () => {
       .to.containSubset(
         {
           links: {
-            self: `${fakeBaseUrl}/gpa`,
+            self: `${fakeBaseUrl}/${resourceType}`,
           },
           data: {
             id: fakeId,
-            type: 'gpa',
+            type: resourceType,
             links: { self: null },
           },
         },
@@ -182,6 +183,7 @@ describe('Test students-serializer', () => {
   });
   it('test serializeAccountBalance', () => {
     const { serializeAccountBalance } = studentsSerializer;
+    const resourceType = 'account-balance';
     const rawAccountBalance = {
       identifierField: fakeId,
       currentBalance: '99.99',
@@ -192,11 +194,11 @@ describe('Test students-serializer', () => {
       .to.containSubset(
         {
           links: {
-            self: `${fakeBaseUrl}/account-balance`,
+            self: `${fakeBaseUrl}/${resourceType}`,
           },
           data: {
             id: fakeId,
-            type: 'account-balance',
+            type: resourceType,
             links: { self: null },
             attributes: {
               currentBalance: 99.99,
@@ -204,5 +206,46 @@ describe('Test students-serializer', () => {
           },
         },
       );
+  });
+  it('test serializeAccountTransactions', () => {
+    const { serializeAccountTransactions } = studentsSerializer;
+    const resourceType = 'account-transactions';
+    const rawTransactions = [
+      {
+        amount: '2850',
+        description: 'Ford Loan-Subsidized',
+        entryDate: '2016-12-31 12:29:54',
+      },
+      {
+        amount: '1814',
+        description: 'Presidential Scholar 001100',
+        entryDate: '2017-11-12 12:13:42',
+      },
+    ];
+
+    const serializedTransactions = serializeAccountTransactions(rawTransactions, fakeId);
+    expect(serializedTransactions)
+      .to.containSubset(
+        {
+          links: {
+            self: `${fakeBaseUrl}/${resourceType}`,
+          },
+          data: {
+            id: fakeId,
+            type: resourceType,
+            links: { self: null },
+          },
+        },
+      ).and.to.have.nested.property('data.attributes.transactions');
+
+    const { transactions } = serializedTransactions.data.attributes;
+    _.each(transactions, (transaction) => {
+      assert.hasAllKeys(transaction, _.keys(
+        openapi.definitions.AccountTransactionsResult.properties.data
+          .properties.attributes.properties.transactions.items.properties,
+      ));
+      assert.isNotNaN(Date.parse(transaction.entryDate));
+      assert.isNumber(transaction.amount);
+    });
   });
 });
