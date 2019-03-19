@@ -1,6 +1,7 @@
 const appRoot = require('app-root-path');
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
+const chaiSubset = require('chai-subset');
 const _ = require('lodash');
 const randomize = require('randomatic');
 const sinon = require('sinon');
@@ -10,9 +11,13 @@ const { openapi } = appRoot.require('utils/load-openapi');
 
 chai.should();
 chai.use(chaiAsPromised);
-const { assert } = chai;
+chai.use(chaiSubset);
+const { assert, expect } = chai;
 
 describe('Test students-serializer', () => {
+  const fakeId = 'fakeId';
+  const fakeBaseUrl = `/v1/students/${fakeId}`;
+
   it('test fourDigitToTime', () => {
     const { fourDigitToTime } = studentsSerializer;
     assert.isNull(fourDigitToTime(null));
@@ -41,9 +46,8 @@ describe('Test students-serializer', () => {
   it('test getSerializerArgs', () => {
     const { getSerializerArgs } = studentsSerializer;
     const fakeType = 'fakeType';
-    const fakeId = 'fakeId';
     const fakePath = 'fakePath';
-    const fakeBaseUrl = `/v1/students/${fakeId}/${fakePath}`;
+    const fakePathUrl = `${fakeBaseUrl}/${fakePath}`;
     const fakeDataSchema = {
       properties: {
         type: {
@@ -58,7 +62,6 @@ describe('Test students-serializer', () => {
         },
       },
     };
-
     const fakeDefinitions = {
       fakeSingleResult: {
         properties: {
@@ -82,25 +85,25 @@ describe('Test students-serializer', () => {
         isSingle: true,
         expectedResult: 'fakeSingleResult',
         fakeParams: {},
-        expectedLink: fakeBaseUrl,
+        expectedLink: fakePathUrl,
       },
       {
         isSingle: true,
         expectedResult: 'fakeSingleResult',
         fakeParams: { fakeKey: 'fakeValue' },
-        expectedLink: `${fakeBaseUrl}?fakeKey=fakeValue`,
+        expectedLink: `${fakePathUrl}?fakeKey=fakeValue`,
       },
       {
         isSingle: true,
         expectedResult: 'fakeSingleResult',
         fakeParams: undefined,
-        expectedLink: fakeBaseUrl,
+        expectedLink: fakePathUrl,
       },
       {
         isSingle: false,
         expectedResult: 'fakePluralResult',
         fakeParams: undefined,
-        expectedLink: fakeBaseUrl,
+        expectedLink: fakePathUrl,
       },
     ];
 
@@ -111,7 +114,6 @@ describe('Test students-serializer', () => {
         expectedLink,
         expectedResult,
       } = testCase;
-
       const expectedArgs = {
         identifierField: 'identifierField',
         resourceKeys: ['fakeAttribute1', 'fakeAttribute2', 'fakeAttribute3'],
@@ -120,8 +122,62 @@ describe('Test students-serializer', () => {
         enableDataLinks: false,
         resourceType: fakeType,
       };
+
       const actualArgs = getSerializerArgs(fakeId, expectedResult, fakePath, isSingle, fakeParams);
       assert.deepEqual(actualArgs, expectedArgs);
+    });
+
+    sinon.restore();
+  });
+  it('test serializeGpa', () => {
+    const { serializeGpa } = studentsSerializer;
+    const rawGpaLevels = [
+      {
+        gpa: '3.96',
+        gpaCreditHours: '103',
+        gpaType: 'Institution',
+        creditHoursAttempted: '107',
+        creditHoursEarned: '107',
+        creditHoursPassed: '107',
+        level: 'Undergraduate',
+        qualityPoints: '407.50',
+      },
+      {
+        gpa: '3.97',
+        gpaCreditHours: '146',
+        gpaType: 'Overall',
+        creditHoursAttempted: '174',
+        creditHoursEarned: '174',
+        creditHoursPassed: '174',
+        level: 'Undergraduate',
+        qualityPoints: '579.50',
+      },
+    ];
+
+    const serializedGpaLevels = serializeGpa(rawGpaLevels, fakeId);
+    expect(serializedGpaLevels)
+      .to.containSubset(
+        {
+          links: {
+            self: `${fakeBaseUrl}/gpa`,
+          },
+          data: {
+            id: fakeId,
+            type: 'gpa',
+            links: { self: null },
+          },
+        },
+      ).and.to.have.nested.property('data.attributes.gpaLevels');
+
+    const floatFields = [
+      'gpaCreditHours', 'creditHoursAttempted', 'creditHoursEarned', 'creditHoursPassed',
+    ];
+    const { gpaLevels } = serializedGpaLevels.data.attributes;
+    _.each(gpaLevels, (gpaLevel) => {
+      assert.hasAllKeys(gpaLevel, _.keys(openapi.definitions.GradePointAverage.properties));
+      _.each(floatFields, (floatField) => {
+        assert.isNumber(gpaLevel[floatField]);
+      });
     });
   });
 });
