@@ -17,6 +17,22 @@ const { assert, expect } = chai;
 describe('Test students-serializer', () => {
   const fakeId = 'fakeId';
   const fakeBaseUrl = `/v1/students/${fakeId}`;
+  const resourceSubsetSchema = (resourceType, resourceAttributes) => {
+    const schema = {
+      links: {
+        self: `${fakeBaseUrl}/${resourceType}`,
+      },
+      data: {
+        id: fakeId,
+        type: resourceType,
+        links: { self: null },
+      },
+    };
+    if (resourceAttributes) {
+      schema.data.attributes = resourceAttributes;
+    }
+    return schema;
+  };
 
   it('test fourDigitToTime', () => {
     const { fourDigitToTime } = studentsSerializer;
@@ -157,18 +173,8 @@ describe('Test students-serializer', () => {
 
     const serializedGpaLevels = serializeGpa(rawGpaLevels, fakeId);
     expect(serializedGpaLevels)
-      .to.containSubset(
-        {
-          links: {
-            self: `${fakeBaseUrl}/${resourceType}`,
-          },
-          data: {
-            id: fakeId,
-            type: resourceType,
-            links: { self: null },
-          },
-        },
-      ).and.to.have.nested.property('data.attributes.gpaLevels');
+      .to.containSubset(resourceSubsetSchema(resourceType))
+      .and.to.have.nested.property('data.attributes.gpaLevels');
 
     const floatFields = [
       'gpaCreditHours', 'creditHoursAttempted', 'creditHoursEarned', 'creditHoursPassed',
@@ -191,21 +197,7 @@ describe('Test students-serializer', () => {
 
     const serializedAccountBalance = serializeAccountBalance(rawAccountBalance, fakeId);
     expect(serializedAccountBalance)
-      .to.containSubset(
-        {
-          links: {
-            self: `${fakeBaseUrl}/${resourceType}`,
-          },
-          data: {
-            id: fakeId,
-            type: resourceType,
-            links: { self: null },
-            attributes: {
-              currentBalance: 99.99,
-            },
-          },
-        },
-      );
+      .to.containSubset(resourceSubsetSchema(resourceType, { currentBalance: 99.99 }));
   });
   it('test serializeAccountTransactions', () => {
     const { serializeAccountTransactions } = studentsSerializer;
@@ -225,18 +217,8 @@ describe('Test students-serializer', () => {
 
     const serializedTransactions = serializeAccountTransactions(rawTransactions, fakeId);
     expect(serializedTransactions)
-      .to.containSubset(
-        {
-          links: {
-            self: `${fakeBaseUrl}/${resourceType}`,
-          },
-          data: {
-            id: fakeId,
-            type: resourceType,
-            links: { self: null },
-          },
-        },
-      ).and.to.have.nested.property('data.attributes.transactions');
+      .to.containSubset(resourceSubsetSchema(resourceType))
+      .and.to.have.nested.property('data.attributes.transactions');
 
     const { transactions } = serializedTransactions.data.attributes;
     _.each(transactions, (transaction) => {
