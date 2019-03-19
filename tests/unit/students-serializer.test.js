@@ -180,4 +180,29 @@ describe('Test students-serializer', () => {
       });
     });
   });
+  it('test serializeAccountBalance', () => {
+    const { serializeAccountBalance } = studentsSerializer;
+    const rawAccountBalance = {
+      identifierField: fakeId,
+      currentBalance: '99.99',
+    };
+
+    const serializedAccountBalance = serializeAccountBalance(rawAccountBalance, fakeId);
+    expect(serializedAccountBalance)
+      .to.containSubset(
+        {
+          links: {
+            self: `${fakeBaseUrl}/account-balance`,
+          },
+          data: {
+            id: fakeId,
+            type: 'account-balance',
+            links: { self: null },
+            attributes: {
+              currentBalance: 99.99,
+            },
+          },
+        },
+      );
+  });
 });
