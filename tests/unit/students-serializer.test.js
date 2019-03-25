@@ -308,4 +308,76 @@ describe('Test students-serializer', () => {
     expect(serializedClassification)
       .to.containSubset(resourceSubsetSchema(resourceType));
   });
+  it('test serializeGrades', () => {
+    const { serializeGrades } = studentsSerializer;
+    const resourceType = 'grades';
+    const rawGrades = [
+      {
+        identifierField: `${fakeId}-200803-37626`,
+        courseReferenceNumber: '37626',
+        gradeFinal: 'A',
+        courseSubject: 'SPAN',
+        courseSubjectDescription: 'Spanish',
+        courseNumber: '336',
+        courseTitle: '*LATIN AMERICAN CULTURE',
+        sectionNumber: '001',
+        term: '200803',
+        termDescription: 'Spring 2008',
+        scheduleType: 'A',
+        scheduleDescription: 'Lecture',
+        creditHours: '3',
+        tcknCourseLevel: 'Non-Degree / Credential',
+        sfrstcrCourseLevel: null,
+        registrationStatus: null,
+        gradeMode: 'N',
+        gradeModeDescription: 'Normal Grading Mode',
+      },
+      {
+        identifierField: `${fakeId}-201900-72004`,
+        courseReferenceNumber: '72004',
+        gradeFinal: 'B',
+        courseSubject: 'FW',
+        courseSubjectDescription: 'Fisheries and Wildlife',
+        courseNumber: '427',
+        courseTitle: 'PRINCIPLES OF WILDLIFE DISEASE',
+        sectionNumber: '400',
+        term: '201900',
+        termDescription: 'Summer 2018',
+        scheduleType: 'Y',
+        scheduleDescription: 'Online',
+        creditHours: '4',
+        tcknCourseLevel: 'Undergraduate',
+        sfrstcrCourseLevel: 'E-Campus Undergraduate Course',
+        registrationStatus: '**Web Registered**',
+        gradeMode: 'N',
+        gradeModeDescription: 'Normal Grading Mode',
+      },
+    ];
+
+    const serializedGrades = serializeGrades(rawGrades, fakeId);
+    const serializedGradesData = serializedGrades.data;
+    expect(serializedGrades).to.have.keys('data', 'links');
+    expect(serializedGradesData).to.be.an('array');
+
+    let index = 0;
+    _.each(serializedGradesData, (resource) => {
+      const { sfrstcrCourseLevel, tcknCourseLevel } = rawGrades[index];
+      expect(resource)
+        .to.contains.keys('attributes')
+        .and.to.containSubset({
+          id: `${fakeId}-${resource.attributes.term}-${resource.attributes.courseReferenceNumber}`,
+          type: resourceType,
+          links: { self: null },
+        });
+
+      const { attributes } = resource;
+      expect(attributes).to.have.all.keys(_.keys(
+        openapi.definitions.GradesResult.properties
+          .data.items.properties.attributes.properties,
+      ));
+      expect(attributes.creditHours).to.be.a('number');
+      expect(attributes.courseLevel).to.equal(sfrstcrCourseLevel || tcknCourseLevel);
+      index += 1;
+    });
+  });
 });
