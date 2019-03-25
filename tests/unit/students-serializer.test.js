@@ -295,4 +295,17 @@ describe('Test students-serializer', () => {
       });
     });
   });
+  it('test serializeClassification', () => {
+    const { serializeClassification } = studentsSerializer;
+    const resourceType = 'classification';
+    const rawClassification = {
+      identifierField: fakeId,
+      level: 'Graduate',
+      classification: 'Determine from Student Type',
+    };
+
+    const serializedClassification = serializeClassification(rawClassification, fakeId);
+    expect(serializedClassification)
+      .to.containSubset(resourceSubsetSchema(resourceType));
+  });
 });
