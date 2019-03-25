@@ -1,3 +1,5 @@
+/* eslint no-unused-expressions: 0 */
+
 const appRoot = require('app-root-path');
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
@@ -12,7 +14,7 @@ const { openapi } = appRoot.require('utils/load-openapi');
 chai.should();
 chai.use(chaiAsPromised);
 chai.use(chaiSubset);
-const { assert, expect } = chai;
+const { expect } = chai;
 
 describe('Test students-serializer', () => {
   const fakeId = 'fakeId';
@@ -36,7 +38,7 @@ describe('Test students-serializer', () => {
 
   it('test fourDigitToTime', () => {
     const { fourDigitToTime } = studentsSerializer;
-    assert.isNull(fourDigitToTime(null));
+    expect(fourDigitToTime(null)).to.be.null;
 
     const invalidStrings = [];
     while (invalidStrings.length < 10) {
@@ -48,7 +50,7 @@ describe('Test students-serializer', () => {
       }
     }
     _.each(invalidStrings, (string) => {
-      assert.equal(fourDigitToTime(string), 'Incorrect time format');
+      expect(fourDigitToTime(string)).to.equal('Incorrect time format');
     });
 
     const validStrings = [];
@@ -56,7 +58,7 @@ describe('Test students-serializer', () => {
       validStrings.push(randomize('0', 4));
     }
     _.each(validStrings, (string) => {
-      assert.equal(fourDigitToTime(string), `${string.substring(0, 2)}:${string.substring(2, 4)}:00`);
+      expect(fourDigitToTime(string)).to.equal(`${string.substring(0, 2)}:${string.substring(2, 4)}:00`);
     });
   });
   it('test getSerializerArgs', () => {
@@ -140,7 +142,7 @@ describe('Test students-serializer', () => {
       };
 
       const actualArgs = getSerializerArgs(fakeId, expectedResult, fakePath, isSingle, fakeParams);
-      assert.deepEqual(actualArgs, expectedArgs);
+      expect(actualArgs).to.deep.equal(expectedArgs);
     });
 
     sinon.restore();
@@ -181,9 +183,9 @@ describe('Test students-serializer', () => {
     ];
     const { gpaLevels } = serializedGpaLevels.data.attributes;
     _.each(gpaLevels, (gpaLevel) => {
-      assert.hasAllKeys(gpaLevel, _.keys(openapi.definitions.GradePointAverage.properties));
+      expect(gpaLevel).to.have.all.keys(_.keys(openapi.definitions.GradePointAverage.properties));
       _.each(floatFields, (floatField) => {
-        assert.isNumber(gpaLevel[floatField]);
+        expect(gpaLevel[floatField]).to.be.a('number');
       });
     });
   });
@@ -222,12 +224,75 @@ describe('Test students-serializer', () => {
 
     const { transactions } = serializedTransactions.data.attributes;
     _.each(transactions, (transaction) => {
-      assert.hasAllKeys(transaction, _.keys(
-        openapi.definitions.AccountTransactionsResult.properties.data
-          .properties.attributes.properties.transactions.items.properties,
+      expect(transaction).to.have.all.keys(_.keys(
+        openapi.definitions.AccountTransactionsResult.properties
+          .data.properties.attributes.properties.transactions.items.properties,
       ));
-      assert.isNotNaN(Date.parse(transaction.entryDate));
-      assert.isNumber(transaction.amount);
+      expect(Date.parse(transaction.entryDate)).to.not.be.NaN;
+      expect(transaction.amount).to.be.a('number');
+    });
+  });
+  it('test serializeAcademicStatus', () => {
+    const { serializeAcademicStatus } = studentsSerializer;
+    const resourceType = 'academic-status';
+    const rawAcademicStatus = [
+      {
+        academicStanding: 'Good Standing',
+        term: '201803',
+        termDescription: 'Spring 2018',
+        gpa: '4.00',
+        gpaCreditHours: '14',
+        gpaType: 'Institution',
+        creditHoursAttempted: '14',
+        creditHoursEarned: '14',
+        creditHoursPassed: '14',
+        level: 'Undergraduate',
+        qualityPoints: '56.00',
+      },
+      {
+        academicStanding: 'Good Standing',
+        term: '201901',
+        termDescription: 'Fall 2018',
+        gpa: '4.00',
+        gpaCreditHours: '15',
+        gpaType: 'Institution',
+        creditHoursAttempted: '16',
+        creditHoursEarned: '16',
+        creditHoursPassed: '16',
+        level: 'Undergraduate',
+        qualityPoints: '60.00',
+      },
+    ];
+
+    const serializedAcademicStatus = serializeAcademicStatus(rawAcademicStatus, fakeId);
+    const serializedAcademicStatusData = serializedAcademicStatus.data;
+    expect(serializedAcademicStatus).to.have.keys('data', 'links');
+    expect(serializedAcademicStatusData).to.be.an('array');
+
+    _.each(serializedAcademicStatusData, (resource) => {
+      expect(resource)
+        .to.contains.keys('attributes')
+        .and.to.containSubset({
+          id: `${fakeId}-${resource.attributes.term}`,
+          type: resourceType,
+          links: { self: null },
+        });
+
+      const { attributes } = resource;
+      expect(attributes).to.have.all.keys(_.keys(
+        openapi.definitions.AcademicStatusResult.properties
+          .data.items.properties.attributes.properties,
+      ));
+
+      _.each(attributes.gpa, (gpaLevel) => {
+        expect(gpaLevel).to.have.all.keys(_.keys(openapi.definitions.GradePointAverage.properties));
+        const floatFields = [
+          'gpaCreditHours', 'creditHoursAttempted', 'creditHoursEarned', 'creditHoursPassed',
+        ];
+        _.each(floatFields, (floatField) => {
+          expect(gpaLevel[floatField]).to.be.a('number');
+        });
+      });
     });
   });
 });
