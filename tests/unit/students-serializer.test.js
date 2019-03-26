@@ -576,4 +576,49 @@ describe('Test students-serializer', () => {
       });
     });
   });
+  it('test serializeWorkStudy', () => {
+    const { serializeWorkStudy } = studentsSerializer;
+    const resourceType = 'work-study';
+    const rawAwards = [
+      {
+        offerAmount: '1500',
+        offerExpirationDate: '2006-06-09',
+        acceptedAmount: '1500',
+        acceptedDate: '2006-05-12',
+        paidAmount: '0',
+        awardStatus: 'Accepted',
+        effectiveStartDate: '2006-09-25',
+        effectiveEndDate: '2007-06-15',
+      },
+      {
+        offerAmount: '0',
+        offerExpirationDate: null,
+        acceptedAmount: '0',
+        acceptedDate: null,
+        paidAmount: '0',
+        awardStatus: 'Cancelled',
+        effectiveStartDate: '2007-06-25',
+        effectiveEndDate: '2008-03-21',
+      },
+    ];
+
+    const serializedWorkStudy = serializeWorkStudy(rawAwards, fakeId);
+    expect(serializedWorkStudy)
+      .to.containSubset(resourceSubsetSchema(resourceType))
+      .and.to.have.nested.property('data.attributes.awards');
+
+    const { awards } = serializedWorkStudy.data.attributes;
+    _.each(awards, (award) => {
+      expect(award).to.have.all.keys(_.keys(
+        openapi.definitions.WorkStudyResult.properties.data
+          .properties.attributes.properties.awards.items.properties,
+      ));
+      const floatFields = [
+        'offerAmount', 'acceptedAmount', 'paidAmount',
+      ];
+      _.each(floatFields, (floatField) => {
+        expect(award[floatField]).to.be.a('number');
+      });
+    });
+  });
 });
