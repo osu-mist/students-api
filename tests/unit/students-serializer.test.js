@@ -380,4 +380,140 @@ describe('Test students-serializer', () => {
       index += 1;
     });
   });
+  it('test serializeClassSchedule', () => {
+    const { serializeClassSchedule } = studentsSerializer;
+    const resourceType = 'class-schedule';
+    const rawClassSchedule = [
+      {
+        academicYear: '0405',
+        academicYearDescription: 'Academic Year 2004-05',
+        courseReferenceNumber: '37430',
+        courseSubject: 'RNG',
+        courseSubjectDescription: 'Rangeland Ecology & Management',
+        courseNumber: '399',
+        courseTitleShort: 'SPECIAL TOPICS',
+        courseTitleLong: null,
+        sectionNumber: '001',
+        term: '200503',
+        termDescription: 'Spring 2005',
+        scheduleType: 'F',
+        scheduleDescription: 'Independent or Special Studies',
+        creditHours: '2',
+        registrationStatus: '**Web Registered**',
+        gradingMode: 'Normal Grading Mode',
+        continuingEducation: null,
+        facultyOsuId: '930608969',
+        facultyName: 'Ehrhart, Robert',
+        facultyEmail: 'Bob.Ehrhart@oregonstate.edu',
+        facultyPrimary: 'Y',
+        beginDate: '2005-03-28',
+        beginTime: null,
+        endDate: '2005-06-03',
+        endTime: null,
+        room: null,
+        building: null,
+        buildingDescription: null,
+        campus: 'Oregon State - Cascades',
+        hoursPerWeek: '0',
+        creditHourSession: '2',
+        meetingScheduleType: 'F',
+        meetingScheduleDescription: 'Independent or Special Studies',
+        monday: null,
+        tuesday: null,
+        wednesday: null,
+        thursday: null,
+        friday: null,
+        saturday: null,
+        sunday: null,
+      },
+      {
+        academicYear: '0405',
+        academicYearDescription: 'Academic Year 2004-05',
+        courseReferenceNumber: '35301',
+        courseSubject: 'BIO',
+        courseSubjectDescription: 'Biology-UO',
+        courseNumber: '370-U',
+        courseTitleShort: 'UO. ECOLOGY',
+        courseTitleLong: null,
+        sectionNumber: '001',
+        term: '200503',
+        termDescription: 'Spring 2005',
+        scheduleType: 'A',
+        scheduleDescription: 'Lecture',
+        creditHours: '4',
+        registrationStatus: '**Web Registered**',
+        gradingMode: 'Normal Grading Mode',
+        continuingEducation: null,
+        facultyOsuId: '930828000',
+        facultyName: 'Clark, Lisa',
+        facultyEmail: null,
+        facultyPrimary: 'Y',
+        beginDate: '2005-03-28',
+        beginTime: '1900',
+        endDate: '2005-06-03',
+        endTime: '2030',
+        room: '201',
+        building: 'CSB',
+        buildingDescription: 'Cascades Hall (COOSU)',
+        campus: 'Oregon State - Cascades',
+        hoursPerWeek: '3',
+        creditHourSession: '4',
+        meetingScheduleType: 'A',
+        meetingScheduleDescription: 'Lecture',
+        monday: null,
+        tuesday: 'T',
+        wednesday: null,
+        thursday: 'R',
+        friday: null,
+        saturday: null,
+        sunday: null,
+      },
+    ];
+    const serializedClassSchedule = serializeClassSchedule(rawClassSchedule, fakeId);
+    const serializedClassScheduleData = serializedClassSchedule.data;
+    const classScheduleAttribute = openapi
+      .definitions.ClassScheduleResult.properties.data.items.properties.attributes.properties;
+
+    expect(serializedClassSchedule).to.have.keys('data', 'links');
+    expect(serializedClassScheduleData).to.be.an('array');
+
+    let index = 0;
+    _.each(serializedClassScheduleData, (resource) => {
+      const { courseTitleLong, courseTitleShort, continuingEducation } = rawClassSchedule[index];
+      expect(resource)
+        .to.contains.keys('attributes')
+        .and.to.containSubset({
+          id: `${fakeId}-${resource.attributes.term}-${resource.attributes.courseReferenceNumber}`,
+          type: resourceType,
+          links: { self: null },
+        });
+
+      const { attributes } = resource;
+      expect(attributes).to.have.all.keys(_.keys(classScheduleAttribute));
+      expect(attributes.creditHours).to.be.a('number');
+      expect(attributes.courseTitle).to.equal(courseTitleLong || courseTitleShort);
+      expect(attributes.continuingEducation).to.equal(continuingEducation === 'Y');
+
+      const { faculty, meetingTimes } = attributes;
+
+      _.each(faculty, (f) => {
+        expect(f).to.have.all.keys(_.keys(classScheduleAttribute.faculty.items.properties));
+        expect(f.primary).to.equal(rawClassSchedule[index].facultyPrimary === 'Y');
+      });
+
+      _.each(meetingTimes, (m) => {
+        expect(m).to.have.all.keys(_.keys(classScheduleAttribute.meetingTimes.items.properties));
+
+        const floatFields = ['hoursPerWeek', 'creditHourSession'];
+        _.each(floatFields, (floatField) => {
+          expect(m[floatField]).to.be.a('number');
+        });
+        expect(m.weeklySchedule).to.be.an('array');
+        _.each(m.weeklySchedule, (dailySchedule) => {
+          expect(dailySchedule).to.be.oneOf(['M', 'T', 'W', 'Th', 'F', 'Sa', 'Su']);
+        });
+      });
+      index += 1;
+    });
+  });
 });
