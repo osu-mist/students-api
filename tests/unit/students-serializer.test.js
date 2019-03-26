@@ -516,4 +516,64 @@ describe('Test students-serializer', () => {
       index += 1;
     });
   });
+  it('test serializeHolds', () => {
+    const { serializeHolds } = studentsSerializer;
+    const resourceType = 'holds';
+    const rawHolds = [
+      {
+        fromDate: '2011-12-28',
+        toDate: '2099-12-31',
+        reason: 'ACTG 321',
+        description: 'Missing Requirements',
+        registration: null,
+        transcript: null,
+        graduation: 'Graduation',
+        grades: null,
+        accountsReceivable: null,
+        enrollmentVerification: null,
+        application: null,
+        compliance: null,
+      },
+      {
+        fromDate: '2011-12-28',
+        toDate: '2099-12-31',
+        reason: 'Has not applied as Postbac',
+        description: 'Must Apply as Postbac',
+        registration: 'Registration',
+        transcript: null,
+        graduation: 'Graduation',
+        grades: null,
+        accountsReceivable: null,
+        enrollmentVerification: null,
+        application: null,
+        compliance: null,
+      },
+    ];
+    const processesAffectedKeys = [
+      'Registration',
+      'Transcript',
+      'Graduation',
+      'Grades',
+      'Accounts Receivable',
+      'Enrollment Verification',
+      'Application',
+      'Compliance',
+    ];
+
+    const serializedHolds = serializeHolds(rawHolds, fakeId);
+    expect(serializedHolds)
+      .to.containSubset(resourceSubsetSchema(resourceType))
+      .and.to.have.nested.property('data.attributes.holds');
+
+    const { holds } = serializedHolds.data.attributes;
+    _.each(holds, (hold) => {
+      expect(hold).to.have.all.keys(_.keys(
+        openapi.definitions.HoldsResult.properties.data
+          .properties.attributes.properties.holds.items.properties,
+      ));
+      _.each(hold.processesAffected, (processesAffectedKey) => {
+        expect(processesAffectedKey).to.be.oneOf(processesAffectedKeys);
+      });
+    });
+  });
 });
