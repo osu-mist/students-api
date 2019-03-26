@@ -621,4 +621,58 @@ describe('Test students-serializer', () => {
       });
     });
   });
+  it('test serializeDualEnrollment', () => {
+    const { serializeDualEnrollment } = studentsSerializer;
+    const resourceType = 'dual-enrollment';
+    const rawDualEnrollment = [
+      {
+        identifierField: `${fakeId}-200503`,
+        creditHours: '5',
+        term: '200503',
+      },
+      {
+        identifierField: `${fakeId}-200602`,
+        creditHours: '8',
+        term: '200602',
+      },
+      {
+        identifierField: `${fakeId}-200603`,
+        creditHours: '8',
+        term: '200603',
+      },
+      {
+        identifierField: `${fakeId}-201900`,
+        creditHours: '0',
+        term: '201900',
+      },
+      {
+        identifierField: `${fakeId}-201901`,
+        creditHours: '0',
+        term: '201901',
+      },
+    ];
+
+    const serializedDualEnrollment = serializeDualEnrollment(rawDualEnrollment, fakeId);
+    const serializedDualEnrollmentData = serializedDualEnrollment.data;
+
+    expect(serializedDualEnrollment).to.have.keys('data', 'links');
+    expect(serializedDualEnrollmentData).to.be.an('array');
+
+    _.each(serializedDualEnrollmentData, (resource) => {
+      expect(resource)
+        .to.contains.keys('attributes')
+        .and.to.containSubset({
+          id: `${fakeId}-${resource.attributes.term}`,
+          type: resourceType,
+          links: { self: null },
+        });
+
+      const { attributes } = resource;
+      expect(attributes).to.have.all.keys(_.keys(
+        openapi.definitions.DualEnrollmentResult.properties.data
+          .items.properties.attributes.properties,
+      ));
+      expect(attributes.creditHours).to.be.a('number');
+    });
+  });
 });
