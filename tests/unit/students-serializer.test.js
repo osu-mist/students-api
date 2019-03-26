@@ -36,6 +36,67 @@ describe('Test students-serializer', () => {
     return schema;
   };
 
+  /**
+   * @summary Helper function for lite-testing single resource
+   * @function
+   * @param {object} serializedResource serialized resource
+   * @param {string} resourceType resource type
+   * @param {string} nestedProps field name of the nested properties
+   */
+  const testSingleResource = (serializedResource, resourceType, nestedProps) => {
+    expect(serializedResource).to.containSubset(resourceSubsetSchema(resourceType));
+
+    if (nestedProps) {
+      expect(serializedResource).have.nested.property(`data.attributes.${nestedProps}`);
+    }
+  };
+
+  /**
+   * @summary Helper function for lite-testing multiple resources
+   * @function
+   * @param {Object} serializedResources serialized resources
+   * @returns {Object} data object from serialized resources for further use
+   */
+  const testMultipleResources = (serializedResources) => {
+    const serializedResourcesData = serializedResources.data;
+    expect(serializedResources).to.have.keys('data', 'links');
+    expect(serializedResourcesData).to.be.an('array');
+
+    return serializedResourcesData;
+  };
+
+  /**
+   * @summary Helper function to get definition from openapi specification
+   * @function
+   * @param {Object} definition the name of definition
+   * @param {Object} nestedOption nested option
+   * @returns {Object}
+   */
+  const getDefinitionProps = (definition, nestedOption) => {
+    let result = openapi.definitions[definition].properties;
+    if (nestedOption) {
+      const { dataItem, dataField } = nestedOption;
+      if (dataItem) {
+        result = result.data.items.properties.attributes.properties;
+      } else if (dataField) {
+        result = result.data.properties.attributes.properties[dataField].items.properties;
+      }
+    }
+    return result;
+  };
+
+  /**
+   * @summary Helper function to check certain fields are parsed as numbers
+   * @function
+   * @param {Object} resource resource to be checked
+   * @param {String[]} numberFields numbers fields
+   */
+  const expectNumberFields = (resource, numberFields) => {
+    _.each(numberFields, (numberField) => {
+      expect(resource[numberField]).to.be.a('number');
+    });
+  };
+
   it('test fourDigitToTime', () => {
     const { fourDigitToTime } = studentsSerializer;
     expect(fourDigitToTime(null)).to.be.null;
@@ -174,19 +235,15 @@ describe('Test students-serializer', () => {
     ];
 
     const serializedGpaLevels = serializeGpa(rawGpaLevels, fakeId);
-    expect(serializedGpaLevels)
-      .to.containSubset(resourceSubsetSchema(resourceType))
-      .and.to.have.nested.property('data.attributes.gpaLevels');
+    testSingleResource(serializedGpaLevels, resourceType, 'gpaLevels');
 
-    const floatFields = [
+    const numberFields = [
       'gpaCreditHours', 'creditHoursAttempted', 'creditHoursEarned', 'creditHoursPassed',
     ];
     const { gpaLevels } = serializedGpaLevels.data.attributes;
     _.each(gpaLevels, (gpaLevel) => {
-      expect(gpaLevel).to.have.all.keys(_.keys(openapi.definitions.GradePointAverage.properties));
-      _.each(floatFields, (floatField) => {
-        expect(gpaLevel[floatField]).to.be.a('number');
-      });
+      expect(gpaLevel).to.have.all.keys(_.keys(getDefinitionProps('GradePointAverage')));
+      expectNumberFields(gpaLevel, numberFields);
     });
   });
   it('test serializeAccountBalance', () => {
@@ -198,8 +255,8 @@ describe('Test students-serializer', () => {
     };
 
     const serializedAccountBalance = serializeAccountBalance(rawAccountBalance, fakeId);
-    expect(serializedAccountBalance)
-      .to.containSubset(resourceSubsetSchema(resourceType, { currentBalance: 99.99 }));
+    testSingleResource(serializedAccountBalance, resourceType);
+    expect(serializedAccountBalance.data.attributes.currentBalance).to.be.a('number');
   });
   it('test serializeAccountTransactions', () => {
     const { serializeAccountTransactions } = studentsSerializer;
@@ -218,18 +275,15 @@ describe('Test students-serializer', () => {
     ];
 
     const serializedTransactions = serializeAccountTransactions(rawTransactions, fakeId);
-    expect(serializedTransactions)
-      .to.containSubset(resourceSubsetSchema(resourceType))
-      .and.to.have.nested.property('data.attributes.transactions');
+    testSingleResource(serializedTransactions, resourceType, 'transactions');
 
     const { transactions } = serializedTransactions.data.attributes;
     _.each(transactions, (transaction) => {
       expect(transaction).to.have.all.keys(_.keys(
-        openapi.definitions.AccountTransactionsResult.properties
-          .data.properties.attributes.properties.transactions.items.properties,
+        getDefinitionProps('AccountTransactionsResult', { dataField: 'transactions' }),
       ));
       expect(Date.parse(transaction.entryDate)).to.not.be.NaN;
-      expect(transaction.amount).to.be.a('number');
+      expectNumberFields(transaction, ['amount']);
     });
   });
   it('test serializeAcademicStatus', () => {
@@ -265,9 +319,7 @@ describe('Test students-serializer', () => {
     ];
 
     const serializedAcademicStatus = serializeAcademicStatus(rawAcademicStatus, fakeId);
-    const serializedAcademicStatusData = serializedAcademicStatus.data;
-    expect(serializedAcademicStatus).to.have.keys('data', 'links');
-    expect(serializedAcademicStatusData).to.be.an('array');
+    const serializedAcademicStatusData = testMultipleResources(serializedAcademicStatus);
 
     _.each(serializedAcademicStatusData, (resource) => {
       expect(resource)
@@ -280,18 +332,15 @@ describe('Test students-serializer', () => {
 
       const { attributes } = resource;
       expect(attributes).to.have.all.keys(_.keys(
-        openapi.definitions.AcademicStatusResult.properties
-          .data.items.properties.attributes.properties,
+        getDefinitionProps('AcademicStatusResult', { dataItem: true }),
       ));
 
+      const numberFields = [
+        'gpaCreditHours', 'creditHoursAttempted', 'creditHoursEarned', 'creditHoursPassed',
+      ];
       _.each(attributes.gpa, (gpaLevel) => {
-        expect(gpaLevel).to.have.all.keys(_.keys(openapi.definitions.GradePointAverage.properties));
-        const floatFields = [
-          'gpaCreditHours', 'creditHoursAttempted', 'creditHoursEarned', 'creditHoursPassed',
-        ];
-        _.each(floatFields, (floatField) => {
-          expect(gpaLevel[floatField]).to.be.a('number');
-        });
+        expect(gpaLevel).to.have.all.keys(_.keys(getDefinitionProps('GradePointAverage')));
+        expectNumberFields(gpaLevel, numberFields);
       });
     });
   });
@@ -305,8 +354,7 @@ describe('Test students-serializer', () => {
     };
 
     const serializedClassification = serializeClassification(rawClassification, fakeId);
-    expect(serializedClassification)
-      .to.containSubset(resourceSubsetSchema(resourceType));
+    testSingleResource(serializedClassification, resourceType);
   });
   it('test serializeGrades', () => {
     const { serializeGrades } = studentsSerializer;
@@ -355,9 +403,7 @@ describe('Test students-serializer', () => {
     ];
 
     const serializedGrades = serializeGrades(rawGrades, fakeId);
-    const serializedGradesData = serializedGrades.data;
-    expect(serializedGrades).to.have.keys('data', 'links');
-    expect(serializedGradesData).to.be.an('array');
+    const serializedGradesData = testMultipleResources(serializedGrades);
 
     let index = 0;
     _.each(serializedGradesData, (resource) => {
@@ -372,10 +418,9 @@ describe('Test students-serializer', () => {
 
       const { attributes } = resource;
       expect(attributes).to.have.all.keys(_.keys(
-        openapi.definitions.GradesResult.properties
-          .data.items.properties.attributes.properties,
+        getDefinitionProps('GradesResult', { dataItem: true }),
       ));
-      expect(attributes.creditHours).to.be.a('number');
+      expectNumberFields(attributes, ['creditHours']);
       expect(attributes.courseLevel).to.equal(sfrstcrCourseLevel || tcknCourseLevel);
       index += 1;
     });
@@ -470,12 +515,8 @@ describe('Test students-serializer', () => {
       },
     ];
     const serializedClassSchedule = serializeClassSchedule(rawClassSchedule, fakeId);
-    const serializedClassScheduleData = serializedClassSchedule.data;
-    const classScheduleAttribute = openapi
-      .definitions.ClassScheduleResult.properties.data.items.properties.attributes.properties;
-
-    expect(serializedClassSchedule).to.have.keys('data', 'links');
-    expect(serializedClassScheduleData).to.be.an('array');
+    const serializedClassScheduleData = testMultipleResources(serializedClassSchedule);
+    const classScheduleAttribute = getDefinitionProps('ClassScheduleResult', { dataItem: true });
 
     let index = 0;
     _.each(serializedClassScheduleData, (resource) => {
@@ -490,7 +531,7 @@ describe('Test students-serializer', () => {
 
       const { attributes } = resource;
       expect(attributes).to.have.all.keys(_.keys(classScheduleAttribute));
-      expect(attributes.creditHours).to.be.a('number');
+      expectNumberFields(attributes, ['creditHours']);
       expect(attributes.courseTitle).to.equal(courseTitleLong || courseTitleShort);
       expect(attributes.continuingEducation).to.equal(continuingEducation === 'Y');
 
@@ -501,13 +542,10 @@ describe('Test students-serializer', () => {
         expect(f.primary).to.equal(rawClassSchedule[index].facultyPrimary === 'Y');
       });
 
+      const numberFields = ['hoursPerWeek', 'creditHourSession'];
       _.each(meetingTimes, (m) => {
         expect(m).to.have.all.keys(_.keys(classScheduleAttribute.meetingTimes.items.properties));
-
-        const floatFields = ['hoursPerWeek', 'creditHourSession'];
-        _.each(floatFields, (floatField) => {
-          expect(m[floatField]).to.be.a('number');
-        });
+        expectNumberFields(m, numberFields);
         expect(m.weeklySchedule).to.be.an('array');
         _.each(m.weeklySchedule, (dailySchedule) => {
           expect(dailySchedule).to.be.oneOf(['M', 'T', 'W', 'Th', 'F', 'Sa', 'Su']);
@@ -561,15 +599,12 @@ describe('Test students-serializer', () => {
     ];
 
     const serializedHolds = serializeHolds(rawHolds, fakeId);
-    expect(serializedHolds)
-      .to.containSubset(resourceSubsetSchema(resourceType))
-      .and.to.have.nested.property('data.attributes.holds');
+    testSingleResource(serializedHolds, resourceType, 'holds');
 
     const { holds } = serializedHolds.data.attributes;
     _.each(holds, (hold) => {
       expect(hold).to.have.all.keys(_.keys(
-        openapi.definitions.HoldsResult.properties.data
-          .properties.attributes.properties.holds.items.properties,
+        getDefinitionProps('HoldsResult', { dataField: 'holds' }),
       ));
       _.each(hold.processesAffected, (processesAffectedKey) => {
         expect(processesAffectedKey).to.be.oneOf(processesAffectedKeys);
@@ -603,22 +638,17 @@ describe('Test students-serializer', () => {
     ];
 
     const serializedWorkStudy = serializeWorkStudy(rawAwards, fakeId);
-    expect(serializedWorkStudy)
-      .to.containSubset(resourceSubsetSchema(resourceType))
-      .and.to.have.nested.property('data.attributes.awards');
+    testSingleResource(serializedWorkStudy, resourceType, 'awards');
 
     const { awards } = serializedWorkStudy.data.attributes;
+    const numberFields = [
+      'offerAmount', 'acceptedAmount', 'paidAmount',
+    ];
     _.each(awards, (award) => {
       expect(award).to.have.all.keys(_.keys(
-        openapi.definitions.WorkStudyResult.properties.data
-          .properties.attributes.properties.awards.items.properties,
+        getDefinitionProps('WorkStudyResult', { dataField: 'awards' }),
       ));
-      const floatFields = [
-        'offerAmount', 'acceptedAmount', 'paidAmount',
-      ];
-      _.each(floatFields, (floatField) => {
-        expect(award[floatField]).to.be.a('number');
-      });
+      expectNumberFields(award, numberFields);
     });
   });
   it('test serializeDualEnrollment', () => {
@@ -653,10 +683,7 @@ describe('Test students-serializer', () => {
     ];
 
     const serializedDualEnrollment = serializeDualEnrollment(rawDualEnrollment, fakeId);
-    const serializedDualEnrollmentData = serializedDualEnrollment.data;
-
-    expect(serializedDualEnrollment).to.have.keys('data', 'links');
-    expect(serializedDualEnrollmentData).to.be.an('array');
+    const serializedDualEnrollmentData = testMultipleResources(serializedDualEnrollment);
 
     _.each(serializedDualEnrollmentData, (resource) => {
       expect(resource)
@@ -669,10 +696,9 @@ describe('Test students-serializer', () => {
 
       const { attributes } = resource;
       expect(attributes).to.have.all.keys(_.keys(
-        openapi.definitions.DualEnrollmentResult.properties.data
-          .items.properties.attributes.properties,
+        getDefinitionProps('DualEnrollmentResult', { dataItem: true }),
       ));
-      expect(attributes.creditHours).to.be.a('number');
+      expectNumberFields(attributes, ['creditHours']);
     });
   });
 });
