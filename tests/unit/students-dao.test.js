@@ -1,7 +1,7 @@
 const appRoot = require('app-root-path');
-const config = require('config');
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
+const config = require('config');
 const _ = require('lodash');
 const sinon = require('sinon');
 
@@ -16,7 +16,7 @@ const { any } = sinon.match;
 describe('Test students-dao', () => {
   const fakeId = 'fakeId';
   const fakeParams = {};
-  const fakeStudentsSerializer = (rows, id, params) => rows; // eslint-disable-line no-unused-vars
+  const stubStudentsSerializer = sinon.stub().returnsArg(0);
 
   sinon.stub(conn, 'getConnection').resolves({
     execute: (sql) => {
@@ -32,7 +32,6 @@ describe('Test students-dao', () => {
   it(`should be fulfilled if
         1. isSingleton is true and only get exact one result
         2. isSingleton is false and get a list of results`, () => {
-    const spy = sinon.spy(fakeStudentsSerializer);
     const fulfilledCases = [
       { fakeSql: () => 'singleResult', isSingleton: true, expectResult: {} },
       { fakeSql: () => 'singleResult', isSingleton: false, expectResult: [{}] },
@@ -41,27 +40,31 @@ describe('Test students-dao', () => {
 
     const fulfilledPromises = [];
     _.each(fulfilledCases, ({ fakeSql, isSingleton, expectResult }) => {
-      const result = studentsDao.getResourceById(fakeId, fakeSql, spy, isSingleton, fakeParams);
+      const result = studentsDao.getResourceById(
+        fakeId, fakeSql, stubStudentsSerializer, isSingleton, fakeParams,
+      );
       fulfilledPromises.push(result.should
-        .to.eventually.be.fulfilled
+        .eventually.be.fulfilled
         .and.deep.equal(expectResult)
         .then(() => {
-          sinon.assert.alwaysCalledWithExactly(spy, any, any, fakeParams);
-          sinon.assert.calledThrice(spy);
+          sinon.assert.alwaysCalledWithExactly(stubStudentsSerializer, any, any, fakeParams);
+          sinon.assert.callCount(stubStudentsSerializer, fulfilledCases.length);
         }));
     });
     return Promise.all(fulfilledPromises);
   });
   it('should be rejected if isSingleton is true but get multiple results', () => {
     const fakeSql = () => 'multiResults';
-    const spy = sinon.spy(fakeStudentsSerializer);
     const isSingleton = true;
     const expectResult = 'Expect a single object but got multiple results.';
 
-    const result = studentsDao.getResourceById(fakeId, fakeSql, spy, isSingleton, fakeParams);
+    const result = studentsDao.getResourceById(
+      fakeId, fakeSql, stubStudentsSerializer, isSingleton, fakeParams,
+    );
     return result.should
-      .to.eventually.be.rejectedWith(expectResult)
+      .eventually.be.rejectedWith(expectResult)
       .and.be.an.instanceOf(Error)
-      .then(() => sinon.assert.notCalled(spy));
+      .then(() => sinon.assert.notCalled(stubStudentsSerializer));
   });
+  afterEach(() => stubStudentsSerializer.resetHistory());
 });
