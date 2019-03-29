@@ -70,8 +70,8 @@ describe('Test students-serializer', () => {
    * @function
    * @param {string} definition the name of definition
    * @param {Object} nestedOption nested option
-   * @param {boolean} dataItem a boolean value which represents whether it's a data item
-   * @param {string} dataField data field name
+   * @param {boolean} nestedOption.dataItem a boolean which represents whether it's a data item
+   * @param {string} nestedOption.dataField data field name
    * @returns {Object}
    */
   const getDefinitionProps = (definition, nestedOption) => {
@@ -105,7 +105,7 @@ describe('Test students-serializer', () => {
 
     const invalidStrings = [];
     while (invalidStrings.length < 10) {
-      const length = Math.floor(Math.random() * Math.floor(10));
+      const length = Math.floor(Math.random() * 10);
       if (length !== 4) {
         invalidStrings.push(randomize('aA0!', length));
       } else {
