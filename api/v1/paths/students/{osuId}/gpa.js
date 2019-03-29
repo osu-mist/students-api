@@ -1,6 +1,6 @@
 const appRoot = require('app-root-path');
 
-const studentsDAO = require('../../../db/oracledb/students-dao');
+const studentsDao = require('../../../db/oracledb/students-dao');
 
 const { errorHandler } = appRoot.require('errors/errors');
 const { openapi: { paths } } = appRoot.require('utils/load-openapi');
@@ -8,7 +8,7 @@ const { openapi: { paths } } = appRoot.require('utils/load-openapi');
 const get = async (req, res) => {
   try {
     const { osuId } = req.params;
-    const result = await studentsDAO.getGpaById(osuId);
+    const result = await studentsDao.getGpaById(osuId);
     res.send(result);
   } catch (err) {
     errorHandler(res, err);

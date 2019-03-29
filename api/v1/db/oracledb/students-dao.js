@@ -3,7 +3,7 @@ const appRoot = require('app-root-path');
 const studentsSerializer = require('../../serializers/students-serializer');
 
 const { contrib } = appRoot.require('api/v1/db/oracledb/contrib/contrib');
-const { getConnection } = appRoot.require('api/v1/db/oracledb/connection');
+const conn = appRoot.require('api/v1/db/oracledb/connection');
 
 /**
  * @summary Return serialized resource(s) by unique ID
@@ -17,7 +17,7 @@ const { getConnection } = appRoot.require('api/v1/db/oracledb/connection');
  */
 const getResourceById = (id, sql, serializer, isSingleton, params) => new Promise(
   async (resolve, reject) => {
-    const connection = await getConnection();
+    const connection = await conn.getConnection();
     let term = params ? params.term : null;
     try {
       if (term === 'current') {
@@ -116,6 +116,7 @@ const getDualEnrollmentById = (osuId, term) => getResourceById(
 );
 
 module.exports = {
+  getResourceById,
   getGpaById,
   getAccountBalanceById,
   getAccountTransactionsById,

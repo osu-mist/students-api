@@ -13,7 +13,6 @@ const oracledb = dataSources.includes('oracledb')
 /**
  * @summary Validate database configuration
  * @function
- * @param {string} dataSourceType data source type
  */
 const validateDataSource = () => {
   const validationMethods = {
