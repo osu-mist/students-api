@@ -766,6 +766,10 @@ definitions:
                       description: Description of the hold.
                       type: string
                       example: 'Missing requirements.'
+                    webDisplay:
+                      description: Web display indicator.
+                      type: boolean
+                      example: true
                     processesAffected:
                       description: Processes affected by the hold.
                       type: array
