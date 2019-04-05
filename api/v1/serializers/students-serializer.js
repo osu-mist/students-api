@@ -263,6 +263,7 @@ const serializeHolds = (rawHolds, osuID) => {
   const identifierField = osuID;
 
   _.forEach(rawHolds, (rawHold) => {
+    rawHold.webDisplay = rawHold.webDisplay === 'Y';
     const processesAffectedKeys = [
       'registration',
       'transcript',
