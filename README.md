@@ -103,10 +103,10 @@ $ npm test
     * The path handler for `/api/v1/pets` should go to [api/v1/paths/pet.js](api/v1/paths/pet.js)
     * The path handler for `/api/v1/pets/{id}` should go to [api/v1/paths/pet/{id}.js](api/v1/paths/pet/{id}.js)
 
-4. Copy [api/v1/serializers/pets-serializers.js](api/v1/serializers/pets-serializers.js) to `api/v1/serializers/<resources>-serializers.js` and modify as necessary:
+4. Copy [api/v1/serializers/pets-serializer.js](api/v1/serializers/pets-serializer.js) to `api/v1/serializers/<resources>-serializer.js` and modify as necessary:
 
     ```shell
-    $ cp api/v1/serializers/pets-serializers.js api/v1/serializers/<resources>-serializers.js
+    $ cp api/v1/serializers/pets-serializer.js api/v1/serializers/<resources>-serializer.js
     ```
 
 ### Base an existing project off / Incorporate updates from the skeleton
@@ -161,7 +161,6 @@ The following instructions show you how to get data from external endpoints for 
 The following instructions show you how to connect the API to an Oracle database.
 
 1. Install [Oracle Instant Client](http://www.oracle.com/technetwork/database/database-technologies/instant-client/overview/index.html) by following [this installation guide](https://oracle.github.io/odpi/doc/installation.html).
-
 
 2. Install [oracledb](https://www.npmjs.com/package/oracledb) via package management:
 
@@ -227,6 +226,56 @@ The following instructions show you how to connect the API to an Oracle database
 
     ```js
     const petsDao = require('../db/oracledb/<resources>-dao');
+    ```
+
+## Getting data source from an AWS S3 bucket
+
+The following instructions show you how to get data from an AWS S3 bucket
+
+1. Install [aws-sdk](https://www.npmjs.com/package/aws-sdk) via package management:
+
+    ```shell
+    # Using yarn (recommended)
+    $ yarn add aws-sdk
+
+    # Using npm
+    $ npm install aws-sdk
+    ```
+
+2. Define the `dataSources` field in `config/default.yaml` to be like:
+
+    ```yaml
+    dataSources:
+      dataSources: ['awsS3']
+      awsS3:
+        bucket: BUCKET_NAME
+        apiVersion: API_VERSION
+        accessKeyId: ACCESS_KEY_ID
+        secretAccessKey: SECRET_ACCESS_KEY
+        region: REGION
+        endpoint: null
+        s3ForcePathStyle: false
+    ```
+
+    **Options for configuration**:
+
+    | Option | Description |
+    | ------ | ----------- |
+    | **bucket** | The name of the AWS S3 bucket to use |
+    | **apiVersion** | Version of the S3 API. Example: `'2006-03-01'` |
+    | **endpoint** | When using a local or proxy S3 instance, set this value to the host URL. Example: `http://localhost:9000` |
+    | **s3ForcePathStyle** | Set to `true` if using a local or proxy S3 instance |
+
+3. Copy [api/v1/db/awsS3/pets-dao-example.js](api/v1/db/awsS3/pets-dao-example.js) to `api/v1/db/awsS3/<resources>-dao.js` and modify as necessary:
+
+    ```shell
+    $ cp api/v1/db/awsS3/pets-dao-example.js api/v1/db/awsS3/<resources>-dao.js
+    ```
+
+4. Make sure to require the correct path for the new DAO file at path handlers files:
+
+    ```js
+    const petsDao = require('../db/awsS3/<resources>-dao');
     ```
 
 ## Docker
