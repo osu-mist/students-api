@@ -162,7 +162,6 @@ The following instructions show you how to connect the API to an Oracle database
 
 1. Install [Oracle Instant Client](http://www.oracle.com/technetwork/database/database-technologies/instant-client/overview/index.html) by following [this installation guide](https://oracle.github.io/odpi/doc/installation.html).
 
-
 2. Install [oracledb](https://www.npmjs.com/package/oracledb) via package management:
 
     ```shell
