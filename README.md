@@ -88,27 +88,6 @@ $ npm test
 
 ## Base project off the skeleton
 
-### Base a new project off the skeleton
-
-1. Clone the skeleton:
-
-    ```shell
-    $ git clone --origin skeleton git@github.com:osu-mist/express-api-skeleton.git students-api
-    ```
-
-2. Rename project by modifying [package.json](./package.json).
-
-3. We use [express-openapi](https://www.npmjs.com/package/express-openapi) to generate API by inheriting openapi.yaml. Create path handlers and put them into corresponding directories. For example:
-
-    * The path handler for `/api/v1/pets` should go to [api/v1/paths/pet.js](api/v1/paths/pet.js)
-    * The path handler for `/api/v1/pets/{id}` should go to [api/v1/paths/pet/{id}.js](api/v1/paths/pet/{id}.js)
-
-4. Copy [api/v1/serializers/pets-serializers.js](api/v1/serializers/pets-serializers.js) to `api/v1/serializers/<resources>-serializers.js` and modify as necessary:
-
-    ```shell
-    $ cp api/v1/serializers/pets-serializers.js api/v1/serializers/<resources>-serializers.js
-    ```
-
 ### Base an existing project off / Incorporate updates from the skeleton
 
 1. Add the skeleton as a remote:
@@ -131,37 +110,11 @@ $ npm test
     $ git commit -v
     ```
 
-## Getting data source from HTTP endpoints
-
-The following instructions show you how to get data from external endpoints for use in the API.
-
-1. Define `dataSources/http` section in the `/config/default.yaml` to be like:
-
-    ```yaml
-    dataSources:
-      dataSources: ['http']
-      http:
-        url: 'https://api.example.com'
-    ```
-
-2. Copy [api/v1/db/http/pets-dao-example.js](api/v1/db/http/pets-dao-example.js) to `api/v1/db/http/<resources>-dao.js` and modify as necessary:
-
-    ```shell
-    $ cp api/v1/db/http/pets-dao-example.js api/v1/db/http/<resources>-dao.js
-    ```
-
-3. Make sure to require the correct path for the new DAO file at path handlers files:
-
-    ```js
-    const petsDao = require('../db/http/<resources>-dao');
-    ```
-
 ## Getting data source from the Oracle Database
 
 The following instructions show you how to connect the API to an Oracle database.
 
 1. Install [Oracle Instant Client](http://www.oracle.com/technetwork/database/database-technologies/instant-client/overview/index.html) by following [this installation guide](https://oracle.github.io/odpi/doc/installation.html).
-
 
 2. Install [oracledb](https://www.npmjs.com/package/oracledb) via package management:
 

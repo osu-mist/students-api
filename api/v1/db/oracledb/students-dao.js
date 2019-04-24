@@ -13,33 +13,29 @@ const conn = appRoot.require('api/v1/db/oracledb/connection');
  * @param {function} serializer Resource serializer function
  * @param {boolean} isSingleton A Boolean value represents the resource should be singleton or not
  * @param {Object} params A key-value pair params object
- * @returns {Promise} Promise object represents serialized resource(s)
+ * @returns {Promise<Object>} Promise object represents serialized resource(s)
  */
-const getResourceById = (id, sql, serializer, isSingleton, params) => new Promise(
-  async (resolve, reject) => {
-    const connection = await conn.getConnection();
-    let term = params ? params.term : null;
-    try {
-      if (term === 'current') {
-        const rawCurrentTerm = await connection.execute(contrib.getCurrentTerm());
-        const { currentTerm } = rawCurrentTerm.rows[0];
-        term = currentTerm;
-      }
-      const sqlParams = term ? [id, term] : [id];
-      const { rows } = await connection.execute(sql(term), sqlParams);
-      if (isSingleton && rows.length > 1) {
-        reject(new Error('Expect a single object but got multiple results.'));
-      } else {
-        const serializedResource = serializer(isSingleton ? rows[0] : rows, id, params);
-        resolve(serializedResource);
-      }
-    } catch (err) {
-      reject(err);
-    } finally {
-      connection.close();
+const getResourceById = async (id, sql, serializer, isSingleton, params) => {
+  const connection = await conn.getConnection();
+  let term = params ? params.term : null;
+  try {
+    if (term === 'current') {
+      const rawCurrentTerm = await connection.execute(contrib.getCurrentTerm());
+      const { currentTerm } = rawCurrentTerm.rows[0];
+      term = currentTerm;
     }
-  },
-);
+    const sqlParams = term ? [id, term] : [id];
+    const { rows } = await connection.execute(sql(term), sqlParams);
+    if (isSingleton && rows.length > 1) {
+      throw new Error('Expect a single object but got multiple results.');
+    } else {
+      const serializedResource = serializer(isSingleton ? rows[0] : rows, id, params);
+      return serializedResource;
+    }
+  } finally {
+    connection.close();
+  }
+};
 
 const getGpaById = osuId => getResourceById(
   osuId,
