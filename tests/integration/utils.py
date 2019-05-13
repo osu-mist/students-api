@@ -202,8 +202,6 @@ def check_schema(self, response, schema, nullable_fields):
 
             if (actual_value and expected_type) or \
                field not in nullable_fields:
-                if (type(actual_value) is not expected_type):
-                    print(field, actual_value, expected_type)
                 self.assertIsInstance(actual_value, expected_type)
 
     status_code = response.status_code
