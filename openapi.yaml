@@ -304,44 +304,46 @@ definitions:
       data:
         type: array
         items:
-          properties:
-            id:
-              $ref: '#/definitions/StudentAndTermId'
-            type:
-              type: string
-              enum: ['academic-status']
-            attributes:
-              properties:
-                academicStanding:
-                  type: string
-                  example: Good Standing
-                  description: Academic standing
-                  enum:
-                    - 'Good Standing'
-                    - 'Academic Dismissal - Graduate'
-                    - 'Continued Deferred Suspension'
-                    - 'Honor Roll'
-                    - 'Academic Probation'
-                    - 'Special Deferred Suspension'
-                    - 'Academic Suspension'
-                    - 'Deferred Suspension'
-                    - 'Academic Warning'
-                    - 'Reinstatement After Suspension'
-                term:
-                  description: The term that this course was graded for.
-                  type: string
-                  example: '201901'
-                termDescription:
-                  description: Description of the term.
-                  type: string
-                  example: 'Fall 2018'
-                gpa:
-                  description: Grade point averages for the given term.
-                  type: array
-                  items:
-                    $ref: '#/definitions/GradePointAverage'
-            links:
-              $ref: '#/definitions/SelfLink'
+          $ref: '#/definitions/AcademicStatusResource'
+  AcademicStatusResource:
+    properties:
+      id:
+        $ref: '#/definitions/StudentAndTermId'
+      type:
+        type: string
+        enum: ['academic-status']
+      attributes:
+        properties:
+          academicStanding:
+            type: string
+            example: Good Standing
+            description: Academic standing
+            enum:
+              - 'Good Standing'
+              - 'Academic Dismissal - Graduate'
+              - 'Continued Deferred Suspension'
+              - 'Honor Roll'
+              - 'Academic Probation'
+              - 'Special Deferred Suspension'
+              - 'Academic Suspension'
+              - 'Deferred Suspension'
+              - 'Academic Warning'
+              - 'Reinstatement After Suspension'
+          term:
+            description: The term that this course was graded for.
+            type: string
+            example: '201901'
+          termDescription:
+            description: Description of the term.
+            type: string
+            example: 'Fall 2018'
+          gpa:
+            description: Grade point averages for the given term.
+            type: array
+            items:
+              $ref: '#/definitions/GradePointAverage'
+      links:
+        $ref: '#/definitions/SelfLink'
   ClassificationResult:
     properties:
       links:
