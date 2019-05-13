@@ -37,9 +37,9 @@ class integration_tests(unittest.TestCase):
 
     # Test case: GET /students/{osuId}/account-balance
     def test_get_account_balance_by_id(self, endpoint='/students'):
-        valid_account_balance = self.test_cases['valid_account_balance']
+        valid_ids = self.test_cases['valid_account_balance']
 
-        for osu_id in valid_account_balance:
+        for osu_id in valid_ids:
             utils.test_endpoint(self,
                                 f'{endpoint}/{osu_id}/account-balance',
                                 resource='AccountBalanceResource',
@@ -53,9 +53,9 @@ class integration_tests(unittest.TestCase):
 
     # Test case: GET /students/{osuId}/account-transactions
     def test_get_account_transactions_by_id(self, endpoint='/students'):
-        valid_account_balance = self.test_cases['valid_account_transactions']
+        valid_ids = self.test_cases['valid_account_transactions']
 
-        for osu_id in valid_account_balance:
+        for osu_id in valid_ids:
             utils.test_endpoint(self,
                                 f'{endpoint}/{osu_id}/account-transactions',
                                 resource='AccountTransactionsResource',
@@ -66,11 +66,26 @@ class integration_tests(unittest.TestCase):
                                 resource='Error',
                                 response_code=404)
 
+    # Test case: GET /students/{osuId}/academic-status
+    def test_get_academic_status_by_id(self, endpoint='/students'):
+        valid_ids = self.test_cases['valid_academic_status']
+
+        for osu_id in valid_ids:
+            utils.test_endpoint(self,
+                                f'{endpoint}/{osu_id}/academic-status',
+                                resource='AcademicStatusResource',
+                                response_code=200)
+
+        for osu_id in self.not_found_id:
+            utils.test_endpoint(self, f'{endpoint}/{osu_id}',
+                                resource='Error',
+                                response_code=404)
+
     # Test case: GET /students/{osuId}/gpa
     def test_get_gpa_by_id(self, endpoint='/students'):
-        valid_account_balance = self.test_cases['valid_gpa']
+        valid_ids = self.test_cases['valid_gpa']
 
-        for osu_id in valid_account_balance:
+        for osu_id in valid_ids:
             utils.test_endpoint(self,
                                 f'{endpoint}/{osu_id}/gpa',
                                 resource='GradePointAverageResource',
