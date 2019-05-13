@@ -267,32 +267,34 @@ definitions:
       links:
         $ref: '#/definitions/SelfLink'
       data:
+        $ref: '#/definitions/AccountTransactionsResource'
+  AccountTransactionsResource:
+    properties:
+      id:
+        $ref: '#/definitions/StudentId'
+      type:
+        type: string
+        enum: ['account-transactions']
+      attributes:
         properties:
-          id:
-            $ref: '#/definitions/StudentId'
-          type:
-            type: string
-            enum: ['account-transactions']
-          attributes:
-            properties:
-              transactions:
-                type: array
-                items:
-                  properties:
-                    amount:
-                      type: number
-                      format: float
-                      description: Amount of money transferred for transaction, in USD.
-                      example: 200.59
-                    description:
-                      type: string
-                      description: Description of transaction.
-                      example: 'Tuition Deposit Applied'
-                    entryDate:
-                      type: string
-                      format: date-time
-                      description: Date the transaction was entered.
-                      example: '2018-04-27T06:31:15Z'
+          transactions:
+            type: array
+            items:
+              properties:
+                amount:
+                  type: number
+                  format: float
+                  description: Amount of money transferred for transaction, in USD.
+                  example: 200.59
+                description:
+                  type: string
+                  description: Description of transaction.
+                  example: 'Tuition Deposit Applied'
+                entryDate:
+                  type: string
+                  format: date-time
+                  description: Date the transaction was entered.
+                  example: '2018-04-27T06:31:15Z'
           links:
             $ref: '#/definitions/SelfLink'
   AcademicStatusResult:
@@ -396,21 +398,23 @@ definitions:
       links:
         $ref: '#/definitions/SelfLink'
       data:
+        $ref: '#/definitions/GradePointAverageResource'
+  GradePointAverageResource:
+    properties:
+      id:
+        $ref: '#/definitions/StudentId'
+      type:
+        type: string
+        enum: ['gpa']
+      attributes:
         properties:
-          id:
-            $ref: '#/definitions/StudentId'
-          type:
-            type: string
-            enum: ['gpa']
-          attributes:
-            properties:
-              gpaLevels:
-                description: Array of GPA s for the student. A student could have a separate GPA for transfer credits, for example.
-                type: array
-                items:
-                  $ref: '#/definitions/GradePointAverage'
-          links:
-            $ref: '#/definitions/SelfLink'
+          gpaLevels:
+            description: Array of GPA s for the student. A student could have a separate GPA for transfer credits, for example.
+            type: array
+            items:
+              $ref: '#/definitions/GradePointAverage'
+      links:
+        $ref: '#/definitions/SelfLink'
   GradePointAverage:
     properties:
       gpa:

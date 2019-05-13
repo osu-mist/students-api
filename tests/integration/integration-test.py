@@ -36,12 +36,44 @@ class integration_tests(unittest.TestCase):
         cls.session.close()
 
     # Test case: GET /students/{osuId}/account-balance
-    def test_get_students_by_id(self, endpoint='/students'):
+    def test_get_account_balance_by_id(self, endpoint='/students'):
         valid_account_balance = self.test_cases['valid_account_balance']
 
         for osu_id in valid_account_balance:
-            utils.test_endpoint(self, f'{endpoint}/{osu_id}/account-balance',
+            utils.test_endpoint(self,
+                                f'{endpoint}/{osu_id}/account-balance',
                                 resource='AccountBalanceResource',
+                                response_code=200)
+
+        for osu_id in self.not_found_id:
+            utils.test_endpoint(self,
+                                f'{endpoint}/{osu_id}',
+                                resource='Error',
+                                response_code=404)
+
+    # Test case: GET /students/{osuId}/account-transactions
+    def test_get_account_transactions_by_id(self, endpoint='/students'):
+        valid_account_balance = self.test_cases['valid_account_transactions']
+
+        for osu_id in valid_account_balance:
+            utils.test_endpoint(self,
+                                f'{endpoint}/{osu_id}/account-transactions',
+                                resource='AccountTransactionsResource',
+                                response_code=200)
+
+        for osu_id in self.not_found_id:
+            utils.test_endpoint(self, f'{endpoint}/{osu_id}',
+                                resource='Error',
+                                response_code=404)
+
+    # Test case: GET /students/{osuId}/gpa
+    def test_get_gpa_by_id(self, endpoint='/students'):
+        valid_account_balance = self.test_cases['valid_gpa']
+
+        for osu_id in valid_account_balance:
+            utils.test_endpoint(self,
+                                f'{endpoint}/{osu_id}/gpa',
+                                resource='GradePointAverageResource',
                                 response_code=200)
 
         for osu_id in self.not_found_id:
