@@ -126,6 +126,20 @@ class integration_tests(unittest.TestCase):
                                 resource='Error',
                                 response_code=404)
 
+    # Test case: GET /students/{osuId}/holds
+    def test_get_holds_by_id(self, endpoint='/students'):
+        valid_ids = self.test_cases['valid_holds']
+
+        for osu_id in valid_ids:
+            utils.test_endpoint(self,
+                                f'{endpoint}/{osu_id}/holds',
+                                resource='HoldsResource',
+                                response_code=200)
+
+        for osu_id in self.not_found_id:
+            utils.test_endpoint(self, f'{endpoint}/{osu_id}',
+                                resource='Error',
+                                response_code=404)
 
 if __name__ == '__main__':
     arguments, argv = utils.parse_arguments()

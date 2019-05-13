@@ -754,48 +754,50 @@ definitions:
       links:
         $ref: '#/definitions/SelfLink'
       data:
+        $ref: '#/definitions/HoldsResource'
+  HoldsResource:
+    properties:
+      id:
+        $ref: '#/definitions/StudentId'
+      type:
+        type: string
+        enum: ['holds']
+      attributes:
         properties:
-          id:
-            $ref: '#/definitions/StudentId'
-          type:
-            type: string
-            enum: ['holds']
-          attributes:
-            properties:
-              holds:
-                type: array
-                items:
-                  properties:
-                    fromDate:
-                      description: The date this hold becomes effective.
-                      type: string
-                      format: date
-                      example: '2019-12-31'
-                    toDate:
-                      description: The date this hold expires.
-                      type: string
-                      format: date
-                      example: '2020-12-31'
-                    description:
-                      description: Description of the hold.
-                      type: string
-                      example: 'Missing requirements.'
-                    webDisplay:
-                      description: Web display indicator.
-                      type: boolean
-                      example: true
-                    processesAffected:
-                      description: Processes affected by the hold.
-                      type: array
-                      items:
-                        type: string
-                        example: 'Graduation'
-                    reason:
-                      description: The reason the hold is on the student's record.
-                      type: string
-                      example: 'CS 161'
-          links:
-            $ref: '#/definitions/SelfLink'
+          holds:
+            type: array
+            items:
+              properties:
+                fromDate:
+                  description: The date this hold becomes effective.
+                  type: string
+                  format: date
+                  example: '2019-12-31'
+                toDate:
+                  description: The date this hold expires.
+                  type: string
+                  format: date
+                  example: '2020-12-31'
+                description:
+                  description: Description of the hold.
+                  type: string
+                  example: 'Missing requirements.'
+                webDisplay:
+                  description: Web display indicator.
+                  type: boolean
+                  example: true
+                processesAffected:
+                  description: Processes affected by the hold.
+                  type: array
+                  items:
+                    type: string
+                    example: 'Graduation'
+                reason:
+                  description: The reason the hold is on the student's record.
+                  type: string
+                  example: 'CS 161'
+      links:
+        $ref: '#/definitions/SelfLink'
   WorkStudyResult:
     properties:
       links:
