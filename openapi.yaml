@@ -803,64 +803,66 @@ definitions:
       links:
         $ref: '#/definitions/SelfLink'
       data:
+        $ref: '#/definitions/WorkStudyResource'
+  WorkStudyResource:
+    properties:
+      id:
+        $ref: '#/definitions/StudentId'
+      type:
+        type: string
+        enum: ['work-study']
+      attributes:
         properties:
-          id:
-            $ref: '#/definitions/StudentId'
-          type:
-            type: string
-            enum: ['work-study']
-          attributes:
-            properties:
-              awards:
-                type: array
-                items:
-                  properties:
-                    effectiveStartDate:
-                      type: string
-                      format: date
-                      description: Date the award is effective.
-                    effectiveEndDate:
-                      type: string
-                      format: date
-                      description: Date the award is no longer effective.
-                    offerAmount:
-                      type: number
-                      format: float
-                      description: Dollar amount offered for the award.
-                    offerExpirationDate:
-                      type: string
-                      format: date
-                      description: Expiration date of offer.
-                    acceptedAmount:
-                      type: number
-                      format: float
-                      description: Dollar amount accepted by awardee.
-                    acceptedDate:
-                      type: string
-                      format: date
-                      description: Date the offer was accepted by the awardee.
-                    paidAmount:
-                      type: number
-                      format: float
-                      description: Dollar amount of the acceptedAmount that has been paid to the awardee.
-                    awardStatus:
-                      type: string
-                      example: Accepted
-                      description: Status of award.
-                      enum:
-                        - 'Declined'
-                        - 'Offered'
-                        - 'System Accepted'
-                        - 'System Cancelled'
-                        - 'Estimated Auto Accept'
-                        - 'Estimated'
-                        - 'Recommended'
-                        - 'Accepted'
-                        - 'Certified'
-                        - 'System Offered'
-                        - 'Canceled'
-          links:
-            $ref: '#/definitions/SelfLink'
+          awards:
+            type: array
+            items:
+              properties:
+                effectiveStartDate:
+                  type: string
+                  format: date
+                  description: Date the award is effective.
+                effectiveEndDate:
+                  type: string
+                  format: date
+                  description: Date the award is no longer effective.
+                offerAmount:
+                  type: number
+                  format: float
+                  description: Dollar amount offered for the award.
+                offerExpirationDate:
+                  type: string
+                  format: date
+                  description: Expiration date of offer.
+                acceptedAmount:
+                  type: number
+                  format: float
+                  description: Dollar amount accepted by awardee.
+                acceptedDate:
+                  type: string
+                  format: date
+                  description: Date the offer was accepted by the awardee.
+                paidAmount:
+                  type: number
+                  format: float
+                  description: Dollar amount of the acceptedAmount that has been paid to the awardee.
+                awardStatus:
+                  type: string
+                  example: Accepted
+                  description: Status of award.
+                  enum:
+                    - 'Declined'
+                    - 'Offered'
+                    - 'System Accepted'
+                    - 'System Cancelled'
+                    - 'Estimated Auto Accept'
+                    - 'Estimated'
+                    - 'Recommended'
+                    - 'Accepted'
+                    - 'Certified'
+                    - 'System Offered'
+                    - 'Canceled'
+      links:
+        $ref: '#/definitions/SelfLink'
   DualEnrollmentResult:
     properties:
       links:
