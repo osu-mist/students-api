@@ -245,21 +245,23 @@ definitions:
       links:
         $ref: '#/definitions/SelfLink'
       data:
+        $ref: '#/definitions/AccountBalanceResource'
+  AccountBalanceResource:
+    properties:
+      id:
+        $ref: '#/definitions/StudentId'
+      type:
+        type: string
+        enum: ['account-balance']
+      attributes:
         properties:
-          id:
-            $ref: '#/definitions/StudentId'
-          type:
-            type: string
-            enum: ['account-balance']
-          attributes:
-            properties:
-              currentBalance:
-                type: number
-                format: float
-                description: Current balance of student's account, in USD.
-                example: 2500.39
-          links:
-            $ref: '#/definitions/SelfLink'
+          currentBalance:
+            type: number
+            format: float
+            description: Current balance of student's account, in USD.
+            example: 2500.39
+      links:
+        $ref: '#/definitions/SelfLink'
   AccountTransactionsResult:
     properties:
       links:
