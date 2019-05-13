@@ -870,24 +870,26 @@ definitions:
       data:
         type: array
         items:
-          properties:
-            id:
-              $ref: '#/definitions/StudentAndTermId'
-            type:
-              type: string
-              enum: ['dual-enrollment']
-            attributes:
-              properties:
-                term:
-                  description: The term that this course is scheduled for.
-                  type: string
-                  example: '201901'
-                creditHours:
-                  description: The number of dual enrollment credit hours enrolled for the given term.
-                  type: integer
-                  example: 5
-            links:
-              $ref: '#/definitions/SelfLink'
+          $ref: '#/definitions/DualEnrollmentResource'
+  DualEnrollmentResource:
+    properties:
+      id:
+        $ref: '#/definitions/StudentAndTermId'
+      type:
+        type: string
+        enum: ['dual-enrollment']
+      attributes:
+        properties:
+          term:
+            description: The term that this course is scheduled for.
+            type: string
+            example: '201901'
+          creditHours:
+            description: The number of dual enrollment credit hours enrolled for the given term.
+            type: integer
+            example: 5
+      links:
+        $ref: '#/definitions/SelfLink'
   StudentId:
     type: string
     description: Student ID
