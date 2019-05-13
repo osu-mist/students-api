@@ -397,7 +397,6 @@ definitions:
               - 'Auditor Only'
       links:
         $ref: '#/definitions/SelfLink'
-
   GradePointAverageResult:
     properties:
       links:
@@ -465,81 +464,83 @@ definitions:
       data:
         type: array
         items:
-          properties:
-            id:
-              $ref: '#/definitions/StudentAndTermAndCourseId'
-            type:
-              type: string
-              enum: ['grades']
-            attributes:
-              properties:
-                courseReferenceNumber:
-                  description: Uniquely identifies a course section for a given term.
-                  type: string
-                  example: '123456'
-                gradeFinal:
-                  description: Letter grade representing the student's final grade for the course.
-                  type: string
-                  example: 'A-'
-                gradeMode:
-                  description: Grade mode for the course.
-                  type: string
-                  example: 'N'
-                  enum: [N, P, C, S, A, K, E, Z]
-                gradeModeDescription:
-                  description: Human readable gradeMode.
-                  type: string
-                  example: 'Normal Grading Mode'
-                courseSubject:
-                  description: Abbreviated course subject.
-                  type: string
-                  example: 'ECON'
-                courseSubjectDescription:
-                  description: Description of course subject.
-                  type: string
-                  example: 'Economics'
-                courseNumber:
-                  type: string
-                  example: '352'
-                courseTitle:
-                  description: Title of the course.
-                  type: string
-                  example: 'Environmental Economics & Policy'
-                sectionNumber:
-                  description: The unique section of a specific course number.
-                  type: string
-                  example: '001'
-                term:
-                  description: The term that this course was graded for.
-                  type: string
-                  example: '201901'
-                termDescription:
-                  description: Description of the term.
-                  type: string
-                  example: 'Fall 2018'
-                scheduleDescription:
-                  description: Human readable scheduleType.
-                  type: string
-                  example: 'Lecture'
-                scheduleType:
-                  description: Format type for the course.
-                  type: string
-                  example: 'A'
-                  enum: [B, C, D, E, F, G, H, I, J, K, A, L, M, N, O, P , Q, R, S, T, U, W, Y, Z, V, X, MID, FIL, HYB]
-                creditHours:
-                  description: Credit hours of the course.
-                  type: integer
-                  example: 3
-                registrationStatus:
-                  description: The student's registration status for the course.
-                  type: string
-                  example: 'Web Registered'
-                courseLevel:
-                  description: Academic level of the course.
-                  type: string
-                  example: 'Undergraduate'
-            links:
-              $ref: '#/definitions/SelfLink'
+          $ref: '#/definitions/GradesResource'
+  GradesResource:
+    properties:
+      id:
+        $ref: '#/definitions/StudentAndTermAndCourseId'
+      type:
+        type: string
+        enum: ['grades']
+      attributes:
+        properties:
+          courseReferenceNumber:
+            description: Uniquely identifies a course section for a given term.
+            type: string
+            example: '123456'
+          gradeFinal:
+            description: Letter grade representing the student's final grade for the course.
+            type: string
+            example: 'A-'
+          gradeMode:
+            description: Grade mode for the course.
+            type: string
+            example: 'N'
+            enum: [N, P, C, S, A, K, E, Z]
+          gradeModeDescription:
+            description: Human readable gradeMode.
+            type: string
+            example: 'Normal Grading Mode'
+          courseSubject:
+            description: Abbreviated course subject.
+            type: string
+            example: 'ECON'
+          courseSubjectDescription:
+            description: Description of course subject.
+            type: string
+            example: 'Economics'
+          courseNumber:
+            type: string
+            example: '352'
+          courseTitle:
+            description: Title of the course.
+            type: string
+            example: 'Environmental Economics & Policy'
+          sectionNumber:
+            description: The unique section of a specific course number.
+            type: string
+            example: '001'
+          term:
+            description: The term that this course was graded for.
+            type: string
+            example: '201901'
+          termDescription:
+            description: Description of the term.
+            type: string
+            example: 'Fall 2018'
+          scheduleDescription:
+            description: Human readable scheduleType.
+            type: string
+            example: 'Lecture'
+          scheduleType:
+            description: Format type for the course.
+            type: string
+            example: 'A'
+            enum: [B, C, D, E, F, G, H, I, J, K, A, L, M, N, O, P , Q, R, S, T, U, W, Y, Z, V, X, MID, FIL, HYB]
+          creditHours:
+            description: Credit hours of the course.
+            type: integer
+            example: 3
+          registrationStatus:
+            description: The student's registration status for the course.
+            type: string
+            example: 'Web Registered'
+          courseLevel:
+            description: Academic level of the course.
+            type: string
+            example: 'Undergraduate'
+      links:
+        $ref: '#/definitions/SelfLink'
   ClassScheduleResult:
     properties:
       links:
