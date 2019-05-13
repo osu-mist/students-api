@@ -548,205 +548,207 @@ definitions:
       data:
         type: array
         items:
-          properties:
-            id:
-              $ref: '#/definitions/StudentAndTermAndCourseId'
-            type:
-              type: string
-              enum: ['class-schedule']
-            attributes:
+          $ref: '#/definitions/ClassScheduleResource'
+  ClassScheduleResource:
+    properties:
+      id:
+        $ref: '#/definitions/StudentAndTermAndCourseId'
+      type:
+        type: string
+        enum: ['class-schedule']
+      attributes:
+        properties:
+          academicYear:
+            description: Code value to identify the academic year for the term.
+            type: string
+            example: '1819'
+          academicYearDescription:
+            description: Short summary of the academic year for the term.
+            type: string
+            example: 'Academic Year 2018-19'
+          courseReferenceNumber:
+            description: Uniquely identifies a course section for a given term.
+            type: string
+            example: '123456'
+          courseSubject:
+            description: Abbreviated course subject.
+            type: string
+            example: 'ECON'
+          courseSubjectDescription:
+            description: Description of course subject.
+            type: string
+            example: 'Economics'
+          courseNumber:
+            type: string
+            example: '352'
+          courseTitle:
+            description: Title of the course.
+            type: string
+            example: 'Environmental Economics & Policy'
+          sectionNumber:
+            description: The unique section of a specific course number.
+            type: string
+            example: '001'
+          term:
+            description: The term that this course is scheduled for.
+            type: string
+            example: '201901'
+          termDescription:
+            description: Description of the term.
+            type: string
+            example: 'Fall 2018'
+          scheduleDescription:
+            description: Human readable schedule type for the course (agnostic of meeting times).
+            type: string
+            example: 'Lecture'
+          scheduleType:
+            description: Type of schedule for the course (agnostic of meeting times).
+            type: string
+            example: 'A'
+            enum: [B, C, D, E, F, G, H, I, J, K, A, L, M, N, O, P , Q, R, S, T, U, W, Y, Z, V, X, MID, FIL, HYB]
+          creditHours:
+            description: Credit hours of the course.
+            type: integer
+            example: 3
+          registrationStatus:
+            description: The student's registration status for the course.
+            type: string
+            example: 'Web Registered'
+          gradingMode:
+            description: The grading mode for the course.
+            type: string
+            example: 'Normal Grading Mode'
+          continuingEducation:
+            description: Identifies whether the course is enrolled for continuing education credits.
+            type: boolean
+          faculty:
+            description: Faculty and instructors associated with this course.
+            type: array
+            items:
               properties:
-                academicYear:
-                  description: Code value to identify the academic year for the term.
+                osuId:
+                  description: Person ID for the faculty.
                   type: string
-                  example: '1819'
-                academicYearDescription:
-                  description: Short summary of the academic year for the term.
+                  example: '937654321'
+                name:
+                  description: Display name of the faculty.
                   type: string
-                  example: 'Academic Year 2018-19'
-                courseReferenceNumber:
-                  description: Uniquely identifies a course section for a given term.
+                  example: 'Johnson, Bob'
+                email:
+                  description: Email address of the faculty.
                   type: string
-                  example: '123456'
-                courseSubject:
-                  description: Abbreviated course subject.
+                  example: 'bob.johnson@oregonstate.edu'
+                primary:
+                  description: Indicates whether the faculty is the primary faculty for the course.
+                  type: boolean
+                  example: true
+          meetingTimes:
+            description: Weekly meeting times for the course.
+            type: array
+            items:
+              properties:
+                beginDate:
+                  description: The starting date of the meeting time schedule.
                   type: string
-                  example: 'ECON'
-                courseSubjectDescription:
-                  description: Description of course subject.
+                  format: date
+                  example: '2018-09-20'
+                beginTime:
+                  description: The starting time of the meeting time for the course in 24 hour format.
                   type: string
-                  example: 'Economics'
-                courseNumber:
+                  example: '14:00:00'
+                endDate:
+                  description: The ending date of the meeting time schedule.
                   type: string
-                  example: '352'
-                courseTitle:
-                  description: Title of the course.
+                  format: date
+                  example: '2018-11-30'
+                endTime:
+                  description: The starting time of the meeting time for the course in 24 hour format.
                   type: string
-                  example: 'Environmental Economics & Policy'
-                sectionNumber:
-                  description: The unique section of a specific course number.
+                  example: '14:50:00'
+                room:
+                  description: Room where the meeting time meets.
                   type: string
-                  example: '001'
-                term:
-                  description: The term that this course is scheduled for.
+                  example: '100'
+                building:
+                  description: The building abbreviation of the meeting time.
                   type: string
-                  example: '201901'
-                termDescription:
-                  description: Description of the term.
+                  example: 'LINC'
+                buildingDescription:
+                  description: The name of the building.
                   type: string
-                  example: 'Fall 2018'
+                  example: 'Learning Innovation Center'
+                campus:
+                  description: Campus location of the meeting time.
+                  type: string
+                  example: 'Oregon State - Corvallis'
+                hoursPerWeek:
+                  description: The amount of hours this meeting time meets per week.
+                  type: number
+                  format: float
+                  example: 1.66
+                creditHourSession:
+                  description: Session credit hours for this meeting time.
+                  type: integer
+                  example: 2
+                scheduleType:
+                  description: |
+                    Type of schedule for this given meeting type.
+                    A: Lecture
+                    B: Discussion
+                    C: Recitation
+                    D: Laboratory
+                    E: Seminar
+                    F: Independent or Special Studies
+                    G: Research
+                    H: Activity
+                    I: Experimental
+                    J: Internship
+                    K: Streaming Media
+                    L: Tutorial
+                    M: Practicum
+                    N: Reading and Conference
+                    O: Experiential/Co-op Education
+                    P: Programmed Instruction
+                    Q: Thesis
+                    R: Studio
+                    S: Project
+                    T: Telecourse/Distance Learning
+                    U: Externship
+                    W: Workshop
+                    Y: Online
+                    Z: Modular
+                    V: Examination for Credit
+                    X: One-time Event
+                    MID: Midterm Exam
+                    FNL: Final Exam
+                    HYB: Hybrid
+                  type: string
+                  example: 'A'
+                  enum: [B, C, D, E, F, G, H, I, J, K, A, L, M, N, O, P , Q, R, S, T, U, W, Y, Z, V, X, MID, FIL, HYB]
                 scheduleDescription:
                   description: Human readable schedule type for the course (agnostic of meeting times).
                   type: string
                   example: 'Lecture'
-                scheduleType:
-                  description: Type of schedule for the course (agnostic of meeting times).
-                  type: string
-                  example: 'A'
-                  enum: [B, C, D, E, F, G, H, I, J, K, A, L, M, N, O, P , Q, R, S, T, U, W, Y, Z, V, X, MID, FIL, HYB]
-                creditHours:
-                  description: Credit hours of the course.
-                  type: integer
-                  example: 3
-                registrationStatus:
-                  description: The student's registration status for the course.
-                  type: string
-                  example: 'Web Registered'
-                gradingMode:
-                  description: The grading mode for the course.
-                  type: string
-                  example: 'Normal Grading Mode'
-                continuingEducation:
-                  description: Identifies whether the course is enrolled for continuing education credits.
-                  type: boolean
-                faculty:
-                  description: Faculty and instructors associated with this course.
+                weeklySchedule:
+                  description: |
+                    Array of day abbreviations to represent which days of the week this meeting time occurs on.
+                    If an abbreviation is present in the array, the meeting time meets on that day of the week.
+                    The meeting time does not meet on any days of the week which aren't in the array.
+                    Abbreviations and their corresponding day of the week:
+                    M: Monday
+                    T: Tuesday
+                    W: Wednesday
+                    Th: Thursday
+                    F: Friday
+                    Sa: Saturday
+                    Su: Sunday
                   type: array
+                  example: ['M', 'W', 'F']
                   items:
-                    properties:
-                      osuId:
-                        description: Person ID for the faculty.
-                        type: string
-                        example: '937654321'
-                      name:
-                        description: Display name of the faculty.
-                        type: string
-                        example: 'Johnson, Bob'
-                      email:
-                        description: Email address of the faculty.
-                        type: string
-                        example: 'bob.johnson@oregonstate.edu'
-                      primary:
-                        description: Indicates whether the faculty is the primary faculty for the course.
-                        type: boolean
-                        example: true
-                meetingTimes:
-                  description: Weekly meeting times for the course.
-                  type: array
-                  items:
-                    properties:
-                      beginDate:
-                        description: The starting date of the meeting time schedule.
-                        type: string
-                        format: date
-                        example: '2018-09-20'
-                      beginTime:
-                        description: The starting time of the meeting time for the course in 24 hour format.
-                        type: string
-                        example: '14:00:00'
-                      endDate:
-                        description: The ending date of the meeting time schedule.
-                        type: string
-                        format: date
-                        example: '2018-11-30'
-                      endTime:
-                        description: The starting time of the meeting time for the course in 24 hour format.
-                        type: string
-                        example: '14:50:00'
-                      room:
-                        description: Room where the meeting time meets.
-                        type: string
-                        example: '100'
-                      building:
-                        description: The building abbreviation of the meeting time.
-                        type: string
-                        example: 'LINC'
-                      buildingDescription:
-                        description: The name of the building.
-                        type: string
-                        example: 'Learning Innovation Center'
-                      campus:
-                        description: Campus location of the meeting time.
-                        type: string
-                        example: 'Oregon State - Corvallis'
-                      hoursPerWeek:
-                        description: The amount of hours this meeting time meets per week.
-                        type: number
-                        format: float
-                        example: 1.66
-                      creditHourSession:
-                        description: Session credit hours for this meeting time.
-                        type: integer
-                        example: 2
-                      scheduleType:
-                        description: |
-                          Type of schedule for this given meeting type.
-                          A: Lecture
-                          B: Discussion
-                          C: Recitation
-                          D: Laboratory
-                          E: Seminar
-                          F: Independent or Special Studies
-                          G: Research
-                          H: Activity
-                          I: Experimental
-                          J: Internship
-                          K: Streaming Media
-                          L: Tutorial
-                          M: Practicum
-                          N: Reading and Conference
-                          O: Experiential/Co-op Education
-                          P: Programmed Instruction
-                          Q: Thesis
-                          R: Studio
-                          S: Project
-                          T: Telecourse/Distance Learning
-                          U: Externship
-                          W: Workshop
-                          Y: Online
-                          Z: Modular
-                          V: Examination for Credit
-                          X: One-time Event
-                          MID: Midterm Exam
-                          FNL: Final Exam
-                          HYB: Hybrid
-                        type: string
-                        example: 'A'
-                        enum: [B, C, D, E, F, G, H, I, J, K, A, L, M, N, O, P , Q, R, S, T, U, W, Y, Z, V, X, MID, FIL, HYB]
-                      scheduleDescription:
-                        description: Human readable schedule type for the course (agnostic of meeting times).
-                        type: string
-                        example: 'Lecture'
-                      weeklySchedule:
-                        description: |
-                          Array of day abbreviations to represent which days of the week this meeting time occurs on.
-                          If an abbreviation is present in the array, the meeting time meets on that day of the week.
-                          The meeting time does not meet on any days of the week which aren't in the array.
-                          Abbreviations and their corresponding day of the week:
-                          M: Monday
-                          T: Tuesday
-                          W: Wednesday
-                          Th: Thursday
-                          F: Friday
-                          Sa: Saturday
-                          Su: Sunday
-                        type: array
-                        example: ['M', 'W', 'F']
-                        items:
-                          type: string
-                          enum:  [M, T, W, Th, F, Sa, Su]
-            links:
-              $ref: '#/definitions/SelfLink'
+                    type: string
+                    enum:  [M, T, W, Th, F, Sa, Su]
+      links:
+        $ref: '#/definitions/SelfLink'
   HoldsResult:
     properties:
       links:

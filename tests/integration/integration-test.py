@@ -111,14 +111,14 @@ class integration_tests(unittest.TestCase):
                                 resource='Error',
                                 response_code=404)
 
-    # Test case: GET /students/{osuId}/grades
-    def test_get_grades_by_id(self, endpoint='/students'):
-        valid_ids = self.test_cases['valid_grades']
+    # Test case: GET /students/{osuId}/class-schedule
+    def test_get_class_schedule_by_id(self, endpoint='/students'):
+        valid_ids = self.test_cases['valid_class_schedule']
 
         for osu_id in valid_ids:
             utils.test_endpoint(self,
-                                f'{endpoint}/{osu_id}/grades',
-                                resource='GradesResource',
+                                f'{endpoint}/{osu_id}/class-schedule',
+                                resource='ClassScheduleResource',
                                 response_code=200)
 
         for osu_id in self.not_found_id:
