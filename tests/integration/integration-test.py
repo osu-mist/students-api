@@ -113,13 +113,22 @@ class integration_tests(unittest.TestCase):
 
     # Test case: GET /students/{osuId}/class-schedule
     def test_get_class_schedule_by_id(self, endpoint='/students'):
+        nullable_fields = [
+            'email',
+            'beginTime',
+            'endTime',
+            'room',
+            'building',
+            'buildingDescription'
+        ]
         valid_ids = self.test_cases['valid_class_schedule']
 
         for osu_id in valid_ids:
             utils.test_endpoint(self,
                                 f'{endpoint}/{osu_id}/class-schedule',
                                 resource='ClassScheduleResource',
-                                response_code=200)
+                                response_code=200,
+                                nullable_fields=nullable_fields)
 
         for osu_id in self.not_found_id:
             utils.test_endpoint(self, f'{endpoint}/{osu_id}',
