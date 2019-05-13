@@ -349,52 +349,55 @@ definitions:
       links:
         $ref: '#/definitions/SelfLink'
       data:
+        $ref: '#/definitions/ClassificationResource'
+  ClassificationResource:
+    properties:
+      id:
+        $ref: '#/definitions/StudentId'
+      type:
+        type: string
+        enum: ['classification']
+      attributes:
         properties:
-          id:
-            $ref: '#/definitions/StudentId'
-          type:
+          level:
+            description: Acamedic level of a student
             type: string
-            enum: ['classification']
-          attributes:
-            properties:
-              level:
-                description: Acamedic level of a student
-                type: string
-                example: 'Undergraduate'
-                enum:
-                  - 'Level Not Declared'
-                  - 'Graduate'
-                  - 'Postbac Degree Seeking'
-                  - 'Undergraduate'
-                  - 'Non-Degree / Credential'
-                  - 'Professional'
-                  - 'Cascades Partner'
-                  - 'Cascades Partner Grad Course'
-                  - 'E-Campus Undergraduate Course'
-                  - 'E-Campus Graduate Course'
-                  - 'E-Campus Overlay Course'
-                  - 'E-Campus Intermediate Course'
-                  - 'Non Credit'
-                  - 'INTO OSU GE/AE/Pathways'
-                  - 'ECampus CCLP & Couseling PHD'
-              classification:
-                description: Classification of a student
-                example: 'Sophomore'
-                type: string
-                enum:
-                  - 'Freshman'
-                  - 'Sophomore'
-                  - 'Junior'
-                  - 'Senior'
-                  - 'Vet Med-First Year'
-                  - 'Determine from Student Type'
-                  - 'Continuing Higher Education'
-                  - 'Vet Med-Second Year'
-                  - 'Vet Med-Third Year'
-                  - 'Vet Med-Fourth Year'
-                  - 'Auditor Only'
-          links:
-            $ref: '#/definitions/SelfLink'
+            example: 'Undergraduate'
+            enum:
+              - 'Level Not Declared'
+              - 'Graduate'
+              - 'Postbac Degree Seeking'
+              - 'Undergraduate'
+              - 'Non-Degree / Credential'
+              - 'Professional'
+              - 'Cascades Partner'
+              - 'Cascades Partner Grad Course'
+              - 'E-Campus Undergraduate Course'
+              - 'E-Campus Graduate Course'
+              - 'E-Campus Overlay Course'
+              - 'E-Campus Intermediate Course'
+              - 'Non Credit'
+              - 'INTO OSU GE/AE/Pathways'
+              - 'ECampus CCLP & Couseling PHD'
+          classification:
+            description: Classification of a student
+            example: 'Sophomore'
+            type: string
+            enum:
+              - 'Freshman'
+              - 'Sophomore'
+              - 'Junior'
+              - 'Senior'
+              - 'Vet Med-First Year'
+              - 'Determine from Student Type'
+              - 'Continuing Higher Education'
+              - 'Vet Med-Second Year'
+              - 'Vet Med-Third Year'
+              - 'Vet Med-Fourth Year'
+              - 'Auditor Only'
+      links:
+        $ref: '#/definitions/SelfLink'
+
   GradePointAverageResult:
     properties:
       links:
