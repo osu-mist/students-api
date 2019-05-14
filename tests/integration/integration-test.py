@@ -51,8 +51,8 @@ class integration_tests(unittest.TestCase):
                                         nullable_fields=nullable_fields,
                                         query_params=params)
 
-        for valid_term in self.invalid_terms:
-            params = {'term': valid_term}
+        for invalid_term in self.invalid_terms:
+            params = {'term': invalid_term}
             utils.test_endpoint(self, endpoint,
                                 resource='Error', response_code=400,
                                 query_params=params)
