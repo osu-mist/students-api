@@ -16,7 +16,17 @@
     }
   },
   "test_cases": {
-    "valid_pet_ids": ["1", "2", "3"],
-    "invalid_pet_ids": ["999", "-1", "invalid_id"]
+    "valid_terms": ["201901", "current"],
+    "invalid_terms": ["prev", "next", "1234"],
+    "valid_account_balance": "123456789",
+    "valid_account_transactions": "123456789",
+    "valid_academic_status": "123456789",
+    "valid_classification": "123456789",
+    "valid_gpa": "123456789",
+    "valid_grades": "123456789",
+    "valid_class_schedule": "123456789",
+    "valid_holds": "123456789",
+    "valid_work_study": "123456789",
+    "valid_dual_enrollment": "123456789"
   }
 }
