@@ -37,6 +37,11 @@ class integration_tests(unittest.TestCase):
     def cleanup(cls):
         cls.session.close()
 
+    @classmethod
+    # Helper function to get testing endpoint
+    def get_test_endpoint(cls, test_case, endpoint, sub_endpoint):
+        return f'{endpoint}/{cls.test_cases[test_case]}/{sub_endpoint}'
+
     # Helper function for testing term query
     def term_testing(self, endpoint, resource, nullable_fields=None):
         for valid_term in self.valid_terms:
@@ -54,27 +59,30 @@ class integration_tests(unittest.TestCase):
 
     # Test case: GET /students/{osuId}/account-balance
     def test_get_account_balance_by_id(self, endpoint='/students'):
-        osu_id = self.test_cases['valid_account_balance']
-        endpoint = f'{endpoint}/{osu_id}/account-balance'
         resource = 'AccountBalanceResource'
+        endpoint = self.get_test_endpoint('valid_account_balance',
+                                          endpoint,
+                                          'account-balance')
 
         utils.test_endpoint(self, endpoint,
                             resource=resource, response_code=200)
 
     # Test case: GET /students/{osuId}/account-transactions
     def test_get_account_transactions_by_id(self, endpoint='/students'):
-        osu_id = self.test_cases['valid_account_transactions']
-        endpoint = f'{endpoint}/{osu_id}/account-transactions'
         resource = 'AccountTransactionsResource'
+        endpoint = self.get_test_endpoint('valid_account_transactions',
+                                          endpoint,
+                                          'account-transactions')
 
         utils.test_endpoint(self, endpoint,
                             resource=resource, response_code=200)
 
     # Test case: GET /students/{osuId}/academic-status
     def test_get_academic_status_by_id(self, endpoint='/students'):
-        osu_id = self.test_cases['valid_academic_status']
-        endpoint = f'{endpoint}/{osu_id}/academic-status'
         resource = 'AcademicStatusResource'
+        endpoint = self.get_test_endpoint('valid_academic_status',
+                                          endpoint,
+                                          'academic-status')
 
         utils.test_endpoint(self, endpoint,
                             resource=resource, response_code=200)
@@ -83,27 +91,30 @@ class integration_tests(unittest.TestCase):
 
     # Test case: GET /students/{osuId}/classification
     def test_get_classification_by_id(self, endpoint='/students'):
-        osu_id = self.test_cases['valid_classification']
-        endpoint = f'{endpoint}/{osu_id}/classification'
         resource = 'ClassificationResource'
+        endpoint = self.get_test_endpoint('valid_classification',
+                                          endpoint,
+                                          'classification')
 
         utils.test_endpoint(self, endpoint,
                             resource=resource, response_code=200)
 
     # Test case: GET /students/{osuId}/gpa
     def test_get_gpa_by_id(self, endpoint='/students'):
-        osu_id = self.test_cases['valid_gpa']
-        endpoint = f'{endpoint}/{osu_id}/gpa'
         resource = 'GradePointAverageResource'
+        endpoint = self.get_test_endpoint('valid_gpa',
+                                          endpoint,
+                                          'gpa')
 
         utils.test_endpoint(self, endpoint,
                             resource=resource, response_code=200)
 
     # Test case: GET /students/{osuId}/grades
     def test_get_grades_by_id(self, endpoint='/students'):
-        osu_id = self.test_cases['valid_grades']
-        endpoint = f'{endpoint}/{osu_id}/grades'
         resource = 'GradesResource'
+        endpoint = self.get_test_endpoint('valid_grades',
+                                          endpoint,
+                                          'grades')
 
         utils.test_endpoint(self, endpoint,
                             resource=resource, response_code=200)
@@ -112,9 +123,10 @@ class integration_tests(unittest.TestCase):
 
     # Test case: GET /students/{osuId}/class-schedule
     def test_get_class_schedule_by_id(self, endpoint='/students'):
-        osu_id = self.test_cases['valid_class_schedule']
-        endpoint = f'{endpoint}/{osu_id}/class-schedule'
         resource = 'ClassScheduleResource'
+        endpoint = self.get_test_endpoint('valid_class_schedule',
+                                          endpoint,
+                                          'class-schedule')
 
         """
         Since OpenAPI 2.0 doesn't support nullable attribute, we need to
@@ -137,18 +149,20 @@ class integration_tests(unittest.TestCase):
 
     # Test case: GET /students/{osuId}/holds
     def test_get_holds_by_id(self, endpoint='/students'):
-        osu_id = self.test_cases['valid_holds']
-        endpoint = f'{endpoint}/{osu_id}/holds'
         resource = 'HoldsResource'
+        endpoint = self.get_test_endpoint('valid_holds',
+                                          endpoint,
+                                          'holds')
 
         utils.test_endpoint(self, endpoint,
                             resource=resource, response_code=200)
 
     # Test case: GET /students/{osuId}/dual-enrollment
     def test_get_dual_enrollment_by_id(self, endpoint='/students'):
-        osu_id = self.test_cases['valid_dual_enrollment']
-        endpoint = f'{endpoint}/{osu_id}/dual-enrollment'
         resource = 'DualEnrollmentResource'
+        endpoint = self.get_test_endpoint('valid_dual_enrollment',
+                                          endpoint,
+                                          'dual-enrollment')
 
         utils.test_endpoint(self, endpoint,
                             resource=resource, response_code=200)
