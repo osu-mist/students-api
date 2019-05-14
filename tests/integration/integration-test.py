@@ -15,8 +15,11 @@ class integration_tests(unittest.TestCase):
             config = json.load(config_file)
             cls.base_url = utils.setup_base_url(config)
             cls.session = utils.setup_session(config)
-            cls.test_cases = config['test_cases']
             cls.local_test = config['local_test']
+
+            cls.test_cases = config['test_cases']
+            cls.valid_terms = cls.test_cases['valid_terms']
+            cls.invalid_terms = cls.test_cases['invalid_terms']
 
         with open(openapi_path) as openapi_file:
             openapi = yaml.load(openapi_file, Loader=yaml.SafeLoader)
@@ -36,61 +39,92 @@ class integration_tests(unittest.TestCase):
 
     # Test case: GET /students/{osuId}/account-balance
     def test_get_account_balance_by_id(self, endpoint='/students'):
-        valid_ids = self.test_cases['valid_account_balance']
-        sub_endpoint = 'account-balance'
+        osu_id = self.test_cases['valid_account_balance']
+        endpoint = f'{endpoint}/{osu_id}/account-balance'
+        resource = 'AccountBalanceResource'
 
-        for osu_id in valid_ids:
-            utils.test_endpoint(self,
-                                f'{endpoint}/{osu_id}/{sub_endpoint}',
-                                resource='AccountBalanceResource',
-                                response_code=200)
+        utils.test_endpoint(self, endpoint,
+                            resource=resource, response_code=200)
 
     # Test case: GET /students/{osuId}/account-transactions
     def test_get_account_transactions_by_id(self, endpoint='/students'):
-        valid_ids = self.test_cases['valid_account_transactions']
-        sub_endpoint = 'account-transactions'
+        osu_id = self.test_cases['valid_account_transactions']
+        endpoint = f'{endpoint}/{osu_id}/account-transactions'
+        resource = 'AccountTransactionsResource'
 
-        for osu_id in valid_ids:
-            utils.test_endpoint(self,
-                                f'{endpoint}/{osu_id}/{sub_endpoint}',
-                                resource='AccountTransactionsResource',
-                                response_code=200)
+        utils.test_endpoint(self, endpoint,
+                            resource=resource, response_code=200)
 
     # Test case: GET /students/{osuId}/academic-status
     def test_get_academic_status_by_id(self, endpoint='/students'):
-        valid_ids = self.test_cases['valid_academic_status']
-        sub_endpoint = 'academic-status'
+        osu_id = self.test_cases['valid_academic_status']
+        endpoint = f'{endpoint}/{osu_id}/academic-status'
+        resource = 'AcademicStatusResource'
 
-        for osu_id in valid_ids:
-            utils.test_endpoint(self,
-                                f'{endpoint}/{osu_id}/{sub_endpoint}',
-                                resource='AcademicStatusResource',
-                                response_code=200)
+        utils.test_endpoint(self, endpoint,
+                            resource=resource, response_code=200)
+
+        for valid_term in self.valid_terms:
+            params = {'term': valid_term}
+            utils.test_endpoint(self, endpoint,
+                                resource=resource, response_code=200,
+                                query_params=params)
+
+        for valid_term in self.invalid_terms:
+            params = {'term': valid_term}
+            utils.test_endpoint(self, endpoint,
+                                resource='Error', response_code=400,
+                                query_params=params)
 
     # Test case: GET /students/{osuId}/classification
     def test_get_classification_by_id(self, endpoint='/students'):
-        valid_ids = self.test_cases['valid_classification']
-        sub_endpoint = 'classification'
+        osu_id = self.test_cases['valid_classification']
+        endpoint = f'{endpoint}/{osu_id}/classification'
+        resource = 'ClassificationResource'
 
-        for osu_id in valid_ids:
-            utils.test_endpoint(self,
-                                f'{endpoint}/{osu_id}/{sub_endpoint}',
-                                resource='ClassificationResource',
-                                response_code=200)
+        utils.test_endpoint(self, endpoint,
+                            resource=resource, response_code=200)
 
     # Test case: GET /students/{osuId}/gpa
     def test_get_gpa_by_id(self, endpoint='/students'):
-        valid_ids = self.test_cases['valid_gpa']
-        sub_endpoint = 'gpa'
+        osu_id = self.test_cases['valid_gpa']
+        endpoint = f'{endpoint}/{osu_id}/gpa'
+        resource = 'GradePointAverageResource'
 
-        for osu_id in valid_ids:
-            utils.test_endpoint(self,
-                                f'{endpoint}/{osu_id}/{sub_endpoint}',
-                                resource='GradePointAverageResource',
-                                response_code=200)
+        utils.test_endpoint(self, endpoint,
+                            resource=resource, response_code=200)
+
+    # Test case: GET /students/{osuId}/grades
+    def test_get_grades_by_id(self, endpoint='/students'):
+        osu_id = self.test_cases['valid_grades']
+        endpoint = f'{endpoint}/{osu_id}/grades'
+        resource = 'GradesResource'
+
+        utils.test_endpoint(self, endpoint,
+                            resource=resource, response_code=200)
+
+        for valid_term in self.valid_terms:
+            params = {'term': valid_term}
+            utils.test_endpoint(self, endpoint,
+                                resource=resource, response_code=200,
+                                query_params=params)
+
+        for valid_term in self.invalid_terms:
+            params = {'term': valid_term}
+            utils.test_endpoint(self, endpoint,
+                                resource='Error', response_code=400,
+                                query_params=params)
 
     # Test case: GET /students/{osuId}/class-schedule
     def test_get_class_schedule_by_id(self, endpoint='/students'):
+        osu_id = self.test_cases['valid_class_schedule']
+        endpoint = f'{endpoint}/{osu_id}/class-schedule'
+        resource = 'ClassScheduleResource'
+
+        """
+        Since OpenAPI 2.0 doesn't support nullable attribute, we need to
+        manually exclude nullable fields until we migrate to OpenAPI 3.0
+        """
         nullable_fields = [
             'email',
             'beginTime',
@@ -99,37 +133,53 @@ class integration_tests(unittest.TestCase):
             'building',
             'buildingDescription'
         ]
-        valid_ids = self.test_cases['valid_class_schedule']
-        sub_endpoint = 'class-schedule'
 
-        for osu_id in valid_ids:
-            utils.test_endpoint(self,
-                                f'{endpoint}/{osu_id}/{sub_endpoint}',
-                                resource='ClassScheduleResource',
-                                response_code=200,
-                                nullable_fields=nullable_fields)
+        utils.test_endpoint(self, endpoint,
+                            resource=resource, response_code=200,
+                            nullable_fields=nullable_fields)
+
+        for valid_term in self.valid_terms:
+            params = {'term': valid_term}
+            utils.test_endpoint(self, endpoint,
+                                resource=resource, response_code=200,
+                                nullable_fields=nullable_fields,
+                                query_params=params)
+
+        for valid_term in self.invalid_terms:
+            params = {'term': valid_term}
+            utils.test_endpoint(self, endpoint,
+                                resource='Error', response_code=400,
+                                query_params=params)
 
     # Test case: GET /students/{osuId}/holds
     def test_get_holds_by_id(self, endpoint='/students'):
-        valid_ids = self.test_cases['valid_holds']
-        sub_endpoint = 'holds'
+        osu_id = self.test_cases['valid_holds']
+        endpoint = f'{endpoint}/{osu_id}/holds'
+        resource = 'HoldsResource'
 
-        for osu_id in valid_ids:
-            utils.test_endpoint(self,
-                                f'{endpoint}/{osu_id}/{sub_endpoint}',
-                                resource='HoldsResource',
-                                response_code=200)
+        utils.test_endpoint(self, endpoint,
+                            resource=resource, response_code=200)
 
     # Test case: GET /students/{osuId}/dual-enrollment
     def test_get_dual_enrollment_by_id(self, endpoint='/students'):
-        valid_ids = self.test_cases['valid_dual_enrollment']
-        sub_endpoint = 'dual-enrollment'
+        osu_id = self.test_cases['valid_dual_enrollment']
+        endpoint = f'{endpoint}/{osu_id}/dual-enrollment'
+        resource = 'DualEnrollmentResource'
 
-        for osu_id in valid_ids:
-            utils.test_endpoint(self,
-                                f'{endpoint}/{osu_id}/{sub_endpoint}',
-                                resource='DualEnrollmentResource',
-                                response_code=200)
+        utils.test_endpoint(self, endpoint,
+                            resource=resource, response_code=200)
+
+        for valid_term in self.valid_terms:
+            params = {'term': valid_term}
+            utils.test_endpoint(self, endpoint,
+                                resource=resource, response_code=200,
+                                query_params=params)
+
+        for valid_term in self.invalid_terms:
+            params = {'term': valid_term}
+            utils.test_endpoint(self, endpoint,
+                                resource='Error', response_code=400,
+                                query_params=params)
 
 
 if __name__ == '__main__':
