@@ -37,6 +37,21 @@ class integration_tests(unittest.TestCase):
     def cleanup(cls):
         cls.session.close()
 
+    # Helper function for testing term query
+    def term_testing(self, endpoint, resource, nullable_fields=None):
+        for valid_term in self.valid_terms:
+                    params = {'term': valid_term}
+                    utils.test_endpoint(self, endpoint,
+                                        resource=resource, response_code=200,
+                                        nullable_fields=nullable_fields,
+                                        query_params=params)
+
+        for valid_term in self.invalid_terms:
+            params = {'term': valid_term}
+            utils.test_endpoint(self, endpoint,
+                                resource='Error', response_code=400,
+                                query_params=params)
+
     # Test case: GET /students/{osuId}/account-balance
     def test_get_account_balance_by_id(self, endpoint='/students'):
         osu_id = self.test_cases['valid_account_balance']
@@ -64,17 +79,7 @@ class integration_tests(unittest.TestCase):
         utils.test_endpoint(self, endpoint,
                             resource=resource, response_code=200)
 
-        for valid_term in self.valid_terms:
-            params = {'term': valid_term}
-            utils.test_endpoint(self, endpoint,
-                                resource=resource, response_code=200,
-                                query_params=params)
-
-        for valid_term in self.invalid_terms:
-            params = {'term': valid_term}
-            utils.test_endpoint(self, endpoint,
-                                resource='Error', response_code=400,
-                                query_params=params)
+        self.term_testing(endpoint, resource)
 
     # Test case: GET /students/{osuId}/classification
     def test_get_classification_by_id(self, endpoint='/students'):
@@ -103,17 +108,7 @@ class integration_tests(unittest.TestCase):
         utils.test_endpoint(self, endpoint,
                             resource=resource, response_code=200)
 
-        for valid_term in self.valid_terms:
-            params = {'term': valid_term}
-            utils.test_endpoint(self, endpoint,
-                                resource=resource, response_code=200,
-                                query_params=params)
-
-        for valid_term in self.invalid_terms:
-            params = {'term': valid_term}
-            utils.test_endpoint(self, endpoint,
-                                resource='Error', response_code=400,
-                                query_params=params)
+        self.term_testing(endpoint, resource)
 
     # Test case: GET /students/{osuId}/class-schedule
     def test_get_class_schedule_by_id(self, endpoint='/students'):
@@ -138,18 +133,7 @@ class integration_tests(unittest.TestCase):
                             resource=resource, response_code=200,
                             nullable_fields=nullable_fields)
 
-        for valid_term in self.valid_terms:
-            params = {'term': valid_term}
-            utils.test_endpoint(self, endpoint,
-                                resource=resource, response_code=200,
-                                nullable_fields=nullable_fields,
-                                query_params=params)
-
-        for valid_term in self.invalid_terms:
-            params = {'term': valid_term}
-            utils.test_endpoint(self, endpoint,
-                                resource='Error', response_code=400,
-                                query_params=params)
+        self.term_testing(endpoint, resource, nullable_fields=nullable_fields)
 
     # Test case: GET /students/{osuId}/holds
     def test_get_holds_by_id(self, endpoint='/students'):
@@ -169,17 +153,7 @@ class integration_tests(unittest.TestCase):
         utils.test_endpoint(self, endpoint,
                             resource=resource, response_code=200)
 
-        for valid_term in self.valid_terms:
-            params = {'term': valid_term}
-            utils.test_endpoint(self, endpoint,
-                                resource=resource, response_code=200,
-                                query_params=params)
-
-        for valid_term in self.invalid_terms:
-            params = {'term': valid_term}
-            utils.test_endpoint(self, endpoint,
-                                resource='Error', response_code=400,
-                                query_params=params)
+        self.term_testing(endpoint, resource)
 
 
 if __name__ == '__main__':
