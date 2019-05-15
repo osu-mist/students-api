@@ -39,93 +39,76 @@ class integration_tests(unittest.TestCase):
 
     @classmethod
     # Helper function to get testing endpoint
-    def get_test_endpoint(cls, test_case, endpoint, sub_endpoint):
-        return f'{endpoint}/{cls.test_cases[test_case]}/{sub_endpoint}'
+    def get_test_endpoint(cls, test_case, sub_endpoint):
+        return f'/students/{cls.test_cases[test_case]}/{sub_endpoint}'
 
     # Helper function for testing term query
     def term_testing(self, endpoint, resource, nullable_fields=None):
         for valid_term in self.valid_terms:
                     params = {'term': valid_term}
-                    utils.test_endpoint(self, endpoint,
-                                        resource=resource, response_code=200,
-                                        nullable_fields=nullable_fields,
-                                        query_params=params)
+                    utils.test_endpoint(self, endpoint, resource, 200,
+                                        query_params=params,
+                                        nullable_fields=nullable_fields)
 
         for invalid_term in self.invalid_terms:
             params = {'term': invalid_term}
-            utils.test_endpoint(self, endpoint,
-                                resource='Error', response_code=400,
+            utils.test_endpoint(self, endpoint, 'Error', 400,
                                 query_params=params)
 
     # Test case: GET /students/{osuId}/account-balance
-    def test_get_account_balance_by_id(self, endpoint='/students'):
+    def test_get_account_balance_by_id(self):
         resource = 'AccountBalanceResource'
         endpoint = self.get_test_endpoint('valid_account_balance',
-                                          endpoint,
                                           'account-balance')
 
-        utils.test_endpoint(self, endpoint,
-                            resource=resource, response_code=200)
+        utils.test_endpoint(self, endpoint, resource, 200)
 
     # Test case: GET /students/{osuId}/account-transactions
-    def test_get_account_transactions_by_id(self, endpoint='/students'):
+    def test_get_account_transactions_by_id(self):
         resource = 'AccountTransactionsResource'
         endpoint = self.get_test_endpoint('valid_account_transactions',
-                                          endpoint,
                                           'account-transactions')
 
-        utils.test_endpoint(self, endpoint,
-                            resource=resource, response_code=200)
+        utils.test_endpoint(self, endpoint, resource, 200)
 
     # Test case: GET /students/{osuId}/academic-status
-    def test_get_academic_status_by_id(self, endpoint='/students'):
+    def test_get_academic_status_by_id(self):
         resource = 'AcademicStatusResource'
         endpoint = self.get_test_endpoint('valid_academic_status',
-                                          endpoint,
                                           'academic-status')
 
-        utils.test_endpoint(self, endpoint,
-                            resource=resource, response_code=200)
-
+        utils.test_endpoint(self, endpoint, resource, 200)
         self.term_testing(endpoint, resource)
 
     # Test case: GET /students/{osuId}/classification
-    def test_get_classification_by_id(self, endpoint='/students'):
+    def test_get_classification_by_id(self):
         resource = 'ClassificationResource'
         endpoint = self.get_test_endpoint('valid_classification',
-                                          endpoint,
                                           'classification')
 
-        utils.test_endpoint(self, endpoint,
-                            resource=resource, response_code=200)
+        utils.test_endpoint(self, endpoint, resource, 200)
 
     # Test case: GET /students/{osuId}/gpa
-    def test_get_gpa_by_id(self, endpoint='/students'):
+    def test_get_gpa_by_id(self):
         resource = 'GradePointAverageResource'
         endpoint = self.get_test_endpoint('valid_gpa',
-                                          endpoint,
                                           'gpa')
 
-        utils.test_endpoint(self, endpoint,
-                            resource=resource, response_code=200)
+        utils.test_endpoint(self, endpoint, resource, 200)
 
     # Test case: GET /students/{osuId}/grades
-    def test_get_grades_by_id(self, endpoint='/students'):
+    def test_get_grades_by_id(self):
         resource = 'GradesResource'
         endpoint = self.get_test_endpoint('valid_grades',
-                                          endpoint,
                                           'grades')
 
-        utils.test_endpoint(self, endpoint,
-                            resource=resource, response_code=200)
-
+        utils.test_endpoint(self, endpoint, resource, 200)
         self.term_testing(endpoint, resource)
 
     # Test case: GET /students/{osuId}/class-schedule
-    def test_get_class_schedule_by_id(self, endpoint='/students'):
+    def test_get_class_schedule_by_id(self):
         resource = 'ClassScheduleResource'
         endpoint = self.get_test_endpoint('valid_class_schedule',
-                                          endpoint,
                                           'class-schedule')
 
         """
@@ -141,32 +124,25 @@ class integration_tests(unittest.TestCase):
             'buildingDescription'
         ]
 
-        utils.test_endpoint(self, endpoint,
-                            resource=resource, response_code=200,
+        utils.test_endpoint(self, endpoint, resource, 200,
                             nullable_fields=nullable_fields)
-
         self.term_testing(endpoint, resource, nullable_fields=nullable_fields)
 
     # Test case: GET /students/{osuId}/holds
-    def test_get_holds_by_id(self, endpoint='/students'):
+    def test_get_holds_by_id(self):
         resource = 'HoldsResource'
         endpoint = self.get_test_endpoint('valid_holds',
-                                          endpoint,
                                           'holds')
 
-        utils.test_endpoint(self, endpoint,
-                            resource=resource, response_code=200)
+        utils.test_endpoint(self, endpoint, resource, 200)
 
     # Test case: GET /students/{osuId}/dual-enrollment
-    def test_get_dual_enrollment_by_id(self, endpoint='/students'):
+    def test_get_dual_enrollment_by_id(self):
         resource = 'DualEnrollmentResource'
         endpoint = self.get_test_endpoint('valid_dual_enrollment',
-                                          endpoint,
                                           'dual-enrollment')
 
-        utils.test_endpoint(self, endpoint,
-                            resource=resource, response_code=200)
-
+        utils.test_endpoint(self, endpoint, resource, 200)
         self.term_testing(endpoint, resource)
 
 
