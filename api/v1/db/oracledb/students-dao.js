@@ -29,7 +29,13 @@ const getResourceById = async (id, sql, serializer, isSingleton, params) => {
     if (isSingleton && rows.length > 1) {
       throw new Error('Expect a single object but got multiple results.');
     } else {
-      const serializedResource = serializer(isSingleton ? rows[0] : rows, id, params);
+      let rawRows;
+      if (isSingleton) {
+        rawRows = rows.length === 0 ? [] : rows[0];
+      } else {
+        rawRows = rows;
+      }
+      const serializedResource = serializer(rawRows, id, params);
       return serializedResource;
     }
   } finally {

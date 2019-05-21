@@ -15,8 +15,11 @@ class integration_tests(unittest.TestCase):
             config = json.load(config_file)
             cls.base_url = utils.setup_base_url(config)
             cls.session = utils.setup_session(config)
-            cls.test_cases = config['test_cases']
             cls.local_test = config['local_test']
+
+            cls.test_cases = config['test_cases']
+            cls.valid_terms = cls.test_cases['valid_terms']
+            cls.invalid_terms = cls.test_cases['invalid_terms']
 
         with open(openapi_path) as openapi_file:
             openapi = yaml.load(openapi_file, Loader=yaml.SafeLoader)
@@ -34,79 +37,113 @@ class integration_tests(unittest.TestCase):
     def cleanup(cls):
         cls.session.close()
 
-    # Test case: GET /pets
-    def test_get_all_pets(self, endpoint='/pets'):
-        nullable_fields = ['owner']
-        utils.test_endpoint(self, endpoint,
-                            resource='PetResource',
-                            response_code=200,
-                            nullable_fields=nullable_fields)
+    @classmethod
+    # Helper function to get testing endpoint
+    def get_test_endpoint(cls, test_case, sub_endpoint):
+        return f'/students/{cls.test_cases[test_case]}/{sub_endpoint}'
 
-    # Test case: GET /pets with species filter
-    def test_get_pets_with_filter(self, endpoint='/pets'):
-        testing_species = ['dog', 'CAT', 'tUrTlE']
+    # Helper function for testing term query
+    def term_testing(self, endpoint, resource, nullable_fields=None):
+        for valid_term in self.valid_terms:
+            params = {'term': valid_term}
+            utils.test_endpoint(self, endpoint, resource, 200,
+                                query_params=params,
+                                nullable_fields=nullable_fields)
 
-        for species in testing_species:
-            params = {'species': species}
-            response = utils.test_endpoint(self, endpoint,
-                                           resource='PetResource',
-                                           response_code=200,
-                                           query_params=params)
+        for invalid_term in self.invalid_terms:
+            params = {'term': invalid_term}
+            utils.test_endpoint(self, endpoint, 'Error', 400,
+                                query_params=params)
 
-            response_data = response.json()['data']
-            for resource in response_data:
-                actual_species = resource['attributes']['species']
-                self.assertEqual(actual_species.lower(), species.lower())
+    # Test case: GET /students/{osuId}/account-balance
+    def test_get_account_balance_by_id(self):
+        resource = 'AccountBalanceResource'
+        endpoint = self.get_test_endpoint('valid_account_balance',
+                                          'account-balance')
 
-    # Test case: GET /pets with pagination parameters
-    def test_get_pets_pagination(self, endpoint='/pets'):
-        testing_paginations = [
-            {'number': 1, 'size': 25, 'expected_status_code': 200},
-            {'number': 1, 'size': None, 'expected_status_code': 200},
-            {'number': None, 'size': 25, 'expected_status_code': 200},
-            {'number': 999, 'size': 1, 'expected_status_code': 200},
-            {'number': -1, 'size': 25, 'expected_status_code': 400},
-            {'number': 1, 'size': -1, 'expected_status_code': 400},
-            {'number': 1, 'size': 501, 'expected_status_code': 400}
+        utils.test_endpoint(self, endpoint, resource, 200)
+
+    # Test case: GET /students/{osuId}/account-transactions
+    def test_get_account_transactions_by_id(self):
+        resource = 'AccountTransactionsResource'
+        endpoint = self.get_test_endpoint('valid_account_transactions',
+                                          'account-transactions')
+
+        utils.test_endpoint(self, endpoint, resource, 200)
+
+    # Test case: GET /students/{osuId}/academic-status
+    def test_get_academic_status_by_id(self):
+        resource = 'AcademicStatusResource'
+        endpoint = self.get_test_endpoint('valid_academic_status',
+                                          'academic-status')
+
+        utils.test_endpoint(self, endpoint, resource, 200)
+        self.term_testing(endpoint, resource)
+
+    # Test case: GET /students/{osuId}/classification
+    def test_get_classification_by_id(self):
+        resource = 'ClassificationResource'
+        endpoint = self.get_test_endpoint('valid_classification',
+                                          'classification')
+
+        utils.test_endpoint(self, endpoint, resource, 200)
+
+    # Test case: GET /students/{osuId}/gpa
+    def test_get_gpa_by_id(self):
+        resource = 'GradePointAverageResource'
+        endpoint = self.get_test_endpoint('valid_gpa',
+                                          'gpa')
+
+        utils.test_endpoint(self, endpoint, resource, 200)
+
+    # Test case: GET /students/{osuId}/grades
+    def test_get_grades_by_id(self):
+        resource = 'GradesResource'
+        endpoint = self.get_test_endpoint('valid_grades',
+                                          'grades')
+
+        utils.test_endpoint(self, endpoint, resource, 200)
+        self.term_testing(endpoint, resource)
+
+    # Test case: GET /students/{osuId}/class-schedule
+    def test_get_class_schedule_by_id(self):
+        resource = 'ClassScheduleResource'
+        endpoint = self.get_test_endpoint('valid_class_schedule',
+                                          'class-schedule')
+
+        """
+        Since OpenAPI 2.0 doesn't support nullable attribute, we need to
+        manually exclude nullable fields until we migrate to OpenAPI 3.0
+        """
+        nullable_fields = [
+            'email',
+            'beginTime',
+            'endTime',
+            'room',
+            'building',
+            'buildingDescription'
         ]
-        nullable_fields = ['owner']
-        for pagination in testing_paginations:
-            params = {f'page[{k}]': pagination[k] for k in ['number', 'size']}
-            expected_status_code = pagination['expected_status_code']
-            resource = (
-                'PetResource' if expected_status_code == 200
-                else 'Error')
-            response = utils.test_endpoint(self, endpoint,
-                                           resource=resource,
-                                           response_code=expected_status_code,
-                                           query_params=params,
-                                           nullable_fields=nullable_fields)
-            content = utils.get_json_content(self, response)
-            if expected_status_code == 200:
-                try:
-                    meta = content['meta']
-                    num = pagination['number'] if pagination['number'] else 1
-                    size = pagination['size'] if pagination['size'] else 25
 
-                    self.assertEqual(num, meta['currentPageNumber'])
-                    self.assertEqual(size, meta['currentPageSize'])
-                except KeyError as error:
-                    self.fail(error)
+        utils.test_endpoint(self, endpoint, resource, 200,
+                            nullable_fields=nullable_fields)
+        self.term_testing(endpoint, resource, nullable_fields=nullable_fields)
 
-    # Test case: GET /pets/{id}
-    def test_get_pet_by_id(self, endpoint='/pets'):
-        valid_pet_ids = self.test_cases['valid_pet_ids']
-        invalid_pet_ids = self.test_cases['invalid_pet_ids']
+    # Test case: GET /students/{osuId}/holds
+    def test_get_holds_by_id(self):
+        resource = 'HoldsResource'
+        endpoint = self.get_test_endpoint('valid_holds',
+                                          'holds')
 
-        for pet_id in valid_pet_ids:
-            utils.test_endpoint(self, f'{endpoint}/{pet_id}',
-                                resource='PetResource',
-                                response_code=200)
+        utils.test_endpoint(self, endpoint, resource, 200)
 
-        for pet_id in invalid_pet_ids:
-            utils.test_endpoint(self, f'{endpoint}/{pet_id}',
-                                resource='Error',
-                                response_code=404)
+    # Test case: GET /students/{osuId}/dual-enrollment
+    def test_get_dual_enrollment_by_id(self):
+        resource = 'DualEnrollmentResource'
+        endpoint = self.get_test_endpoint('valid_dual_enrollment',
+                                          'dual-enrollment')
+
+        utils.test_endpoint(self, endpoint, resource, 200)
+        self.term_testing(endpoint, resource)
 
 
 if __name__ == '__main__':

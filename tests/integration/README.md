@@ -1,6 +1,6 @@
-# Template of Integration Test ![python](https://img.shields.io/badge/python-3.7-blue.svg)
+# Students API Integration Test ![python](https://img.shields.io/badge/python-3.7-blue.svg)
 
-This directory contains template files that run integration tests against the API.
+The integration tests for Students API written using Python 3.
 
 ## Configuration
 
@@ -68,10 +68,10 @@ This directory contains template files that run integration tests against the AP
 Use these commands to build and run the tests in a container. All you need installed is Docker. **Make sure you are in the root directory of the repository**.
 
 ```shell
-$ docker build -f tests/integration/Dockerfile -t <my-api>-integration-test .
+$ docker build -f tests/integration/Dockerfile -t students-api-integration-test .
 $ docker run --rm \
              -v "$PWD"/tests/integration/configuration.json:/usr/src/app/configuration.json:ro \
-             <my-api>-integration-test
+             students-api-integration-test
 ```
 
 ### Test on local instance from the Docker container
