@@ -45,10 +45,10 @@ class integration_tests(unittest.TestCase):
     # Helper function for testing term query
     def term_testing(self, endpoint, resource, nullable_fields=None):
         for valid_term in self.valid_terms:
-                    params = {'term': valid_term}
-                    utils.test_endpoint(self, endpoint, resource, 200,
-                                        query_params=params,
-                                        nullable_fields=nullable_fields)
+            params = {'term': valid_term}
+            utils.test_endpoint(self, endpoint, resource, 200,
+                                query_params=params,
+                                nullable_fields=nullable_fields)
 
         for invalid_term in self.invalid_terms:
             params = {'term': invalid_term}
