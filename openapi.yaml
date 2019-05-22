@@ -73,7 +73,7 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/GradePointAverageResult'
-        500:
+        '500':
           description: Internal Server Error
           schema:
             $ref: '#/definitions/Errors'
