@@ -76,9 +76,11 @@ class integration_tests(unittest.TestCase):
         resource = 'AcademicStatusResource'
         endpoint = self.get_test_endpoint('valid_academic_status',
                                           'academic-status')
+        nullable_fields = ['academicStanding']
 
-        utils.test_endpoint(self, endpoint, resource, 200)
-        self.term_testing(endpoint, resource)
+        utils.test_endpoint(self, endpoint, resource, 200,
+                            nullable_fields=nullable_fields)
+        self.term_testing(endpoint, resource, nullable_fields=nullable_fields)
 
     # Test case: GET /students/{osuId}/classification
     def test_get_classification_by_id(self):
