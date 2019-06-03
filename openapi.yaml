@@ -656,7 +656,7 @@ definitions:
   DegreeResource:
     properties:
       id:
-        $ref: '#/definitions/StudentAndTermId'
+        $ref: '#/definitions/StudentAndTermAndProgramNumber'
       type:
         type: string
         enum: [degree]
@@ -678,28 +678,33 @@ definitions:
             description: Short summary of the academic year for the term
             type: string
             example: Academic Year 2018-19
-          degrees:
-            properties:
-              main:
-                type: object
-                allOf:
-                  - $ref: '#/definitions/Degree'
-                  - properties:
-                      degreeAwardCategory:
-                        description: Degree award category
-                        type: string
-                        example: Baccalaureate Degree
-                description: Degree object of the main degree
-              dual:
-                type: object
-                allOf:
-                  - $ref: '#/definitions/Degree'
-                  - properties:
-                      major:
-                        description: The major of the dual degree
-                        type: string
-                        example: Spanish
-                description: Degree object of the dual degree
+          programNumber:
+            description: >
+              The program number indicates the program priority. For example, 1
+              stands for the primary degree.
+            type: number
+            format: integer
+            example: 1
+          primaryDegree:
+            description: A boolean value indicates if the degree is primary or not
+            type: boolean
+            example: true
+          degree:
+            description: The student degree
+            type: string
+            example: Bachelor of Science
+          level:
+            description: The degree level
+            type: string
+            example: Undergraduate
+          college:
+            description: The college of the degree
+            type: string
+            example: College of Liberal Arts
+          degreeAwardCategory:
+            description: Degree award category
+            type: string
+            example: Baccalaureate Degree
           majors:
             properties:
               first:
@@ -1037,28 +1042,6 @@ definitions:
                     - Canceled
       links:
         $ref: '#/definitions/SelfLink'
-  Degree:
-    properties:
-      degree:
-        description: The student degree
-        type: string
-        example: Bachelor of Science
-      level:
-        description: The degree level
-        type: string
-        example: Undergraduate
-      programClassification:
-        description: The program classification of the degree
-        type: string
-        example: Elect, Electronics & Comm Engr
-      college:
-        description: The college of the degree
-        type: string
-        example: College of Liberal Arts
-      department:
-        description: The department of the degree
-        type: string
-        example: Engineering Science
   Major:
     properties:
       major:
@@ -1109,3 +1092,7 @@ definitions:
     type: string
     example: 931123456-201901-123456
     pattern: '^\d{9}-\d{6}-.+$'
+  StudentAndTermAndProgramNumber:
+    type: string
+    example: 931123456-201901-1
+    pattern: '^\d{9}-\d{6}-\d+'
