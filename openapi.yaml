@@ -38,7 +38,7 @@ paths:
         '500':
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/Errors'
+            $ref: '#/definitions/ErrorResult'
   /students/{osuId}/account-transactions:
     get:
       tags:
@@ -57,7 +57,7 @@ paths:
         '500':
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/Errors'
+            $ref: '#/definitions/ErrorResult'
   /students/{osuId}/gpa:
     get:
       tags:
@@ -76,7 +76,7 @@ paths:
         '500':
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/Errors'
+            $ref: '#/definitions/ErrorResult'
   /students/{osuId}/academic-status:
     get:
       tags:
@@ -96,7 +96,7 @@ paths:
         '500':
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/Errors'
+            $ref: '#/definitions/ErrorResult'
   /students/{osuId}/classification:
     get:
       tags:
@@ -115,7 +115,7 @@ paths:
         '500':
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/Errors'
+            $ref: '#/definitions/ErrorResult'
   /students/{osuId}/grades:
     get:
       tags:
@@ -135,7 +135,7 @@ paths:
         '500':
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/Errors'
+            $ref: '#/definitions/ErrorResult'
   /students/{osuId}/class-schedule:
     get:
       tags:
@@ -157,7 +157,7 @@ paths:
         '500':
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/Errors'
+            $ref: '#/definitions/ErrorResult'
   /students/{osuId}/holds:
     get:
       tags:
@@ -176,7 +176,7 @@ paths:
         '500':
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/Errors'
+            $ref: '#/definitions/ErrorResult'
   /students/{osuId}/work-study:
     get:
       tags:
@@ -195,7 +195,7 @@ paths:
         '500':
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/Errors'
+            $ref: '#/definitions/ErrorResult'
   /students/{osuId}/dual-enrollment:
     get:
       tags:
@@ -215,7 +215,7 @@ paths:
         '500':
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/Errors'
+            $ref: '#/definitions/ErrorResult'
 parameters:
   authorization:
     name: Authorization
@@ -905,7 +905,7 @@ definitions:
       self:
         type: string
         format: url
-  Error:
+  ErrorResource:
     properties:
       status:
         type: string
@@ -929,9 +929,9 @@ definitions:
             format: url
             description: A link to further information about the error
             example: https://developer.oregonstate.edu/documentation/error-reference#1234
-  Errors:
+  ErrorResult:
     properties:
       errors:
         type: array
         items:
-          $ref: '#/definitions/Error'
+          $ref: '#/definitions/ErrorResource'
