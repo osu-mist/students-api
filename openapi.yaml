@@ -20,6 +20,30 @@ externalDocs:
 produces:
   - application/json
 paths:
+  /students/{osuId}/academic-status:
+    get:
+      tags:
+        - students
+        - academic-status
+      description: Get GPA and academic standing for each term a student is registered for.
+      operationId: getAcademicStatusById
+      parameters:
+        - $ref: '#/parameters/authorization'
+        - $ref: '#/parameters/term'
+        - $ref: '#/parameters/osuId'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/AcademicStatusResult'
+        '400':
+          description: Bad request
+          schema:
+            $ref: '#/definitions/ErrorResult'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResult'
   /students/{osuId}/account-balance:
     get:
       tags:
@@ -58,45 +82,6 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/ErrorResult'
-  /students/{osuId}/gpa:
-    get:
-      tags:
-        - students
-        - gpa
-      description: Get a student's overall grade point averages.
-      operationId: getGradePointAverageById
-      parameters:
-        - $ref: '#/parameters/authorization'
-        - $ref: '#/parameters/osuId'
-      responses:
-        '200':
-          description: Successful response
-          schema:
-            $ref: '#/definitions/GradePointAverageResult'
-        '500':
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/ErrorResult'
-  /students/{osuId}/academic-status:
-    get:
-      tags:
-        - students
-        - academic-status
-      description: Get GPA and academic standing for each term a student is registered for.
-      operationId: getAcademicStatusById
-      parameters:
-        - $ref: '#/parameters/authorization'
-        - $ref: '#/parameters/term'
-        - $ref: '#/parameters/osuId'
-      responses:
-        '200':
-          description: Successful response
-          schema:
-            $ref: '#/definitions/AcademicStatusResult'
-        '500':
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/ErrorResult'
   /students/{osuId}/classification:
     get:
       tags:
@@ -112,26 +97,6 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/ClassificationResult'
-        '500':
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/ErrorResult'
-  /students/{osuId}/grades:
-    get:
-      tags:
-        - students
-        - grades
-      description: Get a student's final grades for their classes.
-      operationId: getGradesById
-      parameters:
-        - $ref: '#/parameters/authorization'
-        - $ref: '#/parameters/term'
-        - $ref: '#/parameters/osuId'
-      responses:
-        '200':
-          description: Successful response
-          schema:
-            $ref: '#/definitions/GradesResult'
         '500':
           description: Internal Server Error
           schema:
@@ -154,6 +119,101 @@ paths:
           description: Successful response
           schema:
             $ref: '#/definitions/ClassScheduleResult'
+        '400':
+          description: Bad request
+          schema:
+            $ref: '#/definitions/ErrorResult'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResult'
+  /students/{osuId}/degree:
+    get:
+      tags:
+        - students
+        - degree
+      description: Get a student's degree, major, minor and college information
+      operationId: getDegreeById
+      parameters:
+        - $ref: '#/parameters/authorization'
+        - $ref: '#/parameters/term'
+        - $ref: '#/parameters/osuId'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/DegreeResult'
+        '400':
+          description: Bad request
+          schema:
+            $ref: '#/definitions/ErrorResult'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResult'
+  /students/{osuId}/dual-enrollment:
+    get:
+      tags:
+        - students
+        - dual-enrollment
+      description: Get a student's enrolled credit hours from a dual enrollment institution.
+      operationId: getDualEnrollmentById
+      parameters:
+        - $ref: '#/parameters/authorization'
+        - $ref: '#/parameters/term'
+        - $ref: '#/parameters/osuId'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/DualEnrollmentResult'
+        '400':
+          description: Bad request
+          schema:
+            $ref: '#/definitions/ErrorResult'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResult'
+  /students/{osuId}/gpa:
+    get:
+      tags:
+        - students
+        - gpa
+      description: Get a student's overall grade point averages.
+      operationId: getGradePointAverageById
+      parameters:
+        - $ref: '#/parameters/authorization'
+        - $ref: '#/parameters/osuId'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/GradePointAverageResult'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResult'
+  /students/{osuId}/grades:
+    get:
+      tags:
+        - students
+        - grades
+      description: Get a student's final grades for their classes.
+      operationId: getGradesById
+      parameters:
+        - $ref: '#/parameters/authorization'
+        - $ref: '#/parameters/term'
+        - $ref: '#/parameters/osuId'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/GradesResult'
+        '400':
+          description: Bad request
+          schema:
+            $ref: '#/definitions/ErrorResult'
         '500':
           description: Internal Server Error
           schema:
@@ -196,26 +256,6 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/ErrorResult'
-  /students/{osuId}/dual-enrollment:
-    get:
-      tags:
-        - students
-        - dual-enrollment
-      description: Get a student's enrolled credit hours from a dual enrollment institution.
-      operationId: getDualEnrollmentById
-      parameters:
-        - $ref: '#/parameters/authorization'
-        - $ref: '#/parameters/term'
-        - $ref: '#/parameters/osuId'
-      responses:
-        '200':
-          description: Successful response
-          schema:
-            $ref: '#/definitions/DualEnrollmentResult'
-        '500':
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/ErrorResult'
 parameters:
   authorization:
     name: Authorization
@@ -240,6 +280,53 @@ parameters:
       during spring break, the current term will be the spring term.
     type: string
 definitions:
+  AcademicStatusResult:
+    properties:
+      links:
+        $ref: '#/definitions/SelfLink'
+      data:
+        type: array
+        items:
+          $ref: '#/definitions/AcademicStatusResource'
+  AcademicStatusResource:
+    properties:
+      id:
+        $ref: '#/definitions/StudentAndTermId'
+      type:
+        type: string
+        enum: [academic-status]
+      attributes:
+        properties:
+          academicStanding:
+            type: string
+            example: Good Standing
+            description: Academic standing
+            enum:
+              - Good Standing
+              - Academic Dismissal - Graduate
+              - Continued Deferred Suspension
+              - Honor Roll
+              - Academic Probation
+              - Special Deferred Suspension
+              - Academic Suspension
+              - Deferred Suspension
+              - Academic Warning
+              - Reinstatement After Suspension
+          term:
+            description: The term that this course was graded for.
+            type: string
+            example: '201901'
+          termDescription:
+            description: Description of the term.
+            type: string
+            example: Fall 2018
+          gpa:
+            description: Grade point averages for the given term.
+            type: array
+            items:
+              $ref: '#/definitions/GradePointAverage'
+      links:
+        $ref: '#/definitions/SelfLink'
   AccountBalanceResult:
     properties:
       links:
@@ -252,7 +339,7 @@ definitions:
         $ref: '#/definitions/StudentId'
       type:
         type: string
-        enum: ['account-balance']
+        enum: [account-balance]
       attributes:
         properties:
           currentBalance:
@@ -274,7 +361,7 @@ definitions:
         $ref: '#/definitions/StudentId'
       type:
         type: string
-        enum: ['account-transactions']
+        enum: [account-transactions]
       attributes:
         properties:
           transactions:
@@ -289,61 +376,14 @@ definitions:
                 description:
                   type: string
                   description: Description of transaction.
-                  example: 'Tuition Deposit Applied'
+                  example: Tuition Deposit Applied
                 entryDate:
                   type: string
                   format: date-time
                   description: Date the transaction was entered.
-                  example: '2018-04-27T06:31:15Z'
+                  example: 2018-04-27T06:31:15Z
           links:
             $ref: '#/definitions/SelfLink'
-  AcademicStatusResult:
-    properties:
-      links:
-        $ref: '#/definitions/SelfLink'
-      data:
-        type: array
-        items:
-          $ref: '#/definitions/AcademicStatusResource'
-  AcademicStatusResource:
-    properties:
-      id:
-        $ref: '#/definitions/StudentAndTermId'
-      type:
-        type: string
-        enum: ['academic-status']
-      attributes:
-        properties:
-          academicStanding:
-            type: string
-            example: Good Standing
-            description: Academic standing
-            enum:
-              - 'Good Standing'
-              - 'Academic Dismissal - Graduate'
-              - 'Continued Deferred Suspension'
-              - 'Honor Roll'
-              - 'Academic Probation'
-              - 'Special Deferred Suspension'
-              - 'Academic Suspension'
-              - 'Deferred Suspension'
-              - 'Academic Warning'
-              - 'Reinstatement After Suspension'
-          term:
-            description: The term that this course was graded for.
-            type: string
-            example: '201901'
-          termDescription:
-            description: Description of the term.
-            type: string
-            example: 'Fall 2018'
-          gpa:
-            description: Grade point averages for the given term.
-            type: array
-            items:
-              $ref: '#/definitions/GradePointAverage'
-      links:
-        $ref: '#/definitions/SelfLink'
   ClassificationResult:
     properties:
       links:
@@ -356,189 +396,45 @@ definitions:
         $ref: '#/definitions/StudentId'
       type:
         type: string
-        enum: ['classification']
+        enum: [classification]
       attributes:
         properties:
           level:
-            description: Acamedic level of a student
+            description: Academic level of a student
             type: string
-            example: 'Undergraduate'
+            example: Undergraduate
             enum:
-              - 'Level Not Declared'
-              - 'Graduate'
-              - 'Postbac Degree Seeking'
-              - 'Undergraduate'
-              - 'Non-Degree / Credential'
-              - 'Professional'
-              - 'Cascades Partner'
-              - 'Cascades Partner Grad Course'
-              - 'E-Campus Undergraduate Course'
-              - 'E-Campus Graduate Course'
-              - 'E-Campus Overlay Course'
-              - 'E-Campus Intermediate Course'
-              - 'Non Credit'
-              - 'INTO OSU GE/AE/Pathways'
-              - 'ECampus CCLP & Couseling PHD'
+              - Level Not Declared
+              - Graduate
+              - Postbac Degree Seeking
+              - Undergraduate
+              - Non-Degree / Credential
+              - Professional
+              - Cascades Partner
+              - Cascades Partner Grad Course
+              - E-Campus Undergraduate Course
+              - E-Campus Graduate Course
+              - E-Campus Overlay Course
+              - E-Campus Intermediate Course
+              - Non Credit
+              - INTO OSU GE/AE/Pathways
+              - ECampus CCLP & Couseling PHD
           classification:
             description: Classification of a student
-            example: 'Sophomore'
+            example: Sophomore
             type: string
             enum:
-              - 'Freshman'
-              - 'Sophomore'
-              - 'Junior'
-              - 'Senior'
-              - 'Vet Med-First Year'
-              - 'Determine from Student Type'
-              - 'Continuing Higher Education'
-              - 'Vet Med-Second Year'
-              - 'Vet Med-Third Year'
-              - 'Vet Med-Fourth Year'
-              - 'Auditor Only'
-      links:
-        $ref: '#/definitions/SelfLink'
-  GradePointAverageResult:
-    properties:
-      links:
-        $ref: '#/definitions/SelfLink'
-      data:
-        $ref: '#/definitions/GradePointAverageResource'
-  GradePointAverageResource:
-    properties:
-      id:
-        $ref: '#/definitions/StudentId'
-      type:
-        type: string
-        enum: ['gpa']
-      attributes:
-        properties:
-          gpaLevels:
-            description: Array of GPA s for the student. A student could have a separate GPA for transfer credits, for example.
-            type: array
-            items:
-              $ref: '#/definitions/GradePointAverage'
-      links:
-        $ref: '#/definitions/SelfLink'
-  GradePointAverage:
-    properties:
-      gpa:
-        description: Grade point average
-        type: string
-        example: '3.49'
-      gpaCreditHours:
-        description: Credit hours applied toward GPA calculation.
-        type: integer
-        example: 146
-      gpaType:
-        description: Type of GPA. For example, Institution, Transfer, or Overall.
-        type: string
-        example: 'Institution'
-        enum:
-          - 'Institution'
-          - 'Transfer'
-          - 'Overall'
-      creditHoursAttempted:
-        description: Credit hours attempted for GPA calculation.
-        type: integer
-        example: 146
-      creditHoursEarned:
-        description: Credit hours earned for GPA calculation.
-        type: integer
-        example: 146
-      creditHoursPassed:
-        description: Credit hours passed for GPA calculation.
-        type: integer
-        example: 146
-      level:
-        description: Academic level for GPA calculation.
-        type: string
-        example: 'Undergraduate'
-      qualityPoints:
-        description: Quality points for GPA calculation.
-        type: string
-        example: '578.70'
-  GradesResult:
-    properties:
-      links:
-        $ref: '#/definitions/SelfLink'
-      data:
-        type: array
-        items:
-          $ref: '#/definitions/GradesResource'
-  GradesResource:
-    properties:
-      id:
-        $ref: '#/definitions/StudentAndTermAndCourseId'
-      type:
-        type: string
-        enum: ['grades']
-      attributes:
-        properties:
-          courseReferenceNumber:
-            description: Uniquely identifies a course section for a given term.
-            type: string
-            example: '123456'
-          gradeFinal:
-            description: Letter grade representing the student's final grade for the course.
-            type: string
-            example: 'A-'
-          gradeMode:
-            description: Grade mode for the course.
-            type: string
-            example: 'N'
-            enum: [N, P, C, S, A, K, E, Z]
-          gradeModeDescription:
-            description: Human readable gradeMode.
-            type: string
-            example: 'Normal Grading Mode'
-          courseSubject:
-            description: Abbreviated course subject.
-            type: string
-            example: 'ECON'
-          courseSubjectDescription:
-            description: Description of course subject.
-            type: string
-            example: 'Economics'
-          courseNumber:
-            type: string
-            example: '352'
-          courseTitle:
-            description: Title of the course.
-            type: string
-            example: 'Environmental Economics & Policy'
-          sectionNumber:
-            description: The unique section of a specific course number.
-            type: string
-            example: '001'
-          term:
-            description: The term that this course was graded for.
-            type: string
-            example: '201901'
-          termDescription:
-            description: Description of the term.
-            type: string
-            example: 'Fall 2018'
-          scheduleDescription:
-            description: Human readable scheduleType.
-            type: string
-            example: 'Lecture'
-          scheduleType:
-            description: Format type for the course.
-            type: string
-            example: 'A'
-            enum: [B, C, D, E, F, G, H, I, J, K, A, L, M, N, O, P , Q, R, S, T, U, W, Y, Z, V, X, MID, FIL, HYB]
-          creditHours:
-            description: Credit hours of the course.
-            type: integer
-            example: 3
-          registrationStatus:
-            description: The student's registration status for the course.
-            type: string
-            example: 'Web Registered'
-          courseLevel:
-            description: Academic level of the course.
-            type: string
-            example: 'Undergraduate'
+              - Freshman
+              - Sophomore
+              - Junior
+              - Senior
+              - Vet Med-First Year
+              - Determine from Student Type
+              - Continuing Higher Education
+              - Vet Med-Second Year
+              - Vet Med-Third Year
+              - Vet Med-Fourth Year
+              - Auditor Only
       links:
         $ref: '#/definitions/SelfLink'
   ClassScheduleResult:
@@ -555,7 +451,7 @@ definitions:
         $ref: '#/definitions/StudentAndTermAndCourseId'
       type:
         type: string
-        enum: ['class-schedule']
+        enum: [class-schedule]
       attributes:
         properties:
           academicYear:
@@ -565,7 +461,7 @@ definitions:
           academicYearDescription:
             description: Short summary of the academic year for the term.
             type: string
-            example: 'Academic Year 2018-19'
+            example: Academic Year 2018-19
           courseReferenceNumber:
             description: Uniquely identifies a course section for a given term.
             type: string
@@ -573,18 +469,18 @@ definitions:
           courseSubject:
             description: Abbreviated course subject.
             type: string
-            example: 'ECON'
+            example: ECON
           courseSubjectDescription:
             description: Description of course subject.
             type: string
-            example: 'Economics'
+            example: Economics
           courseNumber:
             type: string
             example: '352'
           courseTitle:
             description: Title of the course.
             type: string
-            example: 'Environmental Economics & Policy'
+            example: Environmental Economics & Policy
           sectionNumber:
             description: The unique section of a specific course number.
             type: string
@@ -596,15 +492,15 @@ definitions:
           termDescription:
             description: Description of the term.
             type: string
-            example: 'Fall 2018'
+            example: Fall 2018
           scheduleDescription:
             description: Human readable schedule type for the course (agnostic of meeting times).
             type: string
-            example: 'Lecture'
+            example: Lecture
           scheduleType:
             description: Type of schedule for the course (agnostic of meeting times).
             type: string
-            example: 'A'
+            example: A
             enum: [B, C, D, E, F, G, H, I, J, K, A, L, M, N, O, P , Q, R, S, T, U, W, Y, Z, V, X, MID, FIL, HYB]
           creditHours:
             description: Credit hours of the course.
@@ -613,11 +509,11 @@ definitions:
           registrationStatus:
             description: The student's registration status for the course.
             type: string
-            example: 'Web Registered'
+            example: Web Registered
           gradingMode:
             description: The grading mode for the course.
             type: string
-            example: 'Normal Grading Mode'
+            example: Normal Grading Mode
           continuingEducation:
             description: Identifies whether the course is enrolled for continuing education credits.
             type: boolean
@@ -633,11 +529,11 @@ definitions:
                 name:
                   description: Display name of the faculty.
                   type: string
-                  example: 'Johnson, Bob'
+                  example: Johnson, Bob
                 email:
                   description: Email address of the faculty.
                   type: string
-                  example: 'bob.johnson@oregonstate.edu'
+                  example: bob.johnson@oregonstate.edu
                 primary:
                   description: Indicates whether the faculty is the primary faculty for the course.
                   type: boolean
@@ -651,20 +547,20 @@ definitions:
                   description: The starting date of the meeting time schedule.
                   type: string
                   format: date
-                  example: '2018-09-20'
+                  example: 2018-09-20
                 beginTime:
                   description: The starting time of the meeting time for the course in 24 hour format.
                   type: string
-                  example: '14:00:00'
+                  example: 14:00:00
                 endDate:
                   description: The ending date of the meeting time schedule.
                   type: string
                   format: date
-                  example: '2018-11-30'
+                  example: 2018-11-30
                 endTime:
                   description: The starting time of the meeting time for the course in 24 hour format.
                   type: string
-                  example: '14:50:00'
+                  example: 14:50:00
                 room:
                   description: Room where the meeting time meets.
                   type: string
@@ -672,15 +568,15 @@ definitions:
                 building:
                   description: The building abbreviation of the meeting time.
                   type: string
-                  example: 'LINC'
+                  example: LINC
                 buildingDescription:
                   description: The name of the building.
                   type: string
-                  example: 'Learning Innovation Center'
+                  example: Learning Innovation Center
                 campus:
                   description: Campus location of the meeting time.
                   type: string
-                  example: 'Oregon State - Corvallis'
+                  example: Oregon State - Corvallis
                 hoursPerWeek:
                   description: The amount of hours this meeting time meets per week.
                   type: number
@@ -723,12 +619,12 @@ definitions:
                     FNL: Final Exam
                     HYB: Hybrid
                   type: string
-                  example: 'A'
+                  example: A
                   enum: [B, C, D, E, F, G, H, I, J, K, A, L, M, N, O, P , Q, R, S, T, U, W, Y, Z, V, X, MID, FIL, HYB]
                 scheduleDescription:
                   description: Human readable schedule type for the course (agnostic of meeting times).
                   type: string
-                  example: 'Lecture'
+                  example: Lecture
                 weeklySchedule:
                   description: |
                     Array of day abbreviations to represent which days of the week this meeting time occurs on.
@@ -743,10 +639,288 @@ definitions:
                     Sa: Saturday
                     Su: Sunday
                   type: array
-                  example: ['M', 'W', 'F']
+                  example: [M, W, F]
                   items:
                     type: string
                     enum:  [M, T, W, Th, F, Sa, Su]
+      links:
+        $ref: '#/definitions/SelfLink'
+  DegreeResult:
+    properties:
+      links:
+        $ref: '#/definitions/SelfLink'
+      data:
+        type: array
+        items:
+          $ref: '#/definitions/DegreeResource'
+  DegreeResource:
+    properties:
+      id:
+        $ref: '#/definitions/StudentAndTermId'
+      type:
+        type: string
+        enum: [degree]
+      attributes:
+        properties:
+          term:
+            description: The term that this course is scheduled for
+            type: string
+            example: '201901'
+          termDescription:
+            description: Description of the term
+            type: string
+            example: Fall 2018
+          academicYear:
+            description: Code value to identify the academic year for the term
+            type: string
+            example: '1819'
+          academicYearDescription:
+            description: Short summary of the academic year for the term
+            type: string
+            example: Academic Year 2018-19
+          degrees:
+            properties:
+              main:
+                type: object
+                allOf:
+                  - $ref: '#/definitions/Degree'
+                  - properties:
+                      degreeAwardCategory:
+                        description: Degree award category
+                        type: string
+                        example: Baccalaureate Degree
+                description: Degree object of the main degree
+              dual:
+                type: object
+                allOf:
+                  - $ref: '#/definitions/Degree'
+                  - properties:
+                      major:
+                        description: The major of the dual degree
+                        type: string
+                        example: Spanish
+                description: Degree object of the dual degree
+          majors:
+            properties:
+              first:
+                $ref: '#/definitions/Major'
+              second:
+                $ref: '#/definitions/Major'
+              third:
+                $ref: '#/definitions/Major'
+              fourth:
+                $ref: '#/definitions/Major'
+            description: Majors information
+          minors:
+            properties:
+              first:
+                $ref: '#/definitions/Minor'
+              second:
+                $ref: '#/definitions/Minor'
+              third:
+                $ref: '#/definitions/Minor'
+              fourth:
+                $ref: '#/definitions/Minor'
+            description: Minors information
+  DualEnrollmentResult:
+    properties:
+      links:
+        $ref: '#/definitions/SelfLink'
+      data:
+        type: array
+        items:
+          $ref: '#/definitions/DualEnrollmentResource'
+  DualEnrollmentResource:
+    properties:
+      id:
+        $ref: '#/definitions/StudentAndTermId'
+      type:
+        type: string
+        enum: [dual-enrollment]
+      attributes:
+        properties:
+          term:
+            description: The term that this course is scheduled for.
+            type: string
+            example: '201901'
+          creditHours:
+            description: The number of dual enrollment credit hours enrolled for the given term.
+            type: integer
+            example: 5
+      links:
+        $ref: '#/definitions/SelfLink'
+  ErrorResource:
+    properties:
+      status:
+        type: string
+        description: HTTP status code
+        example: '123'
+      title:
+        type: string
+        description: A short, user readable summary of the error
+        example: Not Found
+      code:
+        type: string
+        description: An application-specific error code
+        example: '1234'
+      detail:
+        type: string
+        description: A long description of the error that may contain instance-specific details
+      links:
+        properties:
+          about:
+            type: string
+            format: url
+            description: A link to further information about the error
+            example: https://developer.oregonstate.edu/documentation/error-reference#1234
+  ErrorResult:
+    properties:
+      errors:
+        type: array
+        items:
+          $ref: '#/definitions/ErrorResource'
+  GradePointAverageResult:
+    properties:
+      links:
+        $ref: '#/definitions/SelfLink'
+      data:
+        $ref: '#/definitions/GradePointAverageResource'
+  GradePointAverageResource:
+    properties:
+      id:
+        $ref: '#/definitions/StudentId'
+      type:
+        type: string
+        enum: [gpa]
+      attributes:
+        properties:
+          gpaLevels:
+            description: Array of GPA s for the student. A student could have a separate GPA for transfer credits, for example.
+            type: array
+            items:
+              $ref: '#/definitions/GradePointAverage'
+      links:
+        $ref: '#/definitions/SelfLink'
+  GradePointAverage:
+    properties:
+      gpa:
+        description: Grade point average
+        type: string
+        example: '3.49'
+      gpaCreditHours:
+        description: Credit hours applied toward GPA calculation.
+        type: integer
+        example: 146
+      gpaType:
+        description: Type of GPA. For example, Institution, Transfer, or Overall.
+        type: string
+        example: Institution
+        enum:
+          - Institution
+          - Transfer
+          - Overall
+      creditHoursAttempted:
+        description: Credit hours attempted for GPA calculation.
+        type: integer
+        example: 146
+      creditHoursEarned:
+        description: Credit hours earned for GPA calculation.
+        type: integer
+        example: 146
+      creditHoursPassed:
+        description: Credit hours passed for GPA calculation.
+        type: integer
+        example: 146
+      level:
+        description: Academic level for GPA calculation.
+        type: string
+        example: Undergraduate
+      qualityPoints:
+        description: Quality points for GPA calculation.
+        type: string
+        example: '578.70'
+  GradesResult:
+    properties:
+      links:
+        $ref: '#/definitions/SelfLink'
+      data:
+        type: array
+        items:
+          $ref: '#/definitions/GradesResource'
+  GradesResource:
+    properties:
+      id:
+        $ref: '#/definitions/StudentAndTermAndCourseId'
+      type:
+        type: string
+        enum: [grades]
+      attributes:
+        properties:
+          courseReferenceNumber:
+            description: Uniquely identifies a course section for a given term.
+            type: string
+            example: '123456'
+          gradeFinal:
+            description: Letter grade representing the student's final grade for the course.
+            type: string
+            example: A-
+          gradeMode:
+            description: Grade mode for the course.
+            type: string
+            example: N
+            enum: [N, P, C, S, A, K, E, Z]
+          gradeModeDescription:
+            description: Human readable gradeMode.
+            type: string
+            example: Normal Grading Mode
+          courseSubject:
+            description: Abbreviated course subject.
+            type: string
+            example: ECON
+          courseSubjectDescription:
+            description: Description of course subject.
+            type: string
+            example: Economics
+          courseNumber:
+            type: string
+            example: '352'
+          courseTitle:
+            description: Title of the course.
+            type: string
+            example: Environmental Economics & Policy
+          sectionNumber:
+            description: The unique section of a specific course number.
+            type: string
+            example: '001'
+          term:
+            description: The term that this course was graded for.
+            type: string
+            example: '201901'
+          termDescription:
+            description: Description of the term.
+            type: string
+            example: Fall 2018
+          scheduleDescription:
+            description: Human readable scheduleType.
+            type: string
+            example: Lecture
+          scheduleType:
+            description: Format type for the course.
+            type: string
+            example: A
+            enum: [B, C, D, E, F, G, H, I, J, K, A, L, M, N, O, P , Q, R, S, T, U, W, Y, Z, V, X, MID, FIL, HYB]
+          creditHours:
+            description: Credit hours of the course.
+            type: integer
+            example: 3
+          registrationStatus:
+            description: The student's registration status for the course.
+            type: string
+            example: Web Registered
+          courseLevel:
+            description: Academic level of the course.
+            type: string
+            example: Undergraduate
       links:
         $ref: '#/definitions/SelfLink'
   HoldsResult:
@@ -761,7 +935,7 @@ definitions:
         $ref: '#/definitions/StudentId'
       type:
         type: string
-        enum: ['holds']
+        enum: [holds]
       attributes:
         properties:
           holds:
@@ -772,16 +946,16 @@ definitions:
                   description: The date this hold becomes effective.
                   type: string
                   format: date
-                  example: '2019-12-31'
+                  example: 2019-12-31
                 toDate:
                   description: The date this hold expires.
                   type: string
                   format: date
-                  example: '2020-12-31'
+                  example: 2020-12-31
                 description:
                   description: Description of the hold.
                   type: string
-                  example: 'Missing requirements.'
+                  example: Missing requirements.
                 webDisplay:
                   description: Web display indicator.
                   type: boolean
@@ -791,11 +965,11 @@ definitions:
                   type: array
                   items:
                     type: string
-                    example: 'Graduation'
+                    example: Graduation
                 reason:
                   description: The reason the hold is on the student's record.
                   type: string
-                  example: 'CS 161'
+                  example: CS 161
       links:
         $ref: '#/definitions/SelfLink'
   WorkStudyResult:
@@ -810,7 +984,7 @@ definitions:
         $ref: '#/definitions/StudentId'
       type:
         type: string
-        enum: ['work-study']
+        enum: [work-study]
       attributes:
         properties:
           awards:
@@ -850,88 +1024,88 @@ definitions:
                   example: Accepted
                   description: Status of award.
                   enum:
-                    - 'Declined'
-                    - 'Offered'
-                    - 'System Accepted'
-                    - 'System Cancelled'
-                    - 'Estimated Auto Accept'
-                    - 'Estimated'
-                    - 'Recommended'
-                    - 'Accepted'
-                    - 'Certified'
-                    - 'System Offered'
-                    - 'Canceled'
+                    - Declined
+                    - Offered
+                    - System Accepted
+                    - System Cancelled
+                    - Estimated Auto Accept
+                    - Estimated
+                    - Recommended
+                    - Accepted
+                    - Certified
+                    - System Offered
+                    - Canceled
       links:
         $ref: '#/definitions/SelfLink'
-  DualEnrollmentResult:
+  Degree:
     properties:
-      links:
-        $ref: '#/definitions/SelfLink'
-      data:
-        type: array
-        items:
-          $ref: '#/definitions/DualEnrollmentResource'
-  DualEnrollmentResource:
-    properties:
-      id:
-        $ref: '#/definitions/StudentAndTermId'
-      type:
+      degree:
+        description: The student degree
         type: string
-        enum: ['dual-enrollment']
-      attributes:
-        properties:
-          term:
-            description: The term that this course is scheduled for.
-            type: string
-            example: '201901'
-          creditHours:
-            description: The number of dual enrollment credit hours enrolled for the given term.
-            type: integer
-            example: 5
-      links:
-        $ref: '#/definitions/SelfLink'
-  StudentId:
-    type: string
-    description: Student ID
-    example: '931234567'
-  StudentAndTermId:
-    type: string
-    example: '931234567-201901'
-  StudentAndTermAndCourseId:
-    type: string
-    example: '931123456-201901-123456'
+        example: Bachelor of Science
+      level:
+        description: The degree level
+        type: string
+        example: Undergraduate
+      programClassification:
+        description: The program classification of the degree
+        type: string
+        example: Elect, Electronics & Comm Engr
+      college:
+        description: The college of the degree
+        type: string
+        example: College of Liberal Arts
+      department:
+        description: The department of the degree
+        type: string
+        example: Engineering Science
+  Major:
+    properties:
+      major:
+        description: The major description
+        type: string
+        example: Business Administration
+      programClassification:
+        description: The program classification of the major
+        type: string
+        example: Business Admin & Mgmt, General
+      department:
+        description: The department of the major
+        type: string
+        example: Business Administration
+      firstConcentration:
+        description: The first concentration of the major
+        type: string
+        example: Accounting
+      secondConcentration:
+        description: The second concentration of the major
+        type: string
+        example: Finance
+      thirdConcentration:
+        description: The third concentration of the major
+        type: string
+        example: International Business
+  Minor:
+    properties:
+      minor:
+        description: The minor description
+        type: string
+        example: History
   SelfLink:
     properties:
       self:
         type: string
         format: url
-  ErrorResource:
-    properties:
-      status:
-        type: string
-        description: HTTP status code
-        example: '123'
-      title:
-        type: string
-        description: A short, user readable summary of the error
-        example: Not Found
-      code:
-        type: string
-        description: An application-specific error code
-        example: '1234'
-      detail:
-        type: string
-        description: A long description of the error that may contain instance-specific details
-      links:
-        properties:
-          about:
-            type: string
-            format: url
-            description: A link to further information about the error
-            example: https://developer.oregonstate.edu/documentation/error-reference#1234
-  ErrorResult:
-    properties:
-      errors:
-        type: array
-        items:
-          $ref: '#/definitions/ErrorResource'
+  StudentId:
+    type: string
+    description: Student ID
+    example: '931234567'
+    pattern: '^\d{9}$'
+  StudentAndTermId:
+    type: string
+    example: 931234567-201901
+    pattern: '^\d{9}-\d{6}$'
+  StudentAndTermAndCourseId:
+    type: string
+    example: 931123456-201901-123456
+    pattern: '^\d{9}-\d{6}-.+$'
