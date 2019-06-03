@@ -142,7 +142,7 @@ paths:
         '200':
           description: Successful response
           schema:
-            $ref: '#/definitions/DegreeResult'
+            $ref: '#/definitions/DegreesResult'
         '400':
           description: Bad request
           schema:
@@ -645,7 +645,7 @@ definitions:
                     enum:  [M, T, W, Th, F, Sa, Su]
       links:
         $ref: '#/definitions/SelfLink'
-  DegreeResult:
+  DegreesResult:
     properties:
       links:
         $ref: '#/definitions/SelfLink'
