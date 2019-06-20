@@ -320,6 +320,61 @@ const serializeDualEnrollment = (rawDualEnrollment, osuId, params) => {
   return serializeJsonApi(serializerArgs, rawDualEnrollment);
 };
 
+/**
+ * @summary A function to serialize raw degree data
+ * @function
+ */
+const serializeDegrees = (rawDegrees, osuId, params) => {
+  const serializerArgs = getSerializerArgs(osuId, 'DegreesResult', 'degrees', false, params);
+
+  _.forEach(rawDegrees, (rawDegree) => {
+    rawDegree.programNumber = parseFloat(rawDegree.programNumber);
+    rawDegree.primaryDegree = rawDegree.primaryDegree === 'Y';
+    rawDegree.majors = {
+      first: rawDegree.firstMajor ? {
+        major: rawDegree.firstMajor,
+        programClassification: rawDegree.firstProgramClassification,
+        department: rawDegree.firstDepartment,
+        firstConcentration: rawDegree.firstMajorFirstConcentration,
+        secondConcentration: rawDegree.firstMajorSecondConcentration,
+        thirdConcentration: rawDegree.firstMajorThirdConcentration,
+      } : null,
+      second: rawDegree.secondMajor ? {
+        major: rawDegree.secondMajor,
+        programClassification: rawDegree.secondProgramClassification,
+        department: rawDegree.secondDepartment,
+        firstConcentration: rawDegree.secondMajorFirstConcentration,
+        secondConcentration: rawDegree.secondMajorSecondConcentration,
+        thirdConcentration: rawDegree.secondMajorThirdConcentration,
+      } : null,
+      third: rawDegree.thirdMajor ? {
+        major: rawDegree.thirdMajor,
+        programClassification: rawDegree.thirdProgramClassification,
+        department: rawDegree.thirdDepartment,
+        firstConcentration: rawDegree.thirdMajorFirstConcentration,
+        secondConcentration: rawDegree.thirdMajorSecondConcentration,
+        thirdConcentration: rawDegree.thirdMajorThirdConcentration,
+      } : null,
+      fourth: rawDegree.fourthMajor ? {
+        major: rawDegree.fourthMajor,
+        programClassification: rawDegree.fourthProgramClassification,
+        department: rawDegree.fourthDepartment,
+        firstConcentration: rawDegree.fourthMajorFirstConcentration,
+        secondConcentration: rawDegree.fourthMajorSecondConcentration,
+        thirdConcentration: rawDegree.fourthMajorThirdConcentration,
+      } : null,
+    };
+    rawDegree.minors = {
+      first: rawDegree.firstMinor,
+      second: rawDegree.secondMinor,
+      third: rawDegree.thirdMinor,
+      fourth: rawDegree.fourthMinor,
+    };
+  });
+
+  return serializeJsonApi(serializerArgs, rawDegrees);
+};
+
 module.exports = {
   fourDigitToTime,
   getSerializerArgs,
@@ -333,4 +388,5 @@ module.exports = {
   serializeHolds,
   serializeWorkStudy,
   serializeDualEnrollment,
+  serializeDegrees,
 };

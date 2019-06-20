@@ -379,4 +379,29 @@ describe('Test students-serializer', () => {
       expectNumberFields(attributes, ['creditHours']);
     });
   });
+  it('test serializeDegrees', () => {
+    const { serializeDegrees } = studentsSerializer;
+    const { rawDegrees } = testData;
+    const resourceType = 'degree';
+
+    const serializedDegrees = serializeDegrees(rawDegrees, fakeId);
+    const serializedDegreesData = testMultipleResources(serializedDegrees);
+
+    _.each(serializedDegreesData, (resource) => {
+      expect(resource)
+        .to.contain.keys('attributes')
+        .and.to.containSubset({
+          id: `${fakeId}-${resource.attributes.term}-${resource.attributes.programNumber}`,
+          type: resourceType,
+          links: { self: null },
+        });
+
+      const { attributes } = resource;
+      expect(attributes).to.have.all.keys(_.keys(
+        getDefinitionProps('DegreesResult', { dataItem: true }),
+      ));
+      expectNumberFields(attributes, ['programNumber']);
+      expect(attributes.primaryDegree).to.be.a('boolean');
+    });
+  });
 });
