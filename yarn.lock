@@ -1253,7 +1253,11 @@ expand-tilde@^2.0.0, expand-tilde@^2.0.2:
   dependencies:
     homedir-polyfill "^1.0.1"
 
+<<<<<<< HEAD
 express-basic-auth@^1.1.7:
+=======
+express-basic-auth@1.1.7:
+>>>>>>> skeleton/master
   version "1.1.7"
   resolved "https://registry.yarnpkg.com/express-basic-auth/-/express-basic-auth-1.1.7.tgz#8682dea1023ec9694628f9ab561fb56d17e88741"
   integrity sha512-gofejPlyXxuRQfbc2pfCBEjFgKUPwICLoEJuC6i2KqBPBszBU7bIKvpEKrsU0oCCFDo2L1YuK/KSG5gVyess+A==
