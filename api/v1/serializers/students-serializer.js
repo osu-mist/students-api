@@ -25,7 +25,7 @@ const getSerializerArgs = (osuId, resultField, resourcePath, isSingleton, params
   const serializerArgs = {
     identifierField: 'identifierField',
     resourceKeys: _.keys(resourceProp.attributes.properties),
-    resourcePath: 'student',
+    resourcePath: 'students',
     topLevelSelfLink: params && !_.isEmpty(params) ? paramsLink(resourceUrl, params) : resourceUrl,
     enableDataLinks: false,
     resourceType: resourceProp.type.enum[0],
