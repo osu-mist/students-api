@@ -145,7 +145,7 @@ describe('Test students-serializer', () => {
       const expectedArgs = {
         identifierField: 'identifierField',
         resourceKeys: ['fakeAttribute1', 'fakeAttribute2', 'fakeAttribute3'],
-        resourcePath: 'student',
+        resourcePath: 'students',
         topLevelSelfLink: expectedLink,
         enableDataLinks: false,
         resourceType: fakeType,
