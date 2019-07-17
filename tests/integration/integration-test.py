@@ -52,7 +52,7 @@ class integration_tests(unittest.TestCase):
 
         for invalid_term in self.invalid_terms:
             params = {'term': invalid_term}
-            utils.test_endpoint(self, endpoint, 'ErrorResource', 400,
+            utils.test_endpoint(self, endpoint, 'ErrorObject', 400,
                                 query_params=params)
 
     # Test case: GET /students/{osuId}/account-balance

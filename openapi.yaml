@@ -754,7 +754,7 @@ definitions:
             example: 5
       links:
         $ref: '#/definitions/SelfLink'
-  ErrorResource:
+  ErrorObject:
     properties:
       status:
         type: string
@@ -783,7 +783,7 @@ definitions:
       errors:
         type: array
         items:
-          $ref: '#/definitions/ErrorResource'
+          $ref: '#/definitions/ErrorObject'
   GradePointAverageResult:
     properties:
       links:
