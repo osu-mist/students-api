@@ -8,13 +8,14 @@ const { serializerOptions } = appRoot.require('utils/jsonapi');
 const { apiBaseUrl, resourcePathLink, paramsLink } = appRoot.require('utils/uri-builder');
 
 /**
- * @summary The function to generate arguments for JSONAPI serializer
- * @function
+ * The function to generate arguments for JSONAPI serializer
+ *
  * @param {string} osuId 9 digits OSU ID
  * @param {string} resultField result field from OpenAPI file which the serializer should refer to
  * @param {string} resourcePath resource path name for generating top-level self-link
  * @param {boolean} isSingleton a boolean value represents the resource is singleton or not
- * @returns {Object} arguments for JSONAPI serializer
+ * @param {object} params query parameters
+ * @returns {object} arguments for JSONAPI serializer
  */
 const getSerializerArgs = (osuId, resultField, resourcePath, isSingleton, params) => {
   const resourceData = openapi.definitions[resultField].properties.data;
@@ -34,11 +35,11 @@ const getSerializerArgs = (osuId, resultField, resourcePath, isSingleton, params
 };
 
 /**
- * @summary Serialize raw data by given serializer arguments
- * @function
+ * Serialize raw data by given serializer arguments
+ *
  * @param {string} serializerArgs serializer arguments
  * @param {string} rawRows raw data to be serialized
- * @returns {Object} serialized data
+ * @returns {object} serialized data
  */
 const serializeJsonApi = (serializerArgs, rawRows) => new JSONAPISerializer(
   serializerArgs.resourceType,
@@ -46,8 +47,8 @@ const serializeJsonApi = (serializerArgs, rawRows) => new JSONAPISerializer(
 ).serialize(rawRows);
 
 /**
- * @summary A helper function to convert a four digit string to time format
- * @function
+ * A helper function to convert a four digit string to time format
+ *
  * @param {string} string 4 digits string represent time, e.g. 0900
  * @returns {string} properly formatted time format, e.g. 09:00:00
  */
@@ -63,8 +64,11 @@ const fourDigitToTime = (string) => {
 };
 
 /**
- * @summary A function to serialize raw GPA data
- * @function
+ * A function to serialize raw GPA data
+ *
+ * @param {object[]} rawGpaLevels raw GPA level
+ * @param {string} osuId 9 digits OSU ID
+ * @returns {object} serialized GPA data
  */
 const serializeGpa = (rawGpaLevels, osuId) => {
   const serializerArgs = getSerializerArgs(osuId, 'GradePointAverageResult', 'gpa', true);
@@ -84,8 +88,11 @@ const serializeGpa = (rawGpaLevels, osuId) => {
 };
 
 /**
- * @summary A function to serialize raw account balance data
- * @function
+ * A function to serialize raw account balance data
+ *
+ * @param {object[]} rawAccountBalance raw account balance
+ * @param {string} osuId 9 digits OSU ID
+ * @returns {object} serialized account balance data
  */
 const serializeAccountBalance = (rawAccountBalance, osuId) => {
   const serializerArgs = getSerializerArgs(osuId, 'AccountBalanceResult', 'account-balance', true);
@@ -96,8 +103,11 @@ const serializeAccountBalance = (rawAccountBalance, osuId) => {
 };
 
 /**
- * @summary A function to serialize raw account transactions data
- * @function
+ * A function to serialize raw account transactions data
+ *
+ * @param {object[]} rawTransactions raw account transaction
+ * @param {string} osuId 9 digits OSU ID
+ * @returns {object} serialized account transaction data
  */
 const serializeAccountTransactions = (rawTransactions, osuId) => {
   const serializerArgs = getSerializerArgs(osuId, 'AccountTransactionsResult', 'account-transactions', true);
@@ -115,8 +125,12 @@ const serializeAccountTransactions = (rawTransactions, osuId) => {
 };
 
 /**
- * @summary A function to serialize raw academic status data
- * @function
+ * A function to serialize raw academic status data
+ *
+ * @param {object[]} rawAcademicStatus raw academic status
+ * @param {string} osuId 9 digits OSU ID
+ * @param {object} params query parameters
+ * @returns {object} serialized academic status data
  */
 const serializeAcademicStatus = (rawAcademicStatus, osuId, params) => {
   const serializerArgs = getSerializerArgs(osuId, 'AcademicStatusResult', 'academic-status', false, params);
@@ -159,8 +173,11 @@ const serializeAcademicStatus = (rawAcademicStatus, osuId, params) => {
 };
 
 /**
- * @summary A function to serialize raw classification data
- * @function
+ * A function to serialize raw classification data
+ *
+ * @param {object[]} rawClassification raw classification
+ * @param {string} osuId 9 digits OSU ID
+ * @returns {object} serialized classification data
  */
 const serializeClassification = (rawClassification, osuId) => {
   const serializerArgs = getSerializerArgs(osuId, 'ClassificationResult', 'classification', true);
@@ -168,6 +185,14 @@ const serializeClassification = (rawClassification, osuId) => {
   return serializeJsonApi(serializerArgs, rawClassification);
 };
 
+/**
+ * A function to serialize raw grade data
+ *
+ * @param {object[]} rawGrades raw grades
+ * @param {string} osuId 9 digits OSU ID
+ * @param {object} params query parameters
+ * @returns {object} serialized grades data
+ */
 const serializeGrades = (rawGrades, osuId, params) => {
   const serializerArgs = getSerializerArgs(osuId, 'GradesResult', 'grades', false, params);
 
@@ -180,8 +205,12 @@ const serializeGrades = (rawGrades, osuId, params) => {
 };
 
 /**
- * @summary A function to serialize raw class schedule data
- * @function
+ * A function to serialize raw class schedule data
+ *
+ * @param {object[]} rawClassSchedule raw class schedule
+ * @param {string} osuId 9 digits OSU ID
+ * @param {object} params query parameters
+ * @returns {object} serialized class schedule data
  */
 const serializeClassSchedule = (rawClassSchedule, osuId, params) => {
   const serializerArgs = getSerializerArgs(osuId, 'ClassScheduleResult', 'class-schedule', false, params);
@@ -255,12 +284,15 @@ const serializeClassSchedule = (rawClassSchedule, osuId, params) => {
 };
 
 /**
- * @summary A function to serialize raw holds data
- * @function
+ * A function to serialize raw holds data
+ *
+ * @param {object[]} rawHolds raw holds
+ * @param {string} osuId 9 digits OSU ID
+ * @returns {object} serialized holds data
  */
-const serializeHolds = (rawHolds, osuID) => {
-  const serializerArgs = getSerializerArgs(osuID, 'HoldsResult', 'holds', true);
-  const identifierField = osuID;
+const serializeHolds = (rawHolds, osuId) => {
+  const serializerArgs = getSerializerArgs(osuId, 'HoldsResult', 'holds', true);
+  const identifierField = osuId;
 
   _.forEach(rawHolds, (rawHold) => {
     rawHold.webDisplay = rawHold.webDisplay === 'Y';
@@ -284,8 +316,11 @@ const serializeHolds = (rawHolds, osuID) => {
 };
 
 /**
- * @summary A function to serialize raw work study data
- * @function
+ * A function to serialize raw work study data
+ *
+ * @param {object[]} rawAwards raw awards
+ * @param {string} osuId 9 digits OSU ID
+ * @returns {object} serialized awards data
  */
 const serializeWorkStudy = (rawAwards, osuId) => {
   const serializerArgs = getSerializerArgs(osuId, 'WorkStudyResult', 'work-study', true);
@@ -307,8 +342,12 @@ const serializeWorkStudy = (rawAwards, osuId) => {
 };
 
 /**
- * @summary A function to serialize raw dual enrollment data
- * @function
+ * A function to serialize raw dual enrollment data
+ *
+ * @param {object[]} rawDualEnrollment raw dual enrollment
+ * @param {string} osuId 9 digits OSU ID
+ * @param {object} params query parameters
+ * @returns {object} serialized dual enrollment data
  */
 const serializeDualEnrollment = (rawDualEnrollment, osuId, params) => {
   const serializerArgs = getSerializerArgs(osuId, 'DualEnrollmentResult', 'dual-enrollment', false, params);
@@ -321,8 +360,12 @@ const serializeDualEnrollment = (rawDualEnrollment, osuId, params) => {
 };
 
 /**
- * @summary A function to serialize raw degree data
- * @function
+ * A function to serialize raw degrees data
+ *
+ * @param {object[]} rawDegrees raw degrees
+ * @param {string} osuId 9 digits OSU ID
+ * @param {object} params query parameters
+ * @returns {object} serialized degrees data
  */
 const serializeDegrees = (rawDegrees, osuId, params) => {
   const serializerArgs = getSerializerArgs(osuId, 'DegreesResult', 'degrees', false, params);

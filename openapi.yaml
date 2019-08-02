@@ -269,6 +269,7 @@ parameters:
     required: true
     description: OSU ID of person
     type: string
+    pattern: '^\d{9}$'
   term:
     name: term
     in: query
