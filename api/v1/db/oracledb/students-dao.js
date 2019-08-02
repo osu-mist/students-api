@@ -10,7 +10,7 @@ const conn = appRoot.require('api/v1/db/oracledb/connection');
  *
  * @param {string} id The unique ID for resource(s)
  * @param {string} sql The SQL statement that is executed
- * @param {*} serializer Resource serializer function
+ * @param {Function} serializer Resource serializer function
  * @param {boolean} isSingleton A Boolean value represents the resource should be singleton or not
  * @param {object} params A key-value pair params object
  * @returns {Promise<object>} Promise object represents serialized resource(s)
