@@ -3,8 +3,12 @@ const appRoot = require('app-root-path');
 const studentsDao = require('../../../db/oracledb/students-dao');
 
 const { errorHandler } = appRoot.require('errors/errors');
-const { openapi: { paths } } = appRoot.require('utils/load-openapi');
 
+/**
+ * Get grades
+ *
+ * @type {RequestHandler}
+ */
 const get = async (req, res) => {
   try {
     const { osuId } = req.params;
@@ -15,7 +19,5 @@ const get = async (req, res) => {
     errorHandler(res, err);
   }
 };
-
-get.apiDoc = paths['/students/{osuId}/grades'].get;
 
 module.exports = { get };
