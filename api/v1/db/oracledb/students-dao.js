@@ -19,7 +19,7 @@ const conn = appRoot.require('api/v1/db/oracledb/connection');
 const getResourceById = async (osuId, sql, serializer, isSingleton, params) => {
   const connection = await conn.getConnection();
   try {
-    if (params.term === 'current') {
+    if (params && params.term === 'current') {
       const rawCurrentTerm = await connection.execute(contrib.getCurrentTerm());
       const { currentTerm } = rawCurrentTerm.rows[0];
       params.term = currentTerm;
@@ -77,34 +77,27 @@ const getAccountBalanceById = osuId => getResourceById(
  * @param {object} params filter parameters
  * @returns {object} serialized account transactions
  */
-const getAccountTransactionsById = (osuId, params) => {
-  const { categories, transactionType } = params;
-
-  params.categories = categories ? `(${_.join(categories.map(item => `'${item}'`), ', ')})` : null;
-  params.transactionType = transactionType ? { charge: 'C', payment: 'P' }[transactionType] : null;
-
-  return getResourceById(
-    osuId,
-    contrib.getTransactionsById,
-    studentsSerializer.serializeAccountTransactions,
-    false,
-    params,
-  );
-};
+const getAccountTransactionsById = (osuId, params) => getResourceById(
+  osuId,
+  contrib.getTransactionsById,
+  studentsSerializer.serializeAccountTransactions,
+  false,
+  params,
+);
 
 /**
  * Get academic status
  *
  * @param {string} osuId 9 digits OSU ID
- * @param {string} term 6 digits term code
+ * @param {object} params filter parameters
  * @returns {object} serialized academic status
  */
-const getAcademicStatusById = (osuId, term) => getResourceById(
+const getAcademicStatusById = (osuId, params) => getResourceById(
   osuId,
   contrib.getAcademicStatusById,
   studentsSerializer.serializeAcademicStatus,
   false,
-  term ? { term } : {},
+  params,
 );
 
 /**
@@ -124,30 +117,30 @@ const getClassificationById = osuId => getResourceById(
  * Get grades
  *
  * @param {string} osuId 9 digits OSU ID
- * @param {string} term 6 digits term code
+ * @param {object} params filter parameters
  * @returns {object} serialized grades
  */
-const getGradesById = (osuId, term) => getResourceById(
+const getGradesById = (osuId, params) => getResourceById(
   osuId,
   contrib.getGradesById,
   studentsSerializer.serializeGrades,
   false,
-  term ? { term } : {},
+  params,
 );
 
 /**
  * Get class schedule
  *
  * @param {string} osuId 9 digits OSU ID
- * @param {string} term 6 digits term code
+ * @param {object} params filter parameters
  * @returns {object} serialized class schedule
  */
-const getClassScheduleById = (osuId, term) => getResourceById(
+const getClassScheduleById = (osuId, params) => getResourceById(
   osuId,
   contrib.getClassScheduleById,
   studentsSerializer.serializeClassSchedule,
   false,
-  term ? { term } : {},
+  params,
 );
 
 /**
@@ -180,30 +173,30 @@ const getWorkStudyById = osuId => getResourceById(
  * Get dual enrollment
  *
  * @param {string} osuId 9 digits OSU ID
- * @param {string} term 6 digits term code
+ * @param {object} params filter parameters
  * @returns {object} serialized dual enrollment
  */
-const getDualEnrollmentById = (osuId, term) => getResourceById(
+const getDualEnrollmentById = (osuId, params) => getResourceById(
   osuId,
   contrib.getDualEnrollmentById,
   studentsSerializer.serializeDualEnrollment,
   false,
-  term ? { term } : {},
+  params,
 );
 
 /**
  * Get degrees
  *
  * @param {string} osuId 9 digits OSU ID
- * @param {string} term 6 digits term code
+ * @param {object} params filter parameters
  * @returns {object} serialized degrees
  */
-const getDegreesById = (osuId, term) => getResourceById(
+const getDegreesById = (osuId, params) => getResourceById(
   osuId,
   contrib.getDegreesById,
   studentsSerializer.serializeDegrees,
   false,
-  term ? { term } : {},
+  params,
 );
 
 module.exports = {

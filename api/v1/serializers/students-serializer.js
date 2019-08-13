@@ -23,6 +23,13 @@ const getSerializerArgs = (osuId, resultField, resourcePath, isSingleton, params
   const studentsUrl = resourcePathLink(apiBaseUrl, 'students');
   const resourceUrl = resourcePathLink(resourcePathLink(studentsUrl, osuId), resourcePath);
 
+  params = _.omit(params, ['osuId']);
+  _.each(params, (value, key) => {
+    if (value instanceof Array) {
+      params[key] = _.join(value, ',');
+    }
+  });
+
   const serializerArgs = {
     identifierField: 'identifierField',
     resourceKeys: _.keys(resourceProp.attributes.properties),
@@ -107,10 +114,11 @@ const serializeAccountBalance = (rawAccountBalance, osuId) => {
  *
  * @param {object[]} rawTransactions raw account transaction
  * @param {string} osuId 9 digits OSU ID
+ * @param {object} params query parameters
  * @returns {object} serialized account transaction data
  */
-const serializeAccountTransactions = (rawTransactions, osuId) => {
-  const serializerArgs = getSerializerArgs(osuId, 'AccountTransactionsResult', 'account-transactions', true);
+const serializeAccountTransactions = (rawTransactions, osuId, params) => {
+  const serializerArgs = getSerializerArgs(osuId, 'AccountTransactionsResult', 'account-transactions', true, params);
   const identifierField = osuId;
 
   _.forEach(rawTransactions, (rawTransaction) => {
