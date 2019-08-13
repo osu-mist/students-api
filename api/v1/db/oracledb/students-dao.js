@@ -1,4 +1,5 @@
 const appRoot = require('app-root-path');
+const _ = require('lodash');
 
 const studentsSerializer = require('../../serializers/students-serializer');
 
@@ -8,24 +9,24 @@ const conn = appRoot.require('api/v1/db/oracledb/connection');
 /**
  * Return serialized resource(s) by unique ID
  *
- * @param {string} id The unique ID for resource(s)
+ * @param {string} osuId 9 digits OSU ID
  * @param {string} sql The SQL statement that is executed
  * @param {Function} serializer Resource serializer function
  * @param {boolean} isSingleton A Boolean value represents the resource should be singleton or not
  * @param {object} params A key-value pair params object
  * @returns {Promise<object>} Promise object represents serialized resource(s)
  */
-const getResourceById = async (id, sql, serializer, isSingleton, params) => {
+const getResourceById = async (osuId, sql, serializer, isSingleton, params) => {
   const connection = await conn.getConnection();
-  let term = params ? params.term : null;
   try {
-    if (term === 'current') {
+    if (params.term === 'current') {
       const rawCurrentTerm = await connection.execute(contrib.getCurrentTerm());
       const { currentTerm } = rawCurrentTerm.rows[0];
-      term = currentTerm;
+      params.term = currentTerm;
     }
-    const sqlParams = term ? [id, term] : [id];
-    const { rows } = await connection.execute(sql(term), sqlParams);
+    const sqlParams = _.assign(params, { osuId });
+
+    const { rows } = await connection.execute(sql(sqlParams));
     if (isSingleton && rows.length > 1) {
       throw new Error('Expect a single object but got multiple results.');
     } else {
@@ -35,7 +36,7 @@ const getResourceById = async (id, sql, serializer, isSingleton, params) => {
       } else {
         rawRows = rows;
       }
-      const serializedResource = serializer(rawRows, id, params);
+      const serializedResource = serializer(rawRows, osuId, params);
       return serializedResource;
     }
   } finally {
@@ -73,14 +74,23 @@ const getAccountBalanceById = osuId => getResourceById(
  * Get account transactions
  *
  * @param {string} osuId 9 digits OSU ID
+ * @param {object} params filter parameters
  * @returns {object} serialized account transactions
  */
-const getAccountTransactionsById = osuId => getResourceById(
-  osuId,
-  contrib.getTransactionsById,
-  studentsSerializer.serializeAccountTransactions,
-  false,
-);
+const getAccountTransactionsById = (osuId, params) => {
+  const { categories, transactionType } = params;
+
+  params.categories = categories ? `(${_.join(categories.map(item => `'${item}'`), ', ')})` : null;
+  params.transactionType = transactionType ? { charge: 'C', payment: 'P' }[transactionType] : null;
+
+  return getResourceById(
+    osuId,
+    contrib.getTransactionsById,
+    studentsSerializer.serializeAccountTransactions,
+    false,
+    params,
+  );
+};
 
 /**
  * Get academic status
