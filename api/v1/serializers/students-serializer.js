@@ -23,11 +23,11 @@ const getSerializerArgs = (osuId, resultField, resourcePath, isSingleton, params
   const studentsUrl = resourcePathLink(apiBaseUrl, 'students');
   const resourceUrl = resourcePathLink(resourcePathLink(studentsUrl, osuId), resourcePath);
 
-  params = _.omit(params, ['osuId']);
-  _.each(params, (value, key) => {
+  params = _.mapValues(params, (value) => {
     if (value instanceof Array) {
-      params[key] = _.join(value, ',');
+      return _.join(value, ',');
     }
+    return value;
   });
 
   const serializerArgs = {
