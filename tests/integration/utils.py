@@ -191,6 +191,9 @@ def check_schema(self, response, schema, nullable_fields):
     # Helper function to check through all attributes
     def __check_attributes_schema(actual_attributes, expected_attributes):
         for field, actual_value in actual_attributes.items():
+
+            if field not in expected_attributes.keys():
+                print(field, expected_attributes.keys())
             self.assertIn(
                 field,
                 expected_attributes.keys(),
