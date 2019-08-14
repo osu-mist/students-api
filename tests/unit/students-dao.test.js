@@ -16,7 +16,7 @@ const { any } = sinon.match;
 describe('Test students-dao', () => {
   const fakeId = 'fakeId';
   const fakeParams = {};
-  const fakeBinds = {};
+  const fakeExtraBinds = {};
   const stubStudentsSerializer = sinon.stub().returnsArg(0);
 
   sinon.stub(conn, 'getConnection').resolves({
@@ -46,7 +46,7 @@ describe('Test students-dao', () => {
         fakeSql,
         stubStudentsSerializer,
         isSingleton,
-        fakeBinds,
+        fakeExtraBinds,
         fakeParams,
       );
       fulfilledPromises.push(result.should
@@ -69,7 +69,7 @@ describe('Test students-dao', () => {
       fakeSql,
       stubStudentsSerializer,
       isSingleton,
-      fakeBinds,
+      fakeExtraBinds,
       fakeParams,
     );
     return result.should

@@ -403,7 +403,7 @@ parameters:
     name: term
     in: query
     required: false
-    pattern: '^\d{6}|current$'
+    pattern: '^\d{6}$|^current$'
     description: >
       Term code. Example: 201802. You can also specify 'current' to get the current term. During
       academic breaks, the current term will be the current or the most future term. For example,
