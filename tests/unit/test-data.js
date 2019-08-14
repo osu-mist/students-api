@@ -91,6 +91,7 @@ const rawTransactions = [
     entryDate: '2016-12-31 12:29:54',
     category: 'Continuing Education',
     term: '201901',
+    transactionType: 'payment',
   },
   {
     amount: '1814',
@@ -98,6 +99,7 @@ const rawTransactions = [
     entryDate: '2017-11-12 12:13:42',
     category: 'Cascades Campus',
     term: '201903',
+    transactionType: 'charge',
   },
 ];
 const rawAcademicStatus = [
