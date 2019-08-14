@@ -19,7 +19,7 @@ const conn = appRoot.require('api/v1/db/oracledb/connection');
 const getResourceById = async (osuId, sql, serializer, isSingleton, extraBinds, params) => {
   const connection = await conn.getConnection();
   try {
-    const { term } = params;
+    const term = params ? params.term : null;
     const binds = {
       osuId,
       ...(term && { term }),
