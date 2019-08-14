@@ -520,6 +520,11 @@ definitions:
                   description: The term that this transaction was occurred.
                   type: string
                   example: '201901'
+                transactionType:
+                  type: string
+                  description: Transaction Type
+                  enum: [charge, payment]
+                  example: charge
           links:
             $ref: '#/definitions/SelfLink'
   ClassificationResult:
