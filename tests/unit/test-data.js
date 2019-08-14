@@ -89,11 +89,15 @@ const rawTransactions = [
     amount: '2850',
     description: 'Ford Loan-Subsidized',
     entryDate: '2016-12-31 12:29:54',
+    category: 'Continuing Education',
+    term: '201901',
   },
   {
     amount: '1814',
     description: 'Presidential Scholar 001100',
     entryDate: '2017-11-12 12:13:42',
+    category: 'Cascades Campus',
+    term: '201903',
   },
 ];
 const rawAcademicStatus = [

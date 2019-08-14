@@ -12,8 +12,7 @@ const { errorHandler } = appRoot.require('errors/errors');
 const get = async (req, res) => {
   try {
     const { osuId } = req.params;
-    const { term } = req.query;
-    const result = await studentsDao.getAcademicStatusById(osuId, term);
+    const result = await studentsDao.getAcademicStatusById(osuId, req.query);
     res.send(result);
   } catch (err) {
     errorHandler(res, err);

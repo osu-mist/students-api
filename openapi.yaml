@@ -73,11 +73,140 @@ paths:
       parameters:
         - $ref: '#/parameters/authorization'
         - $ref: '#/parameters/osuId'
+        - $ref: '#/parameters/term'
+        - in: query
+          name: transactionType
+          description: Filter transactions by type
+          required: false
+          type: string
+          enum: ['payment', 'charge']
+        - in: query
+          name: categories
+          description: |
+            Filter transactions by categories:
+              - `CSH` - Cash, Check, Credit Card
+              - `RET` - Returned Check Charge
+              - `FEE` - Registration Fees
+              - `TUI` - Registration Tuition
+              - `FA` - Financial Aid
+              - `RFD` - Refund
+              - `APF` - Admissions Application Charges
+              - `EXM` - Exemption Payments
+              - `CNT` - Contract Charges/Payments
+              - `INS` - Installment Charges/Payments
+              - `TRN` - Transcript Charges
+              - `DEP` - Deposit
+              - `BIL` - Billing Charges
+              - `HOU` - Housing
+              - `TFC` - Traffic
+              - `MSC` - Misc Reimbursements
+              - `MEA` - Meal Detail Codes
+              - `PHO` - Phone Detail Codes
+              - `OFE` - Other Registration Fees
+              - `FWD` - Balance Forward
+              - `NON` - Non use
+              - `VET` - Vet Med Category
+              - `CGA` - Cashier/Gen Accounting
+              - `GEN` - General Accounting
+              - `RES` - Research Accounting
+              - `COL` - Collections
+              - `INT` - International Education
+              - `HEA` - Health Center
+              - `REG` - Registrar
+              - `LIB` - Library
+              - `SLO` - Student Loans
+              - `PLC` - Placement Center
+              - `MUB` - Memorial Union
+              - `COU` - Counseling Center
+              - `UCS` - Computing Services
+              - `DCE` - Continuing Education
+              - `NBL` - No a/r statement
+              - `RMB` - Reimbursement Codes
+              - `ELN` - Emergency Loan
+              - `GRN` - Grant Billing
+              - `ALW` - Allowance Doubtful Accounts
+              - `AGP` - Agricultural Publications
+              - `HHS` - Health/Human Science
+              - `ATH` - Athletics
+              - `MPW` - Marketplace
+              - `NQC` - Nonuse 1098T Qualifying Chg
+              - `NSG` - Nonuse 1098T Scholarship/Grant
+              - `CCB` - Cascades Campus
+              - `IDC` - ID Center
+              - `N2` - INTO OSU
+              - `ASB` - Arts & Science Business Center
+              - `PPL` - Parent Plus Title IV Payment
+              - `FNR` - Nonrefundable Course Fees
+              - `NCR` - Non Cash Resources
+          required: false
+          type: array
+          collectionFormat: csv
+          items:
+            type: string
+            enum:
+              - CSH
+              - RET
+              - FEE
+              - TUI
+              - FA
+              - RFD
+              - APF
+              - EXM
+              - CNT
+              - INS
+              - TRN
+              - DEP
+              - BIL
+              - HOU
+              - TFC
+              - MSC
+              - MEA
+              - PHO
+              - OFE
+              - FWD
+              - NON
+              - VET
+              - CGA
+              - GEN
+              - RES
+              - COL
+              - INT
+              - HEA
+              - REG
+              - LIB
+              - SLO
+              - PLC
+              - MUB
+              - COU
+              - UCS
+              - DCE
+              - NBL
+              - RMB
+              - ELN
+              - GRN
+              - ALW
+              - AGP
+              - HHS
+              - ATH
+              - MPW
+              - NQC
+              - NSG
+              - CCB
+              - IDC
+              - N2
+              - ASB
+              - PPL
+              - FNR
+              - NCR
       responses:
         '200':
           description: Successful response
           schema:
             $ref: '#/definitions/AccountTransactionsResult'
+        '400':
+          description: Bad request
+          schema:
+            $ref: '#/definitions/ErrorResult'
         '500':
           description: Internal Server Error
           schema:
@@ -274,7 +403,7 @@ parameters:
     name: term
     in: query
     required: false
-    pattern: '^\d{6}|current$'
+    pattern: '^\d{6}$|^current$'
     description: >
       Term code. Example: 201802. You can also specify 'current' to get the current term. During
       academic breaks, the current term will be the current or the most future term. For example,
@@ -378,11 +507,19 @@ definitions:
                   type: string
                   description: Description of transaction.
                   example: Tuition Deposit Applied
+                category:
+                  type: string
+                  description: Transaction category
+                  example: ID Center
                 entryDate:
                   type: string
                   format: date-time
                   description: Date the transaction was entered.
                   example: 2018-04-27T06:31:15Z
+                term:
+                  description: The term that this transaction was occurred.
+                  type: string
+                  example: '201901'
           links:
             $ref: '#/definitions/SelfLink'
   ClassificationResult:

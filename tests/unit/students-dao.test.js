@@ -16,6 +16,7 @@ const { any } = sinon.match;
 describe('Test students-dao', () => {
   const fakeId = 'fakeId';
   const fakeParams = {};
+  const fakeExtraBinds = {};
   const stubStudentsSerializer = sinon.stub().returnsArg(0);
 
   sinon.stub(conn, 'getConnection').resolves({
@@ -41,7 +42,12 @@ describe('Test students-dao', () => {
     const fulfilledPromises = [];
     _.each(fulfilledCases, ({ fakeSql, isSingleton, expectResult }) => {
       const result = studentsDao.getResourceById(
-        fakeId, fakeSql, stubStudentsSerializer, isSingleton, fakeParams,
+        fakeId,
+        fakeSql,
+        stubStudentsSerializer,
+        isSingleton,
+        fakeExtraBinds,
+        fakeParams,
       );
       fulfilledPromises.push(result.should
         .eventually.be.fulfilled
@@ -59,7 +65,12 @@ describe('Test students-dao', () => {
     const expectResult = 'Expect a single object but got multiple results.';
 
     const result = studentsDao.getResourceById(
-      fakeId, fakeSql, stubStudentsSerializer, isSingleton, fakeParams,
+      fakeId,
+      fakeSql,
+      stubStudentsSerializer,
+      isSingleton,
+      fakeExtraBinds,
+      fakeParams,
     );
     return result.should
       .eventually.be.rejectedWith(expectResult)
