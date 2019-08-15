@@ -358,13 +358,14 @@ paths:
         - $ref: '#/parameters/authorization'
         - $ref: '#/parameters/osuId'
         - in: query
-          name: code
+          name: codes
           description: Filter holds by codes
           required: false
           type: array
           collectionFormat: csv
           items:
             type: string
+            enum: [AD, AM, AP, AR, AS, AW, BB, BC, BD, BG, BI, BL, BP, BR, BS, BU, CC, CE, CM, CP, CR, CS, CW, DC, DD, DG, DH, DP, DS, DT, EL, EN, EO, EP, ET, FA, GA, GD, GG, GM, GR, HA, HC, HH, HI, HS, HV, IN, IP, IS, IT, LF, LG, N2, N3, N4, N5, NB, ND, NH, NP, NR, PF, R1, R2, R3, R4, R5, R6, R7, R8, R9, RA, RB, RC, RD, RE, RF, RG, RH, RI, RJ, RM, RQ, RT, RY, SF, SL, SR, SS, TP, TR, VM, VT]
       responses:
         '200':
           description: Successful response
@@ -1134,6 +1135,7 @@ definitions:
                   type: string
                   description: Hold code
                   example: N3
+                  enum: [AD, AM, AP, AR, AS, AW, BB, BC, BD, BG, BI, BL, BP, BR, BS, BU, CC, CE, CM, CP, CR, CS, CW, DC, DD, DG, DH, DP, DS, DT, EL, EN, EO, EP, ET, FA, GA, GD, GG, GM, GR, HA, HC, HH, HI, HS, HV, IN, IP, IS, IT, LF, LG, N2, N3, N4, N5, NB, ND, NH, NP, NR, PF, R1, R2, R3, R4, R5, R6, R7, R8, R9, RA, RB, RC, RD, RE, RF, RG, RH, RI, RJ, RM, RQ, RT, RY, SF, SL, SR, SS, TP, TR, VM, VT]
                 organizationCode:
                   type: string
                   description: Organization code of the hold.
