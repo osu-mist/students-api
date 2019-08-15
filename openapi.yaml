@@ -357,11 +357,23 @@ paths:
       parameters:
         - $ref: '#/parameters/authorization'
         - $ref: '#/parameters/osuId'
+        - in: query
+          name: code
+          description: Filter holds by codes
+          required: false
+          type: array
+          collectionFormat: csv
+          items:
+            type: string
       responses:
         '200':
           description: Successful response
           schema:
             $ref: '#/definitions/HoldsResult'
+        '400':
+          description: Bad request
+          schema:
+            $ref: '#/definitions/ErrorResult'
         '500':
           description: Internal Server Error
           schema:
@@ -1118,6 +1130,22 @@ definitions:
                   description: The reason the hold is on the student's record.
                   type: string
                   example: CS 161
+                code:
+                  type: string
+                  description: Hold code
+                  example: N3
+                organizationCode:
+                  type: string
+                  description: Organization code of the hold.
+                  example: REGS
+                organizationDescription:
+                  type: string
+                  description: Organization code of the hold.
+                  example: Registration Office
+                releasedInd:
+                  type: boolean
+                  description: The released indicator of the hold.
+                  example: true
       links:
         $ref: '#/definitions/SelfLink'
   WorkStudyResult:

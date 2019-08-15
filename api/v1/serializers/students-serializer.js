@@ -311,6 +311,7 @@ const serializeHolds = (rawHolds, osuId) => {
     ];
     rawHold.processesAffected = _.without(processesAffectedKeys.map(key => rawHold[key]), null);
     _.forEach(processesAffectedKeys, key => delete rawHold[key]);
+    rawHold.releasedInd = rawHold.releasedInd === 'Y';
   });
 
   const holds = { identifierField, holds: rawHolds };
