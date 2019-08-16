@@ -291,10 +291,11 @@ const serializeClassSchedule = (rawClassSchedule, osuId, params) => {
  *
  * @param {object[]} rawHolds raw holds
  * @param {string} osuId 9 digits OSU ID
+ * @param {object} params query parameters
  * @returns {object} serialized holds data
  */
-const serializeHolds = (rawHolds, osuId) => {
-  const serializerArgs = getSerializerArgs(osuId, 'HoldsResult', 'holds', true);
+const serializeHolds = (rawHolds, osuId, params) => {
+  const serializerArgs = getSerializerArgs(osuId, 'HoldsResult', 'holds', true, params);
   const identifierField = osuId;
 
   _.forEach(rawHolds, (rawHold) => {
