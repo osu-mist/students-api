@@ -277,6 +277,10 @@ const rawHolds = [
     enrollmentVerification: null,
     application: null,
     compliance: null,
+    code: 'N3',
+    releasedInd: null,
+    organizationCode: 'TUDY',
+    organizationDescription: 'Tudy/Registrar\'s Office',
   },
   {
     fromDate: '2011-12-28',
@@ -291,6 +295,10 @@ const rawHolds = [
     enrollmentVerification: null,
     application: null,
     compliance: null,
+    code: 'AS',
+    releasedInd: 'Y',
+    organizationCode: 'GRDN',
+    organizationDescription: 'Graduate Dean',
   },
 ];
 const rawAwards = [

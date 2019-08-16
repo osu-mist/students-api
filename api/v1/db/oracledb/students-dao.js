@@ -169,14 +169,16 @@ const getClassScheduleById = (osuId, params) => getResourceById(
  * Get holds
  *
  * @param {string} osuId 9 digits OSU ID
+ * @param {object} params filter parameters
  * @returns {object} serialized holds
  */
-const getHoldsById = osuId => getResourceById(
+const getHoldsById = (osuId, params) => getResourceById(
   osuId,
   contrib.getHoldsById,
   studentsSerializer.serializeHolds,
   false,
-  {},
+  params.codes,
+  params,
 );
 
 /**

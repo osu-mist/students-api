@@ -291,10 +291,11 @@ const serializeClassSchedule = (rawClassSchedule, osuId, params) => {
  *
  * @param {object[]} rawHolds raw holds
  * @param {string} osuId 9 digits OSU ID
+ * @param {object} params query parameters
  * @returns {object} serialized holds data
  */
-const serializeHolds = (rawHolds, osuId) => {
-  const serializerArgs = getSerializerArgs(osuId, 'HoldsResult', 'holds', true);
+const serializeHolds = (rawHolds, osuId, params) => {
+  const serializerArgs = getSerializerArgs(osuId, 'HoldsResult', 'holds', true, params);
   const identifierField = osuId;
 
   _.forEach(rawHolds, (rawHold) => {
@@ -311,6 +312,7 @@ const serializeHolds = (rawHolds, osuId) => {
     ];
     rawHold.processesAffected = _.without(processesAffectedKeys.map(key => rawHold[key]), null);
     _.forEach(processesAffectedKeys, key => delete rawHold[key]);
+    rawHold.releasedInd = rawHold.releasedInd === 'Y';
   });
 
   const holds = { identifierField, holds: rawHolds };
