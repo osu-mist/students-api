@@ -143,61 +143,7 @@ paths:
           collectionFormat: csv
           items:
             type: string
-            enum:
-              - CSH
-              - RET
-              - FEE
-              - TUI
-              - FA
-              - RFD
-              - APF
-              - EXM
-              - CNT
-              - INS
-              - TRN
-              - DEP
-              - BIL
-              - HOU
-              - TFC
-              - MSC
-              - MEA
-              - PHO
-              - OFE
-              - FWD
-              - NON
-              - VET
-              - CGA
-              - GEN
-              - RES
-              - COL
-              - INT
-              - HEA
-              - REG
-              - LIB
-              - SLO
-              - PLC
-              - MUB
-              - COU
-              - UCS
-              - DCE
-              - NBL
-              - RMB
-              - ELN
-              - GRN
-              - ALW
-              - AGP
-              - HHS
-              - ATH
-              - MPW
-              - NQC
-              - NSG
-              - CCB
-              - IDC
-              - N2
-              - ASB
-              - PPL
-              - FNR
-              - NCR
+            enum: [CSH ,RET ,FEE ,TUI ,FA ,RFD ,APF ,EXM ,CNT ,INS ,TRN ,DEP ,BIL ,HOU ,TFC ,MSC ,MEA ,PHO ,OFE ,FWD ,NON ,VET ,CGA ,GEN ,RES ,COL ,INT ,HEA ,REG ,LIB ,SLO ,PLC ,MUB ,COU ,UCS ,DCE ,NBL ,RMB ,ELN ,GRN ,ALW ,AGP ,HHS ,ATH ,MPW ,NQC ,NSG ,CCB ,IDC ,N2 ,ASB ,PPL ,FNR ,NCR]
       responses:
         '200':
           description: Successful response
@@ -363,7 +309,7 @@ paths:
           required: false
           type: array
           collectionFormat: csv
-          items:
+          items: &HoldCode
             type: string
             enum: [AD, AM, AP, AR, AS, AW, BB, BC, BD, BG, BI, BL, BP, BR, BS, BU, CC, CE, CM, CP, CR, CS, CW, DC, DD, DG, DH, DP, DS, DT, EL, EN, EO, EP, ET, FA, GA, GD, GG, GM, GR, HA, HC, HH, HI, HS, HV, IN, IP, IS, IT, LF, LG, N2, N3, N4, N5, NB, ND, NH, NP, NR, PF, R1, R2, R3, R4, R5, R6, R7, R8, R9, RA, RB, RC, RD, RE, RF, RG, RH, RI, RJ, RM, RQ, RT, RY, SF, SL, SR, SS, TP, TR, VM, VT]
       responses:
@@ -1131,11 +1077,7 @@ definitions:
                   description: The reason the hold is on the student's record.
                   type: string
                   example: CS 161
-                code:
-                  type: string
-                  description: Hold code
-                  example: N3
-                  enum: [AD, AM, AP, AR, AS, AW, BB, BC, BD, BG, BI, BL, BP, BR, BS, BU, CC, CE, CM, CP, CR, CS, CW, DC, DD, DG, DH, DP, DS, DT, EL, EN, EO, EP, ET, FA, GA, GD, GG, GM, GR, HA, HC, HH, HI, HS, HV, IN, IP, IS, IT, LF, LG, N2, N3, N4, N5, NB, ND, NH, NP, NR, PF, R1, R2, R3, R4, R5, R6, R7, R8, R9, RA, RB, RC, RD, RE, RF, RG, RH, RI, RJ, RM, RQ, RT, RY, SF, SL, SR, SS, TP, TR, VM, VT]
+                code: *HoldCode
                 organizationCode:
                   type: string
                   description: Organization code of the hold.

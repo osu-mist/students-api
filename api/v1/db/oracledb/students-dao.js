@@ -177,7 +177,7 @@ const getHoldsById = (osuId, params) => getResourceById(
   contrib.getHoldsById,
   studentsSerializer.serializeHolds,
   false,
-  { ...params.codes },
+  params.codes,
   params,
 );
 
