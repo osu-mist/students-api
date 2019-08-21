@@ -11,4 +11,4 @@ const bodyParserError = (err, req, res, next) => {
   next(err);
 };
 
-module.exports = { bodyParserError };
+export { bodyParserError as default };

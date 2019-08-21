@@ -1,13 +1,14 @@
-const appRoot = require('app-root-path');
-const chai = require('chai');
-const chaiAsPromised = require('chai-as-promised');
-const config = require('config');
-const _ = require('lodash');
-const sinon = require('sinon');
+import appRoot from 'app-root-path';
+import chai from 'chai';
+import chaiAsPromised from 'chai-as-promised';
+import config from 'config';
+import _ from 'lodash';
+import sinon from 'sinon';
+
+import studentsDao from 'api/v1/db/oracledb/students-dao';
 
 sinon.replace(config, 'get', () => ({ oracledb: {} }));
-const conn = appRoot.require('api/v1/db/oracledb/connection');
-const studentsDao = appRoot.require('api/v1/db/oracledb/students-dao');
+const conn = appRoot.require('src/api/v1/db/oracledb/connection');
 
 chai.should();
 chai.use(chaiAsPromised);

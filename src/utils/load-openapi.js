@@ -1,5 +1,5 @@
-const deasync = require('deasync');
-const SwaggerParser = require('swagger-parser');
+import deasync from 'deasync';
+import SwaggerParser from 'swagger-parser';
 
 const { logger } = require('./logger');
 
@@ -26,4 +26,4 @@ const parseOpenApi = () => {
 
 const openapi = parseOpenApi();
 
-module.exports = { openapi };
+export { openapi as default };

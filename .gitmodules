@@ -1,3 +1,3 @@
 [submodule "api/v1/db/oracledb/contrib"]
-	path = api/v1/db/oracledb/contrib
+	path = src/api/v1/db/oracledb/contrib
 	url = git@github.sig.oregonstate.edu:ecs-data/students-api-contrib.git

@@ -1,11 +1,12 @@
-const appRoot = require('app-root-path');
-const config = require('config');
-const _ = require('lodash');
-const queryString = require('query-string');
-const url = require('url');
+import url from 'url';
 
-const { openapi: { basePath } } = appRoot.require('utils/load-openapi');
+import config from 'config';
+import _ from 'lodash';
+import queryString from 'query-string';
 
+import openapi from 'utils/load-openapi';
+
+const { basePath } = openapi;
 const { protocol, hostname } = config.get('server');
 
 /** API base URL */
@@ -34,8 +35,4 @@ const paramsLink = (baseUrl, params) => {
     : baseUrl;
 };
 
-module.exports = {
-  apiBaseUrl,
-  resourcePathLink,
-  paramsLink,
-};
+export { apiBaseUrl, resourcePathLink, paramsLink };

@@ -1,21 +1,22 @@
-const appRoot = require('app-root-path');
-const bodyParser = require('body-parser');
-const { compose } = require('compose-middleware');
-const config = require('config');
-const express = require('express');
-const { initialize } = require('express-openapi');
-const fs = require('fs');
-const https = require('https');
-const moment = require('moment');
-const git = require('simple-git/promise');
+import fs from 'fs';
+import https from 'https';
 
-const { errorBuilder, errorHandler } = appRoot.require('errors/errors');
-const { authentication } = appRoot.require('middlewares/authentication');
-const { bodyParserError } = appRoot.require('middlewares/body-parser-error');
-const { loggerMiddleware } = appRoot.require('middlewares/logger');
-const { runtimeErrors } = appRoot.require('middlewares/runtime-errors');
-const { openapi } = appRoot.require('utils/load-openapi');
-const { validateDataSource } = appRoot.require('utils/validate-data-source');
+import bodyParser from 'body-parser';
+import { compose } from 'compose-middleware';
+import config from 'config';
+import express from 'express';
+import { initialize } from 'express-openapi';
+import moment from 'moment';
+import git from 'simple-git/promise';
+import 'source-map-support/register';
+
+import { errorBuilder, errorHandler } from 'errors/errors';
+import authentication from 'middlewares/authentication';
+import bodyParserError from 'middlewares/body-parser-error';
+import loggerMiddleware from 'middlewares/logger';
+import runtimeErrors from 'middlewares/runtime-errors';
+import openapi from 'utils/load-openapi';
+import validateDataSource from 'utils/validate-data-source';
 
 const serverConfig = config.get('server');
 
@@ -68,7 +69,7 @@ const errorTransformer = (openapiError, ajvError) => {
    */
   const pathQueryRegex = /\['(.*)']/g;
 
-  const error = Object.assign({}, openapiError, ajvError);
+  const error = { ...openapiError, ...ajvError };
 
   const regexResult = pathQueryRegex.exec(error.path);
   error.path = regexResult ? regexResult[1] : error.path;
@@ -99,7 +100,7 @@ adminAppRouter.get(`${openapi.basePath}`, async (req, res) => {
 initialize({
   app: appRouter,
   apiDoc: openapi,
-  paths: `${appRoot}/api${openapi.basePath}/paths`,
+  paths: `dist/api${openapi.basePath}/paths`,
   consumesMiddleware: {
     'application/json': compose([bodyParser.json(), bodyParserError]),
   },

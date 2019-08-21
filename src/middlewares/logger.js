@@ -1,6 +1,6 @@
-const expressWinston = require('express-winston');
+import expressWinston from 'express-winston';
 
-const { logger } = require('../utils/logger');
+import { logger } from '../utils/logger';
 
 // log the request body
 expressWinston.requestWhitelist.push('body');
@@ -14,4 +14,4 @@ const loggerMiddleware = expressWinston.logger({
   colorize: true,
 });
 
-module.exports = { loggerMiddleware };
+export { loggerMiddleware as default };

@@ -1,5 +1,5 @@
-const JsonApiError = require('jsonapi-serializer').Error;
-const _ = require('lodash');
+import { Error as JsonApiError } from 'jsonapi-serializer';
+import _ from 'lodash';
 
 const { logger } = require('../utils/logger');
 
@@ -140,7 +140,7 @@ const errorHandler = (res, err) => {
   res.status(500).send(internalServerError(detail));
 };
 
-module.exports = {
+export {
   unauthorized,
   errorBuilder,
   errorHandler,
