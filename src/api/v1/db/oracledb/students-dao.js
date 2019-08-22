@@ -1,6 +1,5 @@
-import { contrib } from 'api/v1/db/oracledb/contrib/contrib';
-import * as conn from 'api/v1/db/oracledb/connection';
-
+import { contrib } from './contrib/contrib';
+import * as conn from './connection';
 import * as studentsSerializer from '../../serializers/students-serializer';
 
 /**
