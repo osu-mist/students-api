@@ -1,14 +1,9 @@
-import appRoot from 'app-root-path';
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 import config from 'config';
 import _ from 'lodash';
+import proxyquire from 'proxyquire';
 import sinon from 'sinon';
-
-import studentsDao from 'api/v1/db/oracledb/students-dao';
-
-sinon.replace(config, 'get', () => ({ oracledb: {} }));
-const conn = appRoot.require('src/api/v1/db/oracledb/connection');
 
 chai.should();
 chai.use(chaiAsPromised);
@@ -20,16 +15,23 @@ describe('Test students-dao', () => {
   const fakeExtraBinds = {};
   const stubStudentsSerializer = sinon.stub().returnsArg(0);
 
-  sinon.stub(conn, 'getConnection').resolves({
-    execute: (sql) => {
-      const sqlResults = {
-        multiResults: { rows: [{}, {}] },
-        singleResult: { rows: [{}] },
-      };
-      return sql in sqlResults ? sqlResults[sql] : sqlResults.singleResult;
+  sinon.replace(config, 'get', () => ({ oracledb: {} }));
+  const studentsDao = proxyquire('../../api/v1/db/oracledb/students-dao', {
+    './connection': {
+      getConnection: sinon.stub().resolves({
+        execute: (sql) => {
+          const sqlResults = {
+            multiResults: { rows: [{}, {}] },
+            singleResult: { rows: [{}] },
+          };
+          return sql in sqlResults ? sqlResults[sql] : sqlResults.singleResult;
+        },
+        close: () => null,
+      }),
     },
-    close: () => null,
   });
+
+  afterEach(() => stubStudentsSerializer.resetHistory());
 
   it(`should be fulfilled if
         1. isSingleton is true and only get exact one result
@@ -78,5 +80,4 @@ describe('Test students-dao', () => {
       .and.be.an.instanceOf(Error)
       .then(() => sinon.assert.notCalled(stubStudentsSerializer));
   });
-  afterEach(() => stubStudentsSerializer.resetHistory());
 });

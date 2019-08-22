@@ -1,8 +1,6 @@
-const appRoot = require('app-root-path');
+import { errorHandler } from 'errors/errors';
 
-const studentsDao = require('../../../db/oracledb/students-dao');
-
-const { errorHandler } = appRoot.require('errors/errors');
+import { getClassificationById } from '../../../db/oracledb/students-dao';
 
 /**
  * Get classification
@@ -12,11 +10,11 @@ const { errorHandler } = appRoot.require('errors/errors');
 const get = async (req, res) => {
   try {
     const { osuId } = req.params;
-    const result = await studentsDao.getClassificationById(osuId);
+    const result = await getClassificationById(osuId);
     res.send(result);
   } catch (err) {
     errorHandler(res, err);
   }
 };
 
-module.exports = { get };
+export { get };

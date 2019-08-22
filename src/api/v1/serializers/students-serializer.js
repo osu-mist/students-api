@@ -1,11 +1,10 @@
-const appRoot = require('app-root-path');
-const _ = require('lodash');
-const JSONAPISerializer = require('jsonapi-serializer').Serializer;
-const moment = require('moment-timezone');
+import _ from 'lodash';
+import { Serializer as JSONAPISerializer } from 'jsonapi-serializer';
+import moment from 'moment-timezone';
 
-const { openapi } = appRoot.require('utils/load-openapi');
-const { serializerOptions } = appRoot.require('utils/jsonapi');
-const { apiBaseUrl, resourcePathLink, paramsLink } = appRoot.require('utils/uri-builder');
+import { openapi } from 'utils/load-openapi';
+import { serializerOptions } from 'utils/jsonapi';
+import { apiBaseUrl, resourcePathLink, paramsLink } from 'utils/uri-builder';
 
 /**
  * The function to generate arguments for JSONAPI serializer
@@ -423,7 +422,7 @@ const serializeDegrees = (rawDegrees, osuId, params) => {
   return serializeJsonApi(serializerArgs, rawDegrees);
 };
 
-module.exports = {
+export {
   fourDigitToTime,
   getSerializerArgs,
   serializeGpa,

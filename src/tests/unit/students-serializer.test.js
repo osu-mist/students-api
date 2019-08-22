@@ -1,16 +1,15 @@
 /* eslint no-unused-expressions: 0 */
 
-const appRoot = require('app-root-path');
-const chai = require('chai');
-const chaiAsPromised = require('chai-as-promised');
-const chaiSubset = require('chai-subset');
-const _ = require('lodash');
-const randomize = require('randomatic');
-const sinon = require('sinon');
+import chai from 'chai';
+import chaiAsPromised from 'chai-as-promised';
+import chaiSubset from 'chai-subset';
+import _ from 'lodash';
+import randomize from 'randomatic';
+import sinon from 'sinon';
 
-const studentsSerializer = appRoot.require('api/v1/serializers/students-serializer');
-const testData = appRoot.require('tests/unit/test-data');
-const { openapi } = appRoot.require('utils/load-openapi');
+import * as studentsSerializer from 'api/v1/serializers/students-serializer';
+import testData from 'tests/unit/test-data';
+import { openapi } from 'utils/load-openapi';
 
 chai.should();
 chai.use(chaiAsPromised);

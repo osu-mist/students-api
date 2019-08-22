@@ -1,9 +1,7 @@
-const appRoot = require('app-root-path');
+import { contrib } from 'api/v1/db/oracledb/contrib/contrib';
+import * as conn from 'api/v1/db/oracledb/connection';
 
-const studentsSerializer = require('../../serializers/students-serializer');
-
-const { contrib } = appRoot.require('api/v1/db/oracledb/contrib/contrib');
-const conn = appRoot.require('api/v1/db/oracledb/connection');
+import * as studentsSerializer from '../../serializers/students-serializer';
 
 /**
  * Return serialized resource(s) by unique ID
@@ -227,7 +225,7 @@ const getDegreesById = (osuId, params) => getResourceById(
   params,
 );
 
-module.exports = {
+export {
   getResourceById,
   getGpaById,
   getAccountBalanceById,
