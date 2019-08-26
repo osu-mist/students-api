@@ -55,7 +55,7 @@ const getResourceById = async (osuId, sql, serializer, isSingleton, extraBinds, 
  * @param {string} osuId 9 digits OSU ID
  * @returns {object} serialized GPA
  */
-const getGpaById = osuId => getResourceById(
+const getGpaById = (osuId) => getResourceById(
   osuId,
   contrib.getGpaLevelsById,
   studentsSerializer.serializeGpa,
@@ -69,7 +69,7 @@ const getGpaById = osuId => getResourceById(
  * @param {string} osuId 9 digits OSU ID
  * @returns {object} serialized GPA
  */
-const getAccountBalanceById = osuId => getResourceById(
+const getAccountBalanceById = (osuId) => getResourceById(
   osuId,
   contrib.getAccountBalanceById,
   studentsSerializer.serializeAccountBalance,
@@ -122,7 +122,7 @@ const getAcademicStatusById = (osuId, params) => getResourceById(
  * @param {string} osuId 9 digits OSU ID
  * @returns {object} serialized classification
  */
-const getClassificationById = osuId => getResourceById(
+const getClassificationById = (osuId) => getResourceById(
   osuId,
   contrib.getClassificationById,
   studentsSerializer.serializeClassification,
@@ -184,7 +184,7 @@ const getHoldsById = (osuId, params) => getResourceById(
  * @param {string} osuId 9 digits OSU ID
  * @returns {object} serialized work study
  */
-const getWorkStudyById = osuId => getResourceById(
+const getWorkStudyById = (osuId) => getResourceById(
   osuId,
   contrib.getAwardsById,
   studentsSerializer.serializeWorkStudy,

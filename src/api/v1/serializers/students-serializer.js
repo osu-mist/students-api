@@ -22,7 +22,7 @@ const getSerializerArgs = (osuId, resultField, resourcePath, isSingleton, params
   const studentsUrl = resourcePathLink(apiBaseUrl, 'students');
   const resourceUrl = resourcePathLink(resourcePathLink(studentsUrl, osuId), resourcePath);
 
-  params = _.mapValues(params, val => (_.isArray(val) ? _.join(val, ',') : val));
+  params = _.mapValues(params, (val) => (_.isArray(val) ? _.join(val, ',') : val));
 
   const serializerArgs = {
     identifierField: 'identifierField',
@@ -309,8 +309,8 @@ const serializeHolds = (rawHolds, osuId, params) => {
       'application',
       'compliance',
     ];
-    rawHold.processesAffected = _.without(processesAffectedKeys.map(key => rawHold[key]), null);
-    _.forEach(processesAffectedKeys, key => delete rawHold[key]);
+    rawHold.processesAffected = _.without(processesAffectedKeys.map((key) => rawHold[key]), null);
+    _.forEach(processesAffectedKeys, (key) => delete rawHold[key]);
     rawHold.releasedInd = rawHold.releasedInd === 'Y';
   });
 
