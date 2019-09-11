@@ -184,6 +184,8 @@ const serializeAcademicStatus = (rawAcademicStatus, osuId, params) => {
 const serializeClassification = (rawClassification, osuId) => {
   const serializerArgs = getSerializerArgs(osuId, 'ClassificationResult', 'classification', true);
 
+  rawClassification.isInternational = rawClassification.isInternational === 'Y';
+
   return serializeJsonApi(serializerArgs, rawClassification);
 };
 

@@ -537,6 +537,27 @@ definitions:
               - Vet Med-Third Year
               - Vet Med-Fourth Year
               - Auditor Only
+          campus:
+            description: Campus for a student
+            example: Oregon State - Corvallis
+            type: string
+          status:
+            description: Student status
+            example: New Student
+            type: string
+            enum:
+              - New Student
+              - Inactive Student
+              - Withdrawn Student
+              - Continuing
+              - Readmit/Old Returning
+              - Summer Only Student
+              - Continuing Higher Education
+              - Auditor
+              - Non-matriculated student
+          isInternational:
+            description: Identifies whether the student is international student.
+            type: boolean
       links:
         $ref: '#/definitions/SelfLink'
   ClassScheduleResult:

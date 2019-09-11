@@ -134,6 +134,9 @@ const rawClassification = {
   identifierField: fakeId,
   level: 'Graduate',
   classification: 'Determine from Student Type',
+  status: 'New Student',
+  isInternational: 'Y',
+  campus: 'Oregon State - Corvallis',
 };
 const rawGrades = [
   {
