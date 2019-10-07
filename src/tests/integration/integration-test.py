@@ -150,6 +150,11 @@ class integration_tests(unittest.TestCase):
     # Test case: GET /students/{osuId}/degrees
     def test_get_degrees_by_id(self):
         resource = 'DegreeResource'
+        endpoint = self.get_test_endpoint('valid_degrees',
+                                          'degrees')
+
+        utils.test_endpoint(self, endpoint, resource, 200)
+        self.term_testing(endpoint, resource)
 
 
 if __name__ == '__main__':
