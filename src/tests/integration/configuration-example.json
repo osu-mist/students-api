@@ -27,6 +27,7 @@
     "valid_class_schedule": "123456789",
     "valid_holds": "123456789",
     "valid_work_study": "123456789",
-    "valid_dual_enrollment": "123456789"
+    "valid_dual_enrollment": "123456789",
+    "valid_degrees": "123456789"
   }
 }
