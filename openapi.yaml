@@ -537,6 +537,10 @@ definitions:
               - Vet Med-Third Year
               - Vet Med-Fourth Year
               - Auditor Only
+          campusCode:
+            description: Campus code for a student
+            example: C
+            type: string
           campus:
             description: Campus for a student
             example: Oregon State - Corvallis
@@ -696,6 +700,10 @@ definitions:
                   description: The name of the building.
                   type: string
                   example: Learning Innovation Center
+                campusCode:
+                  description: Campus code for a student
+                  example: C
+                  type: string
                 campus:
                   description: Campus location of the meeting time.
                   type: string

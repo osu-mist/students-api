@@ -136,6 +136,7 @@ const rawClassification = {
   classification: 'Determine from Student Type',
   status: 'New Student',
   isInternational: 'Y',
+  campusCode: 'C',
   campus: 'Oregon State - Corvallis',
 };
 const rawGrades = [
@@ -210,6 +211,7 @@ const rawClassSchedule = [
     room: null,
     building: null,
     buildingDescription: null,
+    campusCode: 'B',
     campus: 'Oregon State - Cascades',
     hoursPerWeek: '0',
     creditHourSession: '2',
@@ -252,6 +254,7 @@ const rawClassSchedule = [
     room: '201',
     building: 'CSB',
     buildingDescription: 'Cascades Hall (COOSU)',
+    campusCode: 'B',
     campus: 'Oregon State - Cascades',
     hoursPerWeek: '3',
     creditHourSession: '4',

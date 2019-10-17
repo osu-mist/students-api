@@ -240,6 +240,7 @@ const serializeClassSchedule = (rawClassSchedule, osuId, params) => {
       room: rawRow.room,
       building: rawRow.building,
       buildingDescription: rawRow.buildingDescription,
+      campusCode: rawRow.campusCode,
       campus: rawRow.campus,
       hoursPerWeek: parseFloat(rawRow.hoursPerWeek),
       creditHourSession: parseFloat(rawRow.creditHourSession),
