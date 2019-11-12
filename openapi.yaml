@@ -971,21 +971,21 @@ definitions:
         description: |
          Academic level code for GPA calculation.
          00: Level Not Declared
+         01: Undergraduate
          02: Graduate
          03: Postbac Degree Seeking
-         01: Undergraduate
          04: Non-Degree / Credential
          05: Professional
-         CP: Cascades Partner
+         06: INTO OSU GE/AE/Pathways
          CG: Cascades Partner Grad Course
+         CP: Cascades Partner
          CX: Obsolete - Do not use
+         DO: E-Campus Overlay Course
          D1: E-Campus Undergraduate Course
          D2: E-Campus Graduate Course
-         DO: E-Campus Overlay Course
+         D3: ECampus CCLP & Couseling PHD
          DR: E-Campus Intermediate Course
          NC: Non Credit
-         06: INTO OSU GE/AE/Pathways
-         D3: ECampus CCLP & Couseling PHD
         type: string
         example: "01"
         enum: ["00", "02", "03", "01", "04", "05", "CP", "CG", "CX", "D1", "D2", "DO", "DR", "NC", "06", "D3"]
