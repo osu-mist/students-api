@@ -148,6 +148,7 @@ const serializeAcademicStatus = (rawAcademicStatus, osuId, params) => {
       creditHoursAttempted: parseFloat(rawRow.creditHoursAttempted),
       creditHoursEarned: parseFloat(rawRow.creditHoursEarned),
       creditHoursPassed: parseFloat(rawRow.creditHoursPassed),
+      levelCode: rawRow.levelCode,
       level: rawRow.level,
       qualityPoints: rawRow.qualityPoints,
     };

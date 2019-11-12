@@ -967,6 +967,28 @@ definitions:
         description: Credit hours passed for GPA calculation.
         type: integer
         example: 146
+      levelCode:
+        description: |
+         Academic level code for GPA calculation.
+         00: Level Not Declared
+         02: Graduate
+         03: Postbac Degree Seeking
+         01: Undergraduate
+         04: Non-Degree / Credential
+         05: Professional
+         CP: Cascades Partner
+         CG: Cascades Partner Grad Course
+         CX: Obsolete - Do not use
+         D1: E-Campus Undergraduate Course
+         D2: E-Campus Graduate Course
+         DO: E-Campus Overlay Course
+         DR: E-Campus Intermediate Course
+         NC: Non Credit
+         06: INTO OSU GE/AE/Pathways
+         D3: ECampus CCLP & Couseling PHD
+        type: string
+        example: "01"
+        enum: ["00", "02", "03", "01", "04", "05", "CP", "CG", "CX", "D1", "D2", "DO", "DR", "NC", "06", "D3"]
       level:
         description: Academic level for GPA calculation.
         type: string
