@@ -163,6 +163,7 @@ const rawGrades = [
     registrationStatus: null,
     gradeMode: 'N',
     gradeModeDescription: 'Normal Grading Mode',
+    repeatedCourseInd: 'E',
   },
   {
     identifierField: `${fakeId}-201900-72004`,
@@ -183,6 +184,7 @@ const rawGrades = [
     registrationStatus: '**Web Registered**',
     gradeMode: 'N',
     gradeModeDescription: 'Normal Grading Mode',
+    repeatedCourseInd: 'E',
   },
 ];
 const rawClassSchedule = [
@@ -228,6 +230,7 @@ const rawClassSchedule = [
     friday: null,
     saturday: null,
     sunday: null,
+    repeatedCourseInd: 'E',
   },
   {
     academicYear: '0405',
@@ -271,6 +274,7 @@ const rawClassSchedule = [
     friday: null,
     saturday: null,
     sunday: null,
+    repeatedCourseInd: 'E',
   },
 ];
 const rawHolds = [
