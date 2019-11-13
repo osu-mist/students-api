@@ -104,8 +104,15 @@ class integration_tests(unittest.TestCase):
         endpoint = self.get_test_endpoint('valid_grades',
                                           'grades')
 
-        utils.test_endpoint(self, endpoint, resource, 200)
-        self.term_testing(endpoint, resource)
+        """
+        Since OpenAPI 2.0 doesn't support nullable attribute, we need to
+        manually exclude nullable fields until we migrate to OpenAPI 3.0
+        """
+        nullable_fields = ['repeatedCourseInd']
+
+        utils.test_endpoint(self, endpoint, resource, 200,
+                            nullable_fields=nullable_fields)
+        self.term_testing(endpoint, resource, nullable_fields=nullable_fields)
 
     # Test case: GET /students/{osuId}/class-schedule
     def test_get_class_schedule_by_id(self):
@@ -123,7 +130,8 @@ class integration_tests(unittest.TestCase):
             'endTime',
             'room',
             'building',
-            'buildingDescription'
+            'buildingDescription',
+            'repeatedCourseInd'
         ]
 
         utils.test_endpoint(self, endpoint, resource, 200,
