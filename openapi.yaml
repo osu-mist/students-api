@@ -344,6 +344,25 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/ErrorResult'
+  /students/{osuId}/emergent-contacts:
+    get:
+      tags:
+        - students
+        - emergent-contacts
+      description: Get a student's emergent contact
+      operationId: getEmergentContactById
+      parameters:
+        - $ref: '#/parameters/authorization'
+        - $ref: '#/parameters/osuId'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/EmergentContactsResult'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResult'
 parameters:
   authorization:
     name: Authorization
@@ -1206,6 +1225,113 @@ definitions:
                     - Certified
                     - System Offered
                     - Canceled
+      links:
+        $ref: '#/definitions/SelfLink'
+  EmergentContactsResult:
+    properties:
+      links:
+        $ref: '#/definitions/SelfLink'
+      data:
+        $ref: '#/definitions/EmergentContactResource'
+  EmergentContactResource:
+    properties:
+      id:
+        $ref: '#/definitions/StudentId'
+      type:
+        type: string
+        enum: [emergent-contacts]
+      attributes:
+        properties:
+          emergentContacts:
+            type: array
+            items:
+              properties:
+                priority:
+                  type: integer
+                  example: 1
+                  description: Priority order of the emergent contact
+                firstName:
+                  type: string
+                  description: First name of the emergent contact
+                lastName:
+                  type: string
+                  description: Last name of the emergent contact
+                middleName:
+                  type: string
+                  description: Middle name of the emergent contact
+                houseNumber:
+                  type: string
+                  description: House number of the emergent contact
+                streetLine1:
+                  type: string
+                  description: Street line 1 of the emergent contact
+                streetLine2:
+                  type: string
+                  description: Street line 2 of the emergent contact
+                streetLine3:
+                  type: string
+                  description: Street line 3 of the emergent contact
+                streetLine4:
+                  type: string
+                  description: Street line 4 of the emergent contact
+                city:
+                  type: string
+                  description: City of the emergent contact
+                  example: Corvallis
+                stateCode:
+                  type: string
+                  description: State code of the emergent contact
+                  example: OR
+                zipCode:
+                  type: string
+                  description: Zip code of the emergent contact
+                  example: '97331'
+                nationCode:
+                  type: string
+                  description: Nation code of the emergent contact
+                  example: LUS
+                nation:
+                  type: string
+                  description: Nation description of the emergent contact
+                  example: United States of America
+                phoneAreaCode:
+                  type: string
+                  description: Area code for the phone number
+                  example: '541'
+                  pattern: '^[0-9]{1,3}$'
+                phoneNumber:
+                  type: string
+                  description: Phone number not including the area code
+                  example: '4443333'
+                  pattern: '^[0-9]{1,7}$'
+                fullPhoneNumber:
+                  type: string
+                  description: Combination of area code and phone number
+                  example: '5414443333'
+                phoneExtension:
+                  type: string
+                  description: Extension for the phone number. Can be returned in different formats
+                  example: '20'
+                  pattern: '^[0-9]{1,4}$'
+                relationCode:
+                  type: string
+                  description: |
+                    Relation of the emergent contact.
+                    A: Alumni Parent
+                    C: Child
+                    F: Father
+                    G: Guardian
+                    M: Mother
+                    O: Other
+                    P: Parent
+                    R: Relative
+                    S: Spouse
+                    U: Unknown
+                  enum: [A, C, F, G, M, O, P, R, S, U]
+                relation:
+                  type: string
+                  description: Relation description of the emergent contact
+                  example: Parent
       links:
         $ref: '#/definitions/SelfLink'
   Major:
