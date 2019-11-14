@@ -403,21 +403,21 @@ describe('Test students-serializer', () => {
       expect(attributes.primaryDegree).to.be.a('boolean');
     });
   });
-  it('test serializeEmergentContacts', () => {
-    const { serializeEmergentContacts } = studentsSerializer;
-    const { rawEmergentContacts } = testData;
-    const resourceType = 'emergent-contacts';
+  it('test serializeEmergencyContacts', () => {
+    const { serializeEmergencyContacts } = studentsSerializer;
+    const { rawEmergencyContacts } = testData;
+    const resourceType = 'emergency-contacts';
 
-    const serializedEmergentContacts = serializeEmergentContacts(rawEmergentContacts, fakeId);
-    testSingleResource(serializedEmergentContacts, resourceType, 'emergentContacts');
+    const serializedEmergencyContacts = serializeEmergencyContacts(rawEmergencyContacts, fakeId);
+    testSingleResource(serializedEmergencyContacts, resourceType, 'emergencyContacts');
 
     const numberFields = ['priority'];
-    const { emergentContacts } = serializedEmergentContacts.data.attributes;
-    _.each(emergentContacts, (emergentContact) => {
-      expect(emergentContact).to.have.all.keys(_.keys(
-        getDefinitionProps('EmergentContactsResult', { dataField: 'emergentContacts' }),
+    const { emergencyContacts } = serializedEmergencyContacts.data.attributes;
+    _.each(emergencyContacts, (emergencyContact) => {
+      expect(emergencyContact).to.have.all.keys(_.keys(
+        getDefinitionProps('EmergencyContactsResult', { dataField: 'emergencyContacts' }),
       ));
-      expectNumberFields(emergentContact, numberFields);
+      expectNumberFields(emergencyContact, numberFields);
     });
   });
 });

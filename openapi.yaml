@@ -344,13 +344,13 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/ErrorResult'
-  /students/{osuId}/emergent-contacts:
+  /students/{osuId}/emergency-contacts:
     get:
       tags:
         - students
-        - emergent-contacts
-      description: Get a student's emergent contacts
-      operationId: getEmergentContactById
+        - emergency-contacts
+      description: Get a student's emergency contacts
+      operationId: getEmergencyContactById
       parameters:
         - $ref: '#/parameters/authorization'
         - $ref: '#/parameters/osuId'
@@ -358,7 +358,7 @@ paths:
         '200':
           description: Successful response
           schema:
-            $ref: '#/definitions/EmergentContactsResult'
+            $ref: '#/definitions/EmergencyContactsResult'
         '500':
           description: Internal Server Error
           schema:
@@ -1237,72 +1237,72 @@ definitions:
                     - Canceled
       links:
         $ref: '#/definitions/SelfLink'
-  EmergentContactsResult:
+  EmergencyContactsResult:
     properties:
       links:
         $ref: '#/definitions/SelfLink'
       data:
-        $ref: '#/definitions/EmergentContactResource'
-  EmergentContactResource:
+        $ref: '#/definitions/EmergencyContactResource'
+  EmergencyContactResource:
     properties:
       id:
         $ref: '#/definitions/StudentId'
       type:
         type: string
-        enum: [emergent-contacts]
+        enum: [emergency-contacts]
       attributes:
         properties:
-          emergentContacts:
+          emergencyContacts:
             type: array
             items:
               properties:
                 priority:
                   type: integer
                   example: 1
-                  description: Priority order of the emergent contact.
+                  description: Priority order of the emergency contact.
                 firstName:
                   type: string
-                  description: First name of the emergent contact.
+                  description: First name of the emergency contact.
                 lastName:
                   type: string
-                  description: Last name of the emergent contact.
+                  description: Last name of the emergency contact.
                 middleName:
                   type: string
-                  description: Middle name of the emergent contact.
+                  description: Middle name of the emergency contact.
                 houseNumber:
                   type: string
-                  description: House number of the emergent contact.
+                  description: House number of the emergency contact.
                 streetLine1:
                   type: string
-                  description: Street line 1 of the emergent contact.
+                  description: Street line 1 of the emergency contact.
                 streetLine2:
                   type: string
-                  description: Street line 2 of the emergent contact.
+                  description: Street line 2 of the emergency contact.
                 streetLine3:
                   type: string
-                  description: Street line 3 of the emergent contact.
+                  description: Street line 3 of the emergency contact.
                 streetLine4:
                   type: string
-                  description: Street line 4 of the emergent contact.
+                  description: Street line 4 of the emergency contact.
                 city:
                   type: string
-                  description: City of the emergent contact.
+                  description: City of the emergency contact.
                   example: Corvallis
                 stateCode:
                   type: string
-                  description: State code of the emergent contact.
+                  description: State code of the emergency contact.
                   example: OR
                 zipCode:
                   type: string
-                  description: Zip code of the emergent contact.
+                  description: Zip code of the emergency contact.
                   example: '97331'
                 nationCode:
                   type: string
-                  description: Nation code of the emergent contact.
+                  description: Nation code of the emergency contact.
                   example: LUS
                 nation:
                   type: string
-                  description: Nation description of the emergent contact.
+                  description: Nation description of the emergency contact.
                   example: United States of America
                 phoneAreaCode:
                   type: string
@@ -1323,7 +1323,7 @@ definitions:
                 relationCode:
                   type: string
                   description: |
-                    Relation of the emergent contact.
+                    Relation of the emergency contact.
                     A: Alumni Parent
                     C: Child
                     F: Father
@@ -1337,7 +1337,7 @@ definitions:
                   enum: [A, C, F, G, M, O, P, R, S, U]
                 relation:
                   type: string
-                  description: Relation description of the emergent contact.
+                  description: Relation description of the emergency contact.
                   example: Parent
       links:
         $ref: '#/definitions/SelfLink'

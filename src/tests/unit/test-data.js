@@ -530,7 +530,7 @@ const rawDegrees = [
     fourthMinor: null,
   },
 ];
-const rawEmergentContacts = [
+const rawEmergencyContacts = [
   {
     priority: '1',
     firstName: 'fakeFirstName',
@@ -595,5 +595,5 @@ module.exports = {
   rawAwards,
   rawDualEnrollment,
   rawDegrees,
-  rawEmergentContacts,
+  rawEmergencyContacts,
 };

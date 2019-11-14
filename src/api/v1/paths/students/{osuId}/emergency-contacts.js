@@ -1,16 +1,16 @@
 import { errorHandler } from 'errors/errors';
 
-import { getEmergentContactsById } from '../../../db/oracledb/students-dao';
+import { getEmergencyContactsById } from '../../../db/oracledb/students-dao';
 
 /**
- * Get emergent contacts
+ * Get emergency contacts
  *
  * @type {RequestHandler}
  */
 const get = async (req, res) => {
   try {
     const { osuId } = req.params;
-    const result = await getEmergentContactsById(osuId);
+    const result = await getEmergencyContactsById(osuId);
     res.send(result);
   } catch (err) {
     errorHandler(res, err);

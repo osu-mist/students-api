@@ -164,11 +164,11 @@ class integration_tests(unittest.TestCase):
         utils.test_endpoint(self, endpoint, resource, 200)
         self.term_testing(endpoint, resource)
 
-    # Test case: GET /students/{osuId}/emergent-contacts
-    def test_get_emergent_contacts_by_id(self):
-        resource = 'EmergentContactResource'
-        endpoint = self.get_test_endpoint('valid_emergent_contacts',
-                                          'emergent-contacts')
+    # Test case: GET /students/{osuId}/emergency-contacts
+    def test_get_emergency_contacts_by_id(self):
+        resource = 'EmergencyContactResource'
+        endpoint = self.get_test_endpoint('valid_emergency_contacts',
+                                          'emergency-contacts')
 
         """
         Since OpenAPI 2.0 doesn't support nullable attribute, we need to
