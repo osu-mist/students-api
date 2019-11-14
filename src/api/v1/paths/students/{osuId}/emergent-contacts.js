@@ -3,7 +3,7 @@ import { errorHandler } from 'errors/errors';
 import { getEmergentContactsById } from '../../../db/oracledb/students-dao';
 
 /**
- * Get holds
+ * Get emergent contacts
  *
  * @type {RequestHandler}
  */
