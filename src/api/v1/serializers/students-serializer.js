@@ -427,6 +427,27 @@ const serializeDegrees = (rawDegrees, osuId, params) => {
   return serializeJsonApi(serializerArgs, rawDegrees);
 };
 
+/**
+ * A function to serialize raw emergency contact data
+ *
+ * @param {object[]} rawEmergencyContacts raw emergency contacts
+ * @param {string} osuId 9 digits OSU ID
+ * @returns {object} serialized emergency contact data
+ */
+const serializeEmergencyContacts = (rawEmergencyContacts, osuId) => {
+  const serializerArgs = getSerializerArgs(osuId, 'EmergencyContactsResult', 'emergency-contacts', true);
+  const identifierField = osuId;
+
+  _.forEach(rawEmergencyContacts, (rawEmergencyContact) => {
+    rawEmergencyContact.priority = parseFloat(rawEmergencyContact.priority);
+  });
+
+  return serializeJsonApi(serializerArgs, {
+    identifierField,
+    emergencyContacts: rawEmergencyContacts,
+  });
+};
+
 export {
   fourDigitToTime,
   getSerializerArgs,
@@ -441,4 +462,5 @@ export {
   serializeWorkStudy,
   serializeDualEnrollment,
   serializeDegrees,
+  serializeEmergencyContacts,
 };

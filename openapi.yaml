@@ -344,6 +344,25 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/ErrorResult'
+  /students/{osuId}/emergency-contacts:
+    get:
+      tags:
+        - students
+        - emergency-contacts
+      description: Get a student's emergency contacts
+      operationId: getEmergencyContactById
+      parameters:
+        - $ref: '#/parameters/authorization'
+        - $ref: '#/parameters/osuId'
+      responses:
+        '200':
+          description: Successful response
+          schema:
+            $ref: '#/definitions/EmergencyContactsResult'
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResult'
 parameters:
   authorization:
     name: Authorization
@@ -1216,6 +1235,110 @@ definitions:
                     - Certified
                     - System Offered
                     - Canceled
+      links:
+        $ref: '#/definitions/SelfLink'
+  EmergencyContactsResult:
+    properties:
+      links:
+        $ref: '#/definitions/SelfLink'
+      data:
+        $ref: '#/definitions/EmergencyContactResource'
+  EmergencyContactResource:
+    properties:
+      id:
+        $ref: '#/definitions/StudentId'
+      type:
+        type: string
+        enum: [emergency-contacts]
+      attributes:
+        properties:
+          emergencyContacts:
+            type: array
+            items:
+              properties:
+                priority:
+                  type: integer
+                  example: 1
+                  description: Priority order of the emergency contact.
+                firstName:
+                  type: string
+                  description: First name of the emergency contact.
+                lastName:
+                  type: string
+                  description: Last name of the emergency contact.
+                middleName:
+                  type: string
+                  description: Middle name of the emergency contact.
+                houseNumber:
+                  type: string
+                  description: House number of the emergency contact.
+                streetLine1:
+                  type: string
+                  description: Street line 1 of the emergency contact.
+                streetLine2:
+                  type: string
+                  description: Street line 2 of the emergency contact.
+                streetLine3:
+                  type: string
+                  description: Street line 3 of the emergency contact.
+                streetLine4:
+                  type: string
+                  description: Street line 4 of the emergency contact.
+                city:
+                  type: string
+                  description: City of the emergency contact.
+                  example: Corvallis
+                stateCode:
+                  type: string
+                  description: State code of the emergency contact.
+                  example: OR
+                zipCode:
+                  type: string
+                  description: Zip code of the emergency contact.
+                  example: '97331'
+                nationCode:
+                  type: string
+                  description: Nation code of the emergency contact.
+                  example: LUS
+                nation:
+                  type: string
+                  description: Nation description of the emergency contact.
+                  example: United States of America
+                phoneAreaCode:
+                  type: string
+                  description: Area code for the phone number.
+                  example: '541'
+                phoneNumber:
+                  type: string
+                  description: Phone number not including the area code.
+                  example: '4443333'
+                fullPhoneNumber:
+                  type: string
+                  description: Combination of area code and phone number.
+                  example: '5414443333'
+                phoneExtension:
+                  type: string
+                  description: Extension for the phone number. Can be returned in different formats.
+                  example: '20'
+                relationCode:
+                  type: string
+                  description: |
+                    Relation of the emergency contact.
+                    A: Alumni Parent
+                    C: Child
+                    F: Father
+                    G: Guardian
+                    M: Mother
+                    O: Other
+                    P: Parent
+                    R: Relative
+                    S: Spouse
+                    U: Unknown
+                  enum: [A, C, F, G, M, O, P, R, S, U]
+                relation:
+                  type: string
+                  description: Relation description of the emergency contact.
+                  example: Parent
       links:
         $ref: '#/definitions/SelfLink'
   Major:
