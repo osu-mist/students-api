@@ -774,10 +774,15 @@ definitions:
                   items:
                     type: string
                     enum:  [M, T, W, Th, F, Sa, Su]
-          repeatedCourseInd:
-            description: Identifies whether the course is repeated course.
+          repeatedCourseInd: &repeatedCourseInd
+            description: |
+              Identifies whether the course is repeated course.
+              null: Included
+              A: Include to only count in GPA
+              E: Excluded
+              I: Re-included after being excluded
             type: string
-            enum: [null, 'A', 'I', 'E']
+            enum: [null, 'A', 'E', 'I']
       links:
         $ref: '#/definitions/SelfLink'
   DegreesResult:
@@ -1083,10 +1088,7 @@ definitions:
             description: Academic level of the course.
             type: string
             example: Undergraduate
-          repeatedCourseInd:
-            description: Identifies whether the course is repeated course.
-            type: string
-            enum: [null, 'A', 'I', 'E']
+          repeatedCourseInd: *repeatedCourseInd
       links:
         $ref: '#/definitions/SelfLink'
   HoldsResult:
