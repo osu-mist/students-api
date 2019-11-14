@@ -349,7 +349,7 @@ paths:
       tags:
         - students
         - emergent-contacts
-      description: Get a student's emergent contact
+      description: Get a student's emergent contacts
       operationId: getEmergentContactById
       parameters:
         - $ref: '#/parameters/authorization'
