@@ -164,6 +164,39 @@ class integration_tests(unittest.TestCase):
         utils.test_endpoint(self, endpoint, resource, 200)
         self.term_testing(endpoint, resource)
 
+    # Test case: GET /students/{osuId}/emergent-contacts
+    def test_get_emergent_contacts_by_id(self):
+        resource = 'EmergentContactResource'
+        endpoint = self.get_test_endpoint('valid_emergent_contacts',
+                                          'emergent-contacts')
+
+        """
+        Since OpenAPI 2.0 doesn't support nullable attribute, we need to
+        manually exclude nullable fields until we migrate to OpenAPI 3.0
+        """
+        nullable_fields = [
+            'middleName',
+            'houseNumber',
+            'streetLine1',
+            'streetLine2',
+            'streetLine3',
+            'streetLine4',
+            'city',
+            'stateCode',
+            'zipCode',
+            'nationCode',
+            'nation',
+            'phoneAreaCode',
+            'phoneNumber',
+            'fullPhoneNumber',
+            'phoneExtension',
+            'relationCode',
+            'relation'
+        ]
+
+        utils.test_endpoint(self, endpoint, resource, 200,
+                            nullable_fields=nullable_fields)
+
 
 if __name__ == '__main__':
     arguments, argv = utils.parse_arguments()
