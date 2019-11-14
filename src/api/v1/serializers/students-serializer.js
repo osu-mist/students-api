@@ -278,6 +278,7 @@ const serializeClassSchedule = (rawClassSchedule, osuId, params) => {
       continuingEducation: rawRow.continuingEducation === 'Y',
       faculty: _.unionWith(rawDataByTermAndCrn[id].faculty, [faculty], _.isEqual),
       meetingTimes: _.unionWith(rawDataByTermAndCrn[id].meetingTimes, [meetingTime], _.isEqual),
+      repeatedCourseInd: rawRow.repeatedCourseInd,
     };
   });
 
