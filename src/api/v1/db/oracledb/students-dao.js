@@ -224,6 +224,20 @@ const getDegreesById = (osuId, params) => getResourceById(
   params,
 );
 
+/**
+ * Get emergent contacts
+ *
+ * @param {string} osuId 9 digits OSU ID
+ * @returns {object} serialized emergent contacts
+ */
+const getEmergentContactsById = (osuId) => getResourceById(
+  osuId,
+  contrib.getEmergentContactsById,
+  studentsSerializer.serializeEmergentContacts,
+  false,
+  {},
+);
+
 export {
   getResourceById,
   getGpaById,
@@ -237,4 +251,5 @@ export {
   getWorkStudyById,
   getDualEnrollmentById,
   getDegreesById,
+  getEmergentContactsById,
 };
