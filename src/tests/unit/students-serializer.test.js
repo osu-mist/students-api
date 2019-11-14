@@ -403,4 +403,21 @@ describe('Test students-serializer', () => {
       expect(attributes.primaryDegree).to.be.a('boolean');
     });
   });
+  it('test serializeEmergentContacts', () => {
+    const { serializeEmergentContacts } = studentsSerializer;
+    const { rawEmergentContacts } = testData;
+    const resourceType = 'emergent-contacts';
+
+    const serializedEmergentContacts = serializeEmergentContacts(rawEmergentContacts, fakeId);
+    testSingleResource(serializedEmergentContacts, resourceType, 'emergentContacts');
+
+    const numberFields = ['priority'];
+    const { emergentContacts } = serializedEmergentContacts.data.attributes;
+    _.each(emergentContacts, (emergentContact) => {
+      expect(emergentContact).to.have.all.keys(_.keys(
+        getDefinitionProps('EmergentContactsResult', { dataField: 'emergentContacts' }),
+      ));
+      expectNumberFields(emergentContact, numberFields);
+    });
+  });
 });
