@@ -586,6 +586,40 @@ definitions:
           isInternational:
             description: Identifies whether the student is international student.
             type: boolean
+          studentTypeCode:
+            description: |
+              Student type code:
+              - `0`- Undeclared
+              - `1`- Freshman < 24 hours
+              - `2`- Freshman - Early Admit
+              - `3`- GED
+              - `4`- Credential
+              - `5`- Non-Degree Undergrad
+              - `6`- Non-Degree Graduate
+              - `7`- Post Baccalaureate
+              - `8`- Masters
+              - `9`- Doctoral
+              - `A`- Auditor Only
+              - `C`- Continuing Higher Education
+              - `G`- Post Bac Graduate
+              - `H`- Graduate Certificate
+              - `K`- K-12 Online
+              - `N`- Non-Credit
+              - `P`- Doctor of Pharmacy
+              - `R`- Readmit
+              - `S`- Summer Only
+              - `T`- Transfer
+              - `V`- Veterinary Medicine
+              - `W`- INTO OSU Graduate Pathways
+              - `X`- INTO OSU General English
+              - `Y`- INTO OSU Academic English
+              - `Z`- INTO OSU Undergrad Pathways
+            type: string
+            enum: ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'C', 'G', 'H', 'K', 'N', 'P', 'R', 'S', 'T', 'V', 'W', 'X', 'Y', 'Z']
+          studentType:
+            description: Description of student type
+            type: string
+            example: INTO OSU Graduate Pathways
       links:
         $ref: '#/definitions/SelfLink'
   ClassScheduleResult:

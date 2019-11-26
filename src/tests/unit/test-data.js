@@ -136,12 +136,15 @@ const rawAcademicStatus = [
 ];
 const rawClassification = {
   identifierField: fakeId,
+  levelCode: '02',
   level: 'Graduate',
   classification: 'Determine from Student Type',
   status: 'New Student',
   isInternational: 'Y',
   campusCode: 'C',
   campus: 'Oregon State - Corvallis',
+  studentTypeCode: 'W',
+  studentType: 'INTO OSU Graduate Pathways',
 };
 const rawGrades = [
   {
