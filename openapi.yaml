@@ -520,26 +520,31 @@ definitions:
         enum: [classification]
       attributes:
         properties:
+          levelCode: &levelCode
+            description: |
+              Academic level code:
+                - `00` - Level Not Declared
+                - `02` - Graduate
+                - `03` - Postbac Degree Seeking
+                - `01` - Undergraduate
+                - `04` - Non-Degree / Credential
+                - `05` - Professional
+                - `CP` - Cascades Partner
+                - `CG` - Cascades Partner Grad Course
+                - `CX` - Obsolete - Do not use
+                - `D1` - E-Campus Undergraduate Course
+                - `D2` - E-Campus Graduate Course
+                - `DO` - E-Campus Overlay Course
+                - `DR` - E-Campus Intermediate Course
+                - `NC` - Non Credit
+                - `06` - INTO OSU GE/AE/Pathways
+                - `D3` - ECampus CCLP & Couseling PHD
+            type: string
+            enum: ['00', '02', '03', '01', '04', '05', 'CP', 'CG', 'CX', 'D1', 'D2', 'DO', 'DR', 'NC', '06', 'D3']
           level:
-            description: Academic level of a student
+            description: Description of Academic level code
             type: string
             example: Undergraduate
-            enum:
-              - Level Not Declared
-              - Graduate
-              - Postbac Degree Seeking
-              - Undergraduate
-              - Non-Degree / Credential
-              - Professional
-              - Cascades Partner
-              - Cascades Partner Grad Course
-              - E-Campus Undergraduate Course
-              - E-Campus Graduate Course
-              - E-Campus Overlay Course
-              - E-Campus Intermediate Course
-              - Non Credit
-              - INTO OSU GE/AE/Pathways
-              - ECampus CCLP & Couseling PHD
           classification:
             description: Classification of a student
             example: Sophomore
@@ -739,35 +744,35 @@ definitions:
                 scheduleType:
                   description: |
                     Type of schedule for this given meeting type.
-                    A: Lecture
-                    B: Discussion
-                    C: Recitation
-                    D: Laboratory
-                    E: Seminar
-                    F: Independent or Special Studies
-                    G: Research
-                    H: Activity
-                    I: Experimental
-                    J: Internship
-                    K: Streaming Media
-                    L: Tutorial
-                    M: Practicum
-                    N: Reading and Conference
-                    O: Experiential/Co-op Education
-                    P: Programmed Instruction
-                    Q: Thesis
-                    R: Studio
-                    S: Project
-                    T: Telecourse/Distance Learning
-                    U: Externship
-                    W: Workshop
-                    Y: Online
-                    Z: Modular
-                    V: Examination for Credit
-                    X: One-time Event
-                    MID: Midterm Exam
-                    FNL: Final Exam
-                    HYB: Hybrid
+                      - `A` - Lecture
+                      - `B` - Discussion
+                      - `C` - Recitation
+                      - `D` - Laboratory
+                      - `E` - Seminar
+                      - `F` - Independent or Special Studies
+                      - `G` - Research
+                      - `H` - Activity
+                      - `I` - Experimental
+                      - `J` - Internship
+                      - `K` - Streaming Media
+                      - `L` - Tutorial
+                      - `M` - Practicum
+                      - `N` - Reading and Conference
+                      - `O` - Experiential/Co-op Education
+                      - `P` - Programmed Instruction
+                      - `Q` - Thesis
+                      - `R` - Studio
+                      - `S` - Project
+                      - `T` - Telecourse/Distance Learning
+                      - `U` - Externship
+                      - `W` - Workshop
+                      - `Y` - Online
+                      - `Z` - Modular
+                      - `V` - Examination for Credit
+                      - `X` - One-time Event
+                      - `MD` - Midterm Exam
+                      - `FL` - Final Exam
+                      - `HB` - Hybrid
                   type: string
                   example: A
                   enum: [B, C, D, E, F, G, H, I, J, K, A, L, M, N, O, P , Q, R, S, T, U, W, Y, Z, V, X, MID, FIL, HYB]
@@ -781,13 +786,13 @@ definitions:
                     If an abbreviation is present in the array, the meeting time meets on that day of the week.
                     The meeting time does not meet on any days of the week which aren't in the array.
                     Abbreviations and their corresponding day of the week:
-                    M: Monday
-                    T: Tuesday
-                    W: Wednesday
-                    Th: Thursday
-                    F: Friday
-                    Sa: Saturday
-                    Su: Sunday
+                      - `M`: - Monday
+                      - `T`: - Tuesday
+                      - `W`: - Wednesday
+                      - `Th` - Thursday
+                      - `F` - Friday
+                      - `Sa` - Saturday
+                      - `Su` - Sunday
                   type: array
                   example: [M, W, F]
                   items:
@@ -796,10 +801,10 @@ definitions:
           repeatedCourseInd: &repeatedCourseInd
             description: |
               Identifies whether the course is repeated course.
-              null: Included
-              A: Include to only count in GPA
-              E: Excluded
-              I: Re-included after being excluded
+                - `null` - Included
+                - `A` - Include to only count in GPA
+                - `E` - Excluded
+                - `I` - Re-included after being excluded
             type: string
             enum: [null, 'A', 'E', 'I']
       links:
@@ -995,28 +1000,7 @@ definitions:
         description: Credit hours passed for GPA calculation.
         type: integer
         example: 146
-      levelCode:
-        description: |
-         Academic level code for GPA calculation.
-         00: Level Not Declared
-         01: Undergraduate
-         02: Graduate
-         03: Postbac Degree Seeking
-         04: Non-Degree / Credential
-         05: Professional
-         06: INTO OSU GE/AE/Pathways
-         CG: Cascades Partner Grad Course
-         CP: Cascades Partner
-         CX: Obsolete - Do not use
-         DO: E-Campus Overlay Course
-         D1: E-Campus Undergraduate Course
-         D2: E-Campus Graduate Course
-         D3: ECampus CCLP & Couseling PHD
-         DR: E-Campus Intermediate Course
-         NC: Non Credit
-        type: string
-        example: "01"
-        enum: ["00", "01", "02", "03", "04", "05", "06", "CG", "CP", "CX", "DO", "D1", "D2", "D3", "DR", "NC"]
+      levelCode: *levelCode
       level:
         description: Academic level for GPA calculation.
         type: string
@@ -1324,16 +1308,16 @@ definitions:
                   type: string
                   description: |
                     Relation of the emergency contact.
-                    A: Alumni Parent
-                    C: Child
-                    F: Father
-                    G: Guardian
-                    M: Mother
-                    O: Other
-                    P: Parent
-                    R: Relative
-                    S: Spouse
-                    U: Unknown
+                      - `A` - Alumni Parent
+                      - `C` - Child
+                      - `F` - Father
+                      - `G` - Guardian
+                      - `M` - Mother
+                      - `O` - Other
+                      - `P` - Parent
+                      - `R` - Relative
+                      - `S` - Spouse
+                      - `U` - Unknown
                   enum: [A, C, F, G, M, O, P, R, S, U]
                 relation:
                   type: string
