@@ -28,6 +28,7 @@
     "valid_holds": "123456789",
     "valid_work_study": "123456789",
     "valid_dual_enrollment": "123456789",
-    "valid_degrees": "123456789"
+    "valid_degrees": "123456789",
+    "valid_emergency_contacts": "123456789"
   }
 }
