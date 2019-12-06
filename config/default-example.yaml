@@ -13,13 +13,7 @@ authentication:
   password: ${PASSWD}
 
 dataSources:
-<<<<<<< HEAD
   dataSources: ['oracledb']
-=======
-  dataSources: ['json', 'oracledb', 'awsS3']
-  json:
-    dbPath: 'db/mock-data.json'
->>>>>>> skeleton/master
   oracledb:
     connectString: ${DB_URL}
     user: ${DB_USER}
