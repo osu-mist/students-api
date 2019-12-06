@@ -57,10 +57,24 @@ The integration tests for Students API written using Python 3.
     $ pip install -r requirements.txt
     ```
 
-2. Run the integration test:
+2. Install an OpenAPI validator backend package
+
+    **OpenAPI 2**:
 
     ```shell
-    $ python integration-test.py -v --config path/to/configuration.json --openapi path/to/openapi.yaml
+    $ pip install flex
+    ```
+
+    **OpenAPI 3**:
+
+    ```shell
+    $ pip install openapi-spec-validator
+    ```
+
+3. Run the integration test:
+
+    ```shell
+    $ python integration_test.py -v --config path/to/configuration.json --openapi path/to/openapi.yaml
     ```
 
 ## Docker
