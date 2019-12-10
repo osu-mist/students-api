@@ -19,6 +19,11 @@ externalDocs:
   url: https://github.com/osu-mist/students-api
 produces:
   - application/json
+consumes:
+  - application/json
+security:
+  - OAuth2:
+      - full
 paths:
   /students/{osuId}/academic-status:
     get:
@@ -28,7 +33,6 @@ paths:
       description: Get GPA and academic standing for each term a student is registered for.
       operationId: getAcademicStatusById
       parameters:
-        - $ref: '#/parameters/authorization'
         - $ref: '#/parameters/term'
         - $ref: '#/parameters/osuId'
       responses:
@@ -52,7 +56,6 @@ paths:
       description: Get a student's current account balance.
       operationId: getAccountBalanceById
       parameters:
-        - $ref: '#/parameters/authorization'
         - $ref: '#/parameters/osuId'
       responses:
         '200':
@@ -71,7 +74,6 @@ paths:
       description: Get a student's history of account transactions.
       operationId: getAccountTransactionsById
       parameters:
-        - $ref: '#/parameters/authorization'
         - $ref: '#/parameters/osuId'
         - $ref: '#/parameters/term'
         - in: query
@@ -165,7 +167,6 @@ paths:
       description: Get a student's classification information
       operationId: getClassificationById
       parameters:
-        - $ref: '#/parameters/authorization'
         - $ref: '#/parameters/osuId'
       responses:
         '200':
@@ -187,7 +188,6 @@ paths:
       operationId: getClassScheduleById
       parameters:
         - $ref: '#/parameters/term'
-        - $ref: '#/parameters/authorization'
         - $ref: '#/parameters/osuId'
       responses:
         '200':
@@ -210,7 +210,6 @@ paths:
       description: Get a student's degree, major, minor and college information
       operationId: getDegreeById
       parameters:
-        - $ref: '#/parameters/authorization'
         - $ref: '#/parameters/term'
         - $ref: '#/parameters/osuId'
       responses:
@@ -234,7 +233,6 @@ paths:
       description: Get a student's enrolled credit hours from a dual enrollment institution.
       operationId: getDualEnrollmentById
       parameters:
-        - $ref: '#/parameters/authorization'
         - $ref: '#/parameters/term'
         - $ref: '#/parameters/osuId'
       responses:
@@ -258,7 +256,6 @@ paths:
       description: Get a student's overall grade point averages.
       operationId: getGradePointAverageById
       parameters:
-        - $ref: '#/parameters/authorization'
         - $ref: '#/parameters/osuId'
       responses:
         '200':
@@ -277,7 +274,6 @@ paths:
       description: Get a student's final grades for their classes.
       operationId: getGradesById
       parameters:
-        - $ref: '#/parameters/authorization'
         - $ref: '#/parameters/term'
         - $ref: '#/parameters/osuId'
       responses:
@@ -301,7 +297,6 @@ paths:
       description: Get a student's current academic holds.
       operationId: getHoldsById
       parameters:
-        - $ref: '#/parameters/authorization'
         - $ref: '#/parameters/osuId'
         - in: query
           name: codes
@@ -333,7 +328,6 @@ paths:
       description: Get a student's available work study funding.
       operationId: getWorkStudyById
       parameters:
-        - $ref: '#/parameters/authorization'
         - $ref: '#/parameters/osuId'
       responses:
         '200':
@@ -352,7 +346,6 @@ paths:
       description: Get a student's emergency contacts
       operationId: getEmergencyContactById
       parameters:
-        - $ref: '#/parameters/authorization'
         - $ref: '#/parameters/osuId'
       responses:
         '200':
@@ -364,12 +357,6 @@ paths:
           schema:
             $ref: '#/definitions/ErrorResult'
 parameters:
-  authorization:
-    name: Authorization
-    in: header
-    type: string
-    required: true
-    description: '"Bearer [token]" where [token] is your OAuth2 access token'
   osuId:
     name: osuId
     in: path
@@ -387,6 +374,13 @@ parameters:
       academic breaks, the current term will be the current or the most future term. For example,
       during spring break, the current term will be the spring term.
     type: string
+securityDefinitions:
+  OAuth2:
+    type: oauth2
+    flow: application
+    tokenUrl: https://api.oregonstate.edu/oauth2/token
+    scopes:
+      full: Full access to the API
 definitions:
   AcademicStatusResult:
     properties:
