@@ -408,6 +408,11 @@ const rawDegrees = [
     secondMinor: null,
     thirdMinor: null,
     fourthMinor: null,
+    dualDegree: null,
+    dualDegreeLevel: null,
+    dualDegreeCollege: null,
+    dualDegreeMajor: null,
+    dualDegreeProgramClassification: null,
   },
   {
     identifierField: `${fakeId}-201500-2`,
@@ -449,6 +454,11 @@ const rawDegrees = [
     secondMinor: null,
     thirdMinor: null,
     fourthMinor: null,
+    dualDegree: null,
+    dualDegreeLevel: null,
+    dualDegreeCollege: null,
+    dualDegreeMajor: null,
+    dualDegreeProgramClassification: null,
   },
   {
     identifierField: `${fakeId}-201501-1`,
@@ -490,6 +500,11 @@ const rawDegrees = [
     secondMinor: null,
     thirdMinor: null,
     fourthMinor: null,
+    dualDegree: null,
+    dualDegreeLevel: null,
+    dualDegreeCollege: null,
+    dualDegreeMajor: null,
+    dualDegreeProgramClassification: null,
   },
   {
     identifierField: `${fakeId}-201501-2`,
@@ -531,6 +546,11 @@ const rawDegrees = [
     secondMinor: null,
     thirdMinor: null,
     fourthMinor: null,
+    dualDegree: 'Bachelor of Science',
+    dualDegreeLevel: 'Undergraduate',
+    dualDegreeCollege: 'College of Liberal Arts',
+    dualDegreeMajor: 'Spanish',
+    dualDegreeProgramClassification: 'panish Language & Literature',
   },
 ];
 const rawEmergencyContacts = [
