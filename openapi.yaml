@@ -967,7 +967,7 @@ definitions:
         properties:
           about:
             type: string
-            format: url
+            format: uri
             description: A link to further information about the error
             example: https://developer.oregonstate.edu/documentation/error-reference#1234
   ErrorResult:
