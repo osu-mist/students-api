@@ -919,6 +919,28 @@ definitions:
               fourth:
                 $ref: '#/definitions/Minor'
             description: Minors information
+          dualDegree:
+            properties:
+              degree:
+                description: The student's dual degree
+                type: string
+                example: Bachelor of Science
+              level:
+                description: The dual degree level
+                type: string
+                example: Undergraduate
+              college:
+                description: The college of the degree
+                type: string
+                example: College of Forestry
+              major:
+                description: The major description
+                type: string
+                example: Spanish
+              programClassification:
+                description: The program classification of the major
+                type: string
+                example: Spanish Language & Literature
   DualEnrollmentResult:
     properties:
       links:
@@ -967,7 +989,7 @@ definitions:
         properties:
           about:
             type: string
-            format: url
+            format: uri
             description: A link to further information about the error
             example: https://developer.oregonstate.edu/documentation/error-reference#1234
   ErrorResult:

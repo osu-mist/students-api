@@ -422,6 +422,13 @@ const serializeDegrees = (rawDegrees, osuId, params) => {
       third: rawDegree.thirdMinor,
       fourth: rawDegree.fourthMinor,
     };
+    rawDegree.dualDegree = rawDegree.dualDegree ? {
+      degree: rawDegree.dualDegree,
+      level: rawDegree.dualDegreeLevel,
+      college: rawDegree.dualDegreeCollege,
+      major: rawDegree.dualDegreeMajor,
+      programClassification: rawDegree.dualDegreeProgramClassification,
+    } : null;
   });
 
   return serializeJsonApi(serializerArgs, rawDegrees);
