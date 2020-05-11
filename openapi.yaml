@@ -922,7 +922,7 @@ definitions:
           dualDegree:
             properties:
               degree:
-                description: The student dual degree
+                description: The student's dual degree
                 type: string
                 example: Bachelor of Science
               level:
