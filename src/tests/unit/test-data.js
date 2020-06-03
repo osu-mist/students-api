@@ -413,7 +413,7 @@ const rawDegrees = [
     dualDegreeCollege: null,
     dualDegreeMajor: null,
     dualDegreeProgramClassification: null,
-    honorInd: 'Y',
+    honorsInd: 'Y',
   },
   {
     identifierField: `${fakeId}-201500-2`,
@@ -460,7 +460,7 @@ const rawDegrees = [
     dualDegreeCollege: null,
     dualDegreeMajor: null,
     dualDegreeProgramClassification: null,
-    honorInd: 'N',
+    honorsInd: 'N',
   },
   {
     identifierField: `${fakeId}-201501-1`,
@@ -507,7 +507,7 @@ const rawDegrees = [
     dualDegreeCollege: null,
     dualDegreeMajor: null,
     dualDegreeProgramClassification: null,
-    honorInd: 'Y',
+    honorsInd: 'Y',
   },
   {
     identifierField: `${fakeId}-201501-2`,
@@ -554,7 +554,7 @@ const rawDegrees = [
     dualDegreeCollege: 'College of Liberal Arts',
     dualDegreeMajor: 'Spanish',
     dualDegreeProgramClassification: 'panish Language & Literature',
-    honorInd: 'N',
+    honorsInd: 'N',
   },
 ];
 const rawEmergencyContacts = [
