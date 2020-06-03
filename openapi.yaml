@@ -942,7 +942,7 @@ definitions:
                 type: string
                 example: Spanish Language & Literature
           honorInd:
-            description: Determine if student is honor for this degree
+            description: Determines if this degree is an honors degree
             type: boolean
             example: true
   DualEnrollmentResult:
