@@ -429,6 +429,7 @@ const serializeDegrees = (rawDegrees, osuId, params) => {
       major: rawDegree.dualDegreeMajor,
       programClassification: rawDegree.dualDegreeProgramClassification,
     } : null;
+    rawDegree.honorInd = rawDegree.honorInd === 'Y';
   });
 
   return serializeJsonApi(serializerArgs, rawDegrees);
