@@ -555,10 +555,74 @@ definitions:
               - Vet Med-Third Year
               - Vet Med-Fourth Year
               - Auditor Only
-          campusCode:
-            description: Campus code for a student
-            example: C
+          campusCode: &campusCode
+            description: |
+              Campus code for a student.
+                - `A` -	Ashland/SOU
+                - `DSC` -	Dist. Degree Corvallis Student
+                - `O` -	Portland - OCATE Center
+                - `E` -	Eugene/UO
+                - `H` -	Portland/OHSU
+                - `M` -	Monmouth/WOU
+                - `DSB` -	Dist. Degree Cascades Student
+                - `N` -	Newport/HMSC
+                - `P` -	Portland/PSU
+                - `K` -	Klamath Falls/KCC/OIT
+                - `B` -	Oregon State - Cascades
+                - `D0` - Ecampus-Distance Ed Bvrton/Hil
+                - `L` -	LaGrande/EOU
+                - `C` -	 Oregon State - Corvallis
+                - `I` -	OBSOLETE Dist & Online Courses
+                - `S` -	Other States (Non-Oregon)
+                - `J` -	Corvallis - OSU Campus, Statew
+                - `Z` -	International Sites
+                - `D3` - Ecampus-Distance Ed Salem/CCC
+                - `D4` - Ecampus-Distance Ed PDX/PCC
+                - `Q` -	Central Oregon - Warm Springs
+                - `D5` - Ecampus-Distance Ed CosBaySWOC
+                - `D6` - Ecampus-Distance Ed Albany LBC
+                - `2` -	Central Oregon - COCC, Bend
+                - `3` -	Salem/CCC
+                - `4` -	Portland/PCC
+                - `5` -	Coos Bay/SWOCC
+                - `6` -	Albany/LBCC
+                - `7` -	Astoria/CCC
+                - `8` -	Ontario/TVCC
+                - `9` -	Pendleton/BMCC
+                - `V` -	Hood River/The Dalles
+                - `X` -	Medford/Grants Pass
+                - `Y` -	Gresham/MHCC
+                - `0` -	Beaverton/Hillsboro/Cptl Cntr
+                - `D7` - Ecampus-Distance Ed Astoria/CC
+                - `D8` - Ecampus-Distance Ed Ontario
+                - `D9` - Ecampus-Distance Ed Pdleton/BM
+                - `DA` - Ecampus-Distance Ed Ashld/SOU
+                - `DE` - Ecampus-Distance Ed Eugene/UO
+                - `DH` - Ecampus-Distance Ed PDX/OHSU
+                - `DK` - Ecampus-Distance Ed Klmth Fals
+                - `DL` - Ecampus-Distance Ed LaGd/EOU
+                - `DM` - Ecampus-Distance Ed Monmth/WOU
+                - `DN` - Ecampus-Distance Ed Newpt/HMSC
+                - `DO` - Ecampus-Distance Ed PDX-OCATE
+                - `DP` - Ecampus-Distance Ed PDX - PSU
+                - `DQ` - Ecampus-Distance Ed WRM SPRS
+                - `DS` - Ecampus-Distance Ed Other US
+                - `DV` - Ecampus-Distance Ed Hood River
+                - `DX` - Ecampus-Distance Ed Medfrd
+                - `DY` - Ecampus-Distance Ed /MHCC
+                - `DZ` - Ecampus-Distance Ed Internatl
+                - `D1` - Ecampus-Distance Ed Overlay
+                - `DI` - Ecampus-Distance Education-LD
+                - `DB` - Ecampus-Distance Education-UD
+                - `DR` - Ecampus-Dist Ed Intermediate
+                - `DJ` - Ecampus-Distance Ed OSU Campus
+                - `D2` - Ecampus-Distance Ed Centl. OR
+                - `DC` - Ecampus-Dist Ed-UD-Cascades
+                - `DT` - Ecampus-Dist ED Clackamas
+                - `DLP` -	ECampus-Comm Coll Leadrshp Pgm
+                - `PDX` -	Oregon State - Portland
             type: string
+            enum: [A, DSC, O, E, H, M, DSB, N, P, K, B, D0, L, C, I, S, J, Z, D3, D4, Q, D5, D6, 2, 3, 4, 5, 6, 7, 8, 9, V, X, Y, 0, D7, D8, D9, DA, DE, DH, DK, DL, DM, DN, DO, DP, DQ, DS, DV, DX, DY, DZ, D1, DI, DB, DR, DJ, D2, DC, DT, DLP, PDX]
           campus:
             description: Campus for a student
             example: Oregon State - Corvallis
@@ -752,10 +816,7 @@ definitions:
                   description: The name of the building.
                   type: string
                   example: Learning Innovation Center
-                campusCode:
-                  description: Campus code for a student
-                  example: C
-                  type: string
+                campusCode: *campusCode
                 campus:
                   description: Campus location of the meeting time.
                   type: string
