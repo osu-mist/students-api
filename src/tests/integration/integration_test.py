@@ -8,7 +8,7 @@ from prance import ResolvingParser
 import utils
 
 
-class integration_tests(unittest.TestCase):
+class IntegrationTests(utils.UtilsTestCase):
     @classmethod
     def setup(cls, config_path, openapi_path):
         with open(config_path) as config_file:
@@ -46,13 +46,13 @@ class integration_tests(unittest.TestCase):
     def term_testing(self, endpoint, resource, nullable_fields=None):
         for valid_term in self.valid_terms:
             params = {'term': valid_term}
-            utils.test_endpoint(self, endpoint, resource, 200,
+            self.check_endpoint(endpoint, resource, 200,
                                 query_params=params,
                                 nullable_fields=nullable_fields)
 
         for invalid_term in self.invalid_terms:
             params = {'term': invalid_term}
-            utils.test_endpoint(self, endpoint, 'ErrorObject', 400,
+            self.check_endpoint(endpoint, 'ErrorObject', 400,
                                 query_params=params)
 
     # Test case: GET /students/{osuId}/account-balance
@@ -61,7 +61,7 @@ class integration_tests(unittest.TestCase):
         endpoint = self.get_test_endpoint('valid_account_balance',
                                           'account-balance')
 
-        utils.test_endpoint(self, endpoint, resource, 200)
+        self.check_endpoint(endpoint, resource, 200)
 
     # Test case: GET /students/{osuId}/account-transactions
     def test_get_account_transactions_by_id(self):
@@ -69,7 +69,7 @@ class integration_tests(unittest.TestCase):
         endpoint = self.get_test_endpoint('valid_account_transactions',
                                           'account-transactions')
 
-        utils.test_endpoint(self, endpoint, resource, 200)
+        self.check_endpoint(endpoint, resource, 200)
 
     # Test case: GET /students/{osuId}/academic-status
     def test_get_academic_status_by_id(self):
@@ -78,7 +78,7 @@ class integration_tests(unittest.TestCase):
                                           'academic-status')
         nullable_fields = ['academicStanding']
 
-        utils.test_endpoint(self, endpoint, resource, 200,
+        self.check_endpoint(endpoint, resource, 200,
                             nullable_fields=nullable_fields)
         self.term_testing(endpoint, resource, nullable_fields=nullable_fields)
 
@@ -88,7 +88,7 @@ class integration_tests(unittest.TestCase):
         endpoint = self.get_test_endpoint('valid_classification',
                                           'classification')
 
-        utils.test_endpoint(self, endpoint, resource, 200)
+        self.check_endpoint(endpoint, resource, 200)
 
     # Test case: GET /students/{osuId}/gpa
     def test_get_gpa_by_id(self):
@@ -96,7 +96,7 @@ class integration_tests(unittest.TestCase):
         endpoint = self.get_test_endpoint('valid_gpa',
                                           'gpa')
 
-        utils.test_endpoint(self, endpoint, resource, 200)
+        self.check_endpoint(endpoint, resource, 200)
 
     # Test case: GET /students/{osuId}/grades
     def test_get_grades_by_id(self):
@@ -110,7 +110,7 @@ class integration_tests(unittest.TestCase):
         """
         nullable_fields = ['repeatedCourseInd']
 
-        utils.test_endpoint(self, endpoint, resource, 200,
+        self.check_endpoint(endpoint, resource, 200,
                             nullable_fields=nullable_fields)
         self.term_testing(endpoint, resource, nullable_fields=nullable_fields)
 
@@ -134,7 +134,7 @@ class integration_tests(unittest.TestCase):
             'repeatedCourseInd'
         ]
 
-        utils.test_endpoint(self, endpoint, resource, 200,
+        self.check_endpoint(endpoint, resource, 200,
                             nullable_fields=nullable_fields)
         self.term_testing(endpoint, resource, nullable_fields=nullable_fields)
 
@@ -144,7 +144,7 @@ class integration_tests(unittest.TestCase):
         endpoint = self.get_test_endpoint('valid_holds',
                                           'holds')
 
-        utils.test_endpoint(self, endpoint, resource, 200)
+        self.check_endpoint(endpoint, resource, 200)
 
     # Test case: GET /students/{osuId}/dual-enrollment
     def test_get_dual_enrollment_by_id(self):
@@ -152,7 +152,7 @@ class integration_tests(unittest.TestCase):
         endpoint = self.get_test_endpoint('valid_dual_enrollment',
                                           'dual-enrollment')
 
-        utils.test_endpoint(self, endpoint, resource, 200)
+        self.check_endpoint(endpoint, resource, 200)
         self.term_testing(endpoint, resource)
 
     # Test case: GET /students/{osuId}/degrees
@@ -167,7 +167,7 @@ class integration_tests(unittest.TestCase):
         """
         nullable_fields = ['dualDegree']
 
-        utils.test_endpoint(self, endpoint, resource, 200,
+        self.check_endpoint(endpoint, resource, 200,
                             nullable_fields=nullable_fields)
         self.term_testing(endpoint, resource, nullable_fields=nullable_fields)
 
@@ -201,7 +201,7 @@ class integration_tests(unittest.TestCase):
             'relation'
         ]
 
-        utils.test_endpoint(self, endpoint, resource, 200,
+        self.check_endpoint(endpoint, resource, 200,
                             nullable_fields=nullable_fields)
 
 
@@ -214,6 +214,5 @@ if __name__ == '__main__':
     else:
         logging.basicConfig(level=logging.INFO)
 
-    integration_tests.setup(arguments.config_path, arguments.openapi_path)
+    IntegrationTests.setup(arguments.config_path, arguments.openapi_path)
     unittest.main(argv=argv)
-    integration_tests.cleanup()
