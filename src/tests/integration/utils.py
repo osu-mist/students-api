@@ -195,66 +195,30 @@ class UtilsTestCase(unittest.TestCase):
                                                 root_object_paths)
 
             return None
-        else:
-            return types_dict[openapi_type]
 
-    # Helper function to get type of referenced object
-    def __get_reference_type(object_path, root_object_paths=None):
-        keys = re.split('/', re.search('#/(.*)', object_path).group(1))
-        reference = self.openapi
-        for key in keys:
-            reference = reference[key]
+        # Helper function to check resource object schema
+        def __check_resource_schema(resource):
+            # Check resource type
+            self.assertEqual(resource['type'], schema['type']['enum'][0])
+            # Check resource attributes
+            actual_attributes = resource['attributes']
+            expected_attributes = __get_schema_attributes()
+            __check_attributes_schema(actual_attributes, expected_attributes)
 
-        if 'format' in reference and reference['format'] in types_dict:
-            return reference['format']
-        elif 'type' in reference:
-            return reference['type']
-        elif '$ref' in reference:
-            nested_reference = reference['$ref']
-            # Avoid infinite recursion
-            if not root_object_paths:
-                root_object_paths = [object_path]
-            if nested_reference not in root_object_paths:
-                root_object_paths.append(nested_reference)
-                return __get_reference_type(nested_reference,
-                                            root_object_paths)
+        # Helper function to check error object schema
+        def __check_error_schema(error):
+            # Check error attributes
+            actual_attributes = error
+            expected_attributes = schema
+            __check_attributes_schema(actual_attributes, expected_attributes)
 
-        return None
-
-    # Helper function to check resource object schema
-    def __check_resource_schema(resource):
-        # Check resource type
-        self.assertEqual(resource['type'], schema['type']['enum'][0])
-        # Check resource attributes
-        actual_attributes = resource['attributes']
-        expected_attributes = __get_schema_attributes()
-        __check_attributes_schema(actual_attributes, expected_attributes)
-
-    # Helper function to check error object schema
-    def __check_error_schema(error):
-        # Check error attributes
-        actual_attributes = error
-        expected_attributes = schema
-        __check_attributes_schema(actual_attributes, expected_attributes)
-
-    # Helper function to check through all attributes
-    def __check_attributes_schema(actual_attributes, expected_attributes):
-        for field, actual_value in actual_attributes.items():
-            self.assertIn(
-                field,
-                expected_attributes.keys(),
-                f"Unexpected field '{field}'"
-            )
-            expected_attribute = expected_attributes[field]
-            expected_type = __get_attribute_type(expected_attribute)
-
-            # Check item schema if attribute is an array
-            if (
-                expected_type is list
-                and 'properties' in expected_attributes[field]['items']
-            ):
-                expected_item = (
-                    expected_attributes[field]['items']['properties']
+        # Helper function to check through all attributes
+        def __check_attributes_schema(actual_attributes, expected_attributes):
+            for field, actual_value in actual_attributes.items():
+                self.assertIn(
+                    field,
+                    expected_attributes.keys(),
+                    f"Unexpected field '{field}'"
                 )
                 expected_attribute = expected_attributes[field]
                 expected_type = __get_attribute_type(expected_attribute)
@@ -262,53 +226,71 @@ class UtilsTestCase(unittest.TestCase):
                 # Check item schema if attribute is an array
                 if (
                     expected_type is list
-                    and 'properties' in expected_attribute['items']
+                    and 'properties' in expected_attributes[field]['items']
                 ):
                     expected_item = (
-                        expected_attribute['items']['properties']
+                        expected_attributes[field]['items']['properties']
                     )
-                    actual_items = actual_attributes[field]
+                    expected_attribute = expected_attributes[field]
+                    expected_type = __get_attribute_type(expected_attribute)
 
-                    for actual_item in actual_items:
-                        __check_attributes_schema(actual_item, expected_item)
+                    # Check item schema if attribute is an array
+                    if (
+                        expected_type is list
+                        and 'properties' in expected_attribute['items']
+                    ):
+                        expected_item = (
+                            expected_attribute['items']['properties']
+                        )
+                        actual_items = actual_attributes[field]
 
-                if (
-                    (actual_value and expected_type)
-                    or field not in nullable_fields
-                ):
-                    self.assertIsInstance(actual_value, expected_type)
+                        for actual_item in actual_items:
+                            __check_attributes_schema(
+                                actual_item,
+                                expected_item
+                            )
 
-                    # Get attribute pattern and format, then validate
-                    pattern = (
-                        None if 'pattern' not in expected_attribute
-                        else expected_attribute['pattern']
-                    )
-                    formatting = (
-                        None if 'format' not in expected_attribute
-                        else expected_attribute['format']
-                    )
-                    if pattern is not None or formatting is not None:
-                        __validate_format(actual_value, formatting, pattern)
+                    if (
+                        (actual_value and expected_type)
+                        or field not in nullable_fields
+                    ):
+                        self.assertIsInstance(actual_value, expected_type)
 
-        status_code = response.status_code
-        content = self.get_json_content(response)
+                        # Get attribute pattern and format, then validate
+                        pattern = (
+                            None if 'pattern' not in expected_attribute
+                            else expected_attribute['pattern']
+                        )
+                        formatting = (
+                            None if 'format' not in expected_attribute
+                            else expected_attribute['format']
+                        )
+                        if pattern is not None or formatting is not None:
+                            __validate_format(
+                                actual_value,
+                                formatting,
+                                pattern
+                            )
 
-        # Basic tests for successful/error response
-        try:
-            if status_code == 200:
-                resource_data = content['data']
-                if isinstance(resource_data, list):
-                    for resource in resource_data:
-                        __check_resource_schema(resource)
-                else:
-                    __check_resource_schema(resource_data)
-            elif status_code >= 400:
-                errors_data = content['errors']
-                self.assertIsInstance(errors_data, list)
-                for error in errors_data:
-                    __check_error_schema(error)
-        except KeyError as error:
-            self.fail(error)
+            status_code = response.status_code
+            content = self.get_json_content(response)
+
+            # Basic tests for successful/error response
+            try:
+                if status_code == 200:
+                    resource_data = content['data']
+                    if isinstance(resource_data, list):
+                        for resource in resource_data:
+                            __check_resource_schema(resource)
+                    else:
+                        __check_resource_schema(resource_data)
+                elif status_code >= 400:
+                    errors_data = content['errors']
+                    self.assertIsInstance(errors_data, list)
+                    for error in errors_data:
+                        __check_error_schema(error)
+            except KeyError as error:
+                self.fail(error)
 
     def check_url(self, link_url, endpoint, query_params=None):
         """Check url for correct base and endpoint, parameters"""
