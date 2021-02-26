@@ -18,7 +18,7 @@
     "build": "gulp build",
     "dev": "nodemon -i dist/ -x 'npm run babel && npm start'",
     "lint": "gulp lint",
-    "start": "pm2-runtime dist/app.js --no-auto-exit",
+    "start": "export UV_THREADPOOL_SIZE=20 && pm2-runtime dist/app.js --no-auto-exit",
     "test": "gulp test",
     "coverage": "nyc --reporter=lcov --reporter=text gulp test",
     "typecheck": "gulp typecheck"
