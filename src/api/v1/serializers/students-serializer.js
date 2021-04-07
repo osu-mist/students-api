@@ -227,7 +227,7 @@ const serializeClassSchedule = (rawClassSchedule, osuId, params) => {
     rawDataByTermAndCrn[id] = rawDataByTermAndCrn[id] || { faculty: [], meetingTimes: [] };
 
     const faculty = {
-      osuID: rawRow.facultyOsuId,
+      osuId: rawRow.facultyOsuId,
       name: rawRow.facultyName,
       email: rawRow.facultyEmail,
       primary: rawRow.facultyPrimary === 'Y',
