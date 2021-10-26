@@ -479,6 +479,10 @@ definitions:
                   type: string
                   description: Description of transaction.
                   example: Tuition Deposit Applied
+                categoryCode:
+                  type: string
+                  description: Transaction category code
+                  example: IDC
                 category:
                   type: string
                   description: Transaction category
@@ -497,6 +501,14 @@ definitions:
                   description: Transaction Type
                   enum: [charge, payment]
                   example: charge
+                detailCode:
+                  type: string
+                  description: Transaction detail code
+                  example: INC1
+                detail:
+                  type: string
+                  description: Transaction detail
+                  example: Incidental Fee
           links:
             $ref: '#/definitions/SelfLink'
   ClassificationResult:
