@@ -266,7 +266,7 @@ const serializeClassSchedule = (rawClassSchedule, osuId, params) => {
       courseSubject: rawRow.courseSubject,
       courseSubjectDescription: rawRow.courseSubjectDescription,
       courseNumber: rawRow.courseNumber,
-      courseTitle: rawRow.courseTitleLong || rawRow.courseTitleShort,
+      courseTitle: rawRow.courseTitleShort || rawRow.courseTitleLong,
       sectionNumber: rawRow.sectionNumber,
       term: rawRow.term,
       termDescription: rawRow.termDescription,
